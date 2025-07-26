@@ -1,0 +1,128 @@
+.pacote-main{
+  margin-top: 3.5rem;
+}
+
+.duration-badge {
+  display: inline;
+  background-color: #546266;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: white;
+}
+
+.botao-reserva {
+  background-color: #1b9dbd;
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.botao-reserva:hover {
+  background-color: white;
+  color: #1b9dbd;
+}
+
+.pacote-layout{
+  display: inline-flex;
+  gap: 2rem;
+}
+
+.sidebar-pacote{
+  display: inline;
+  width: 30%;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 991.98px) {
+  .pacote-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .imagem-principal {
+    width: 100%;
+    order: 1;
+  }
+  
+  .sidebar-pacote {
+    width: 100%;
+    display: block;
+    order: 2;
+  }
+  
+  .mapa-interativo {
+    display: none;
+  }
+  
+  .pacote-main {
+    margin-top: 2rem;
+    padding: 0 15px;
+  }
+  
+  .dates-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .preco-destaque {
+    padding: 20px;
+    margin-bottom: 1.5rem;
+  }
+  
+  .botao-reserva {
+    padding: 12px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .pacote-main {
+    margin-top: 1.5rem;
+    padding: 0 10px;
+  }
+  
+  .pacote-layout {
+    gap: 1rem;
+  }
+  
+  .date-inputs .col-6 {
+    margin-bottom: 10px;
+  }
+  
+  .date-box {
+    padding: 8px;
+  }
+  
+  .dates-title {
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+  
+  .preco-destaque h2 {
+    font-size: 1.5rem;
+  }
+  
+  .duration-badge {
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .pacote-main h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  .preco-destaque {
+    padding: 15px;
+  }
+  
+  .botao-reserva {
+    padding: 15px;
+    font-size: 1rem;
+  }
+  
+  .date-value {
+    font-size: 0.9rem;
+  }
+}

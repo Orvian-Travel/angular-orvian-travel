@@ -1,0 +1,57 @@
+<app-header></app-header>
+<main class="pacote-main container">
+  <h1 class="mb-4">Pacote de Viagem para Recife</h1>
+  <section class="pacote-layout">
+    <div class="imagem-principal">
+      <img
+        src="assets/images/generic-package-image.jpg"
+        alt="Imagem Destino"
+        class="img-fluid rounded"
+      />
+    </div>
+    <aside class="sidebar-pacote">
+      <div class="mapa-interativo mb-3">
+        <iframe
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-43.209%2C-22.908%2C-43.209%2C-22.908&amp;layer=mapnik"
+          class="w-100 h-100 border-0 rounded"
+          allowfullscreen
+          loading="lazy"
+        ></iframe>
+      </div>
+      <div class="dates-section mb-3">
+        <h4 class="dates-title">Check-in & Check-out</h4>
+        <div class="date-inputs row g-2 mb-3">
+          <div class="col-6">
+            <div class="date-box">
+              <span class="date-value">18/07/2025</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="date-box">
+              <span class="date-value">23/07/2025</span>
+            </div>
+          </div>
+        </div>
+        <div class="duration-badge">
+          <span>7 DIAS 6 NOITES</span>
+        </div>
+      </div>
+
+      <div class="preco-destaque mb-4">
+        <span class="text-muted">Preço por pessoa</span>
+        <h2 class="fw-bold text-dark">R$ 960,00</h2>
+      </div>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+        velit esse cillum...
+      </p>
+      <button class="botao-reserva btn btn-primary btn-lg w-100 mb-3">
+        Reserve
+      </button>
+    </aside>
+  </section>
+</main>
+<app-card-list></app-card-list>
