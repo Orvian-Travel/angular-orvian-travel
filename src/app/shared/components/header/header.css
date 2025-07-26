@@ -1,0 +1,22 @@
+header{
+    background-color: #004657;
+}
+
+.buttons{
+    gap: 1.5rem;
+}
+
+.brand{
+    height: 3.2rem
+}
+
+button{
+    background-color: #1B9DBD;
+    color: white;
+    transition: all 0.3s ease-in-out;
+}
+
+button:hover{
+    background-color: white;
+    color: #1B9DBD;
+}

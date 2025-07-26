@@ -1,0 +1,46 @@
+.hero-section {
+    height: 320px;
+    overflow: hidden;
+}
+
+.hero-image {
+    height: 100%;
+    object-fit: cover;
+}
+
+.card{
+    display: inline-block;
+    background-color: #F8F8F8;
+    width: auto;
+    min-width: fit-content;
+}
+
+.search-container {
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    max-width: 90%;
+    z-index: 10;
+    padding: 0 20px;
+}
+
+.form-control{
+    color: #546266;
+}
+
+.btn{
+    background-color: #1B9DBD;
+    color: white;
+}
+
+button:hover{
+    background-color: white;
+    color: #1B9DBD;
+}
+
+.container-button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

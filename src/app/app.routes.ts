@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-import { Login } from './components/login/login';
+import { Home } from './home/home/home';
+import { Login } from './login/login';
 
 export const routes: Routes = [
-    
-    { path: "login", component: Login }
+  { path: '', component: Home },
+  { path: 'login', component: Login}
 ];
