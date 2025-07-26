@@ -1,0 +1,1 @@
+Pasta para a config do snackbar e dialog (component pra avisos/alertas)

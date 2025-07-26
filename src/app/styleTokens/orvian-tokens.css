@@ -1,0 +1,27 @@
+:root {
+  /* Color Palette */
+  --orvian-primary-variant: #1b9dbd;
+  --orvian-secondary-variant: #602e22;
+  --orvian-primary-color: #004657;
+  --orvian-secondary-color: #602e22;
+  --orvian-gray-001: #cdd5d2;
+  --orvian-gray-002: #efefef;
+  --orvian-gray-003: #546266;
+  --orvian-gray-004: #3d3d3d;
+  --orvian-background-gray: #f8f8f8;
+  --orvian-header-background: #004657;
+  --orvian-button-button-text-color: white;
+  --orvian-button-button-background-color: #1b9dbd;
+  --orvian-button-button-text-color-hover: #1b9dbd;
+  --orvian-button-button-background-color-hover: white;
+
+  /* Fontes ( os que estão aqui é exemplo que peguei do copilot)*/
+  --orvian-font-family: "Arial", sans-serif;
+  --orvian-font-size-base: 16px;
+  --orvian-font-size-lg: 18px;
+  --orvian-font-size-sm: 14px;
+
+  /* error/dialogs */
+}
+
+/* .dark-mode {} pro futuro dark mode do site (se eu não usar a função light-dark())*/

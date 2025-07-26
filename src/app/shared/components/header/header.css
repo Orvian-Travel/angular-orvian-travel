@@ -1,22 +1,31 @@
-header{
-    background-color: #004657;
+header {
+  /* background-color: #004657; */
+
+  background-color: var(--orvian-header-background);
 }
 
-.buttons{
-    gap: 1.5rem;
+.buttons {
+  gap: 1.5rem;
 }
 
-.brand{
-    height: 3.2rem
+.brand {
+  height: 3.2rem;
 }
 
-button{
-    background-color: #1B9DBD;
-    color: white;
-    transition: all 0.3s ease-in-out;
+button {
+  /* background-color: #1b9dbd;
+  color: white; */
+
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
+
+  transition: all 0.3s ease-in-out;
 }
 
-button:hover{
-    background-color: white;
-    color: #1B9DBD;
+button:hover {
+  /* background-color: white;
+  color: #1b9dbd; */
+
+  background-color: var(--orvian-button-button-background-color-hover);
+  color: var(--orvian-button-button-text-color-hover);
 }

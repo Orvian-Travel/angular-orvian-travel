@@ -1,32 +1,41 @@
-.pacote-main{
+.pacote-main {
   margin-top: 3.5rem;
 }
 
 .duration-badge {
   display: inline;
-  background-color: #546266;
+  background-color: var(--orvian-gray-003);
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  color: white;
+  color: var(--orvian-button-button-text-color);
+
+  /* background-color: #546266;
+  color: white; */
 }
 
 .botao-reserva {
-  background-color: #1b9dbd;
-  color: white;
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
   transition: all 0.3s ease-in-out;
+
+  /* background-color: #1b9dbd;
+  color: white; */
 }
 
 .botao-reserva:hover {
-  background-color: white;
-  color: #1b9dbd;
+  background-color: var(--orvian-button-button-background-color-hover);
+  color: var(--orvian-button-button-text-color-hover);
+
+  /* background-color: white;
+  color: #1b9dbd; */
 }
 
-.pacote-layout{
+.pacote-layout {
   display: inline-flex;
   gap: 2rem;
 }
 
-.sidebar-pacote{
+.sidebar-pacote {
   display: inline;
   width: 30%;
 }
@@ -38,36 +47,36 @@
     flex-direction: column;
     gap: 1.5rem;
   }
-  
+
   .imagem-principal {
     width: 100%;
     order: 1;
   }
-  
+
   .sidebar-pacote {
     width: 100%;
     display: block;
     order: 2;
   }
-  
+
   .mapa-interativo {
     display: none;
   }
-  
+
   .pacote-main {
     margin-top: 2rem;
     padding: 0 15px;
   }
-  
+
   .dates-section {
     margin-bottom: 1.5rem;
   }
-  
+
   .preco-destaque {
     padding: 20px;
     margin-bottom: 1.5rem;
   }
-  
+
   .botao-reserva {
     padding: 12px;
     font-size: 1.1rem;
@@ -79,28 +88,28 @@
     margin-top: 1.5rem;
     padding: 0 10px;
   }
-  
+
   .pacote-layout {
     gap: 1rem;
   }
-  
+
   .date-inputs .col-6 {
     margin-bottom: 10px;
   }
-  
+
   .date-box {
     padding: 8px;
   }
-  
+
   .dates-title {
     font-size: 1rem;
     margin-bottom: 10px;
   }
-  
+
   .preco-destaque h2 {
     font-size: 1.5rem;
   }
-  
+
   .duration-badge {
     font-size: 0.85rem;
     padding: 0.4rem 0.8rem;
@@ -112,16 +121,16 @@
     font-size: 1.5rem;
     text-align: center;
   }
-  
+
   .preco-destaque {
     padding: 15px;
   }
-  
+
   .botao-reserva {
     padding: 15px;
     font-size: 1rem;
   }
-  
+
   .date-value {
     font-size: 0.9rem;
   }
