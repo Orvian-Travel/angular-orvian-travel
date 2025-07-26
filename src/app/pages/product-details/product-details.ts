@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Header } from '../shared/components/header/header';
-import { CardList } from '../shared/components/card-list/card-list';
+import { Header } from '../../shared/components/header/header';
+import { CardList } from '../../shared/components/card-list/card-list';
 
 @Component({
   selector: 'app-product-details',
