@@ -1,0 +1,326 @@
+*{
+  overflow-x: hidden;
+}
+
+.bg-gradient-custom {
+  background: linear-gradient(140deg, #19a0d9 0%, #63d0f7 100%) !important;
+  min-height: 100vh;
+}
+
+input{
+  color: var(--orvian-gray-003);
+}
+
+label{
+  font-size: 12px;
+  color: var(--orvian-gray-003);
+}
+
+select{
+    color: var(--orvian-gray-003);
+}
+
+/* Botão customizado marrom */
+.btn-custom-brown {
+  background-color: var(--brown-color);
+  border-color: var(--brown-color);
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  transition: background 0.2s;
+  background-color: #7e4e34;
+}
+
+.btn-custom-brown:hover {
+  background-color: #5e3a26;
+}
+
+.text-container{
+  box-sizing: border-box;
+  margin-bottom: 190px;
+  width: 100%;
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.text-container h2 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.text-container p {
+  font-size: 1rem;
+  line-height: 1.6;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Botão primário customizado */
+.btn-custom-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  font-size: 1.08rem;
+  padding: 12px 100px;
+  border-radius: 6px;
+  transition: background 0.18s;
+  background-color: #1486b4;
+}
+
+.btn-custom-primary:hover {
+    background-color: white;
+    color: #1B9DBD;
+}
+
+/* Labels customizados */
+.form-label-custom {
+  font-size: 0.78rem;
+  color: #555;
+  margin-bottom: 2px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  display: block;
+}
+
+/* Inputs customizados */
+.form-control-custom {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #fafbfc;
+  transition: border 0.2s, background-color 0.2s;
+  height: auto;
+}
+
+.form-control-custom:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(25, 160, 217, 0.25);
+  background-color: #fff;
+}
+
+/* Container para input de data com ícone */
+.date-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Ícone do calendário */
+.date-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  pointer-events: auto;
+  opacity: 0.6;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.date-icon:hover {
+  opacity: 0.8;
+}
+
+/* Input de data com ícone */
+.date-input-with-icon {
+  padding-left: 45px !important;
+  background-color: #fafbfc;
+}
+
+/* Esconder o ícone nativo do input date */
+.date-input-with-icon::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+.date-input-with-icon::-webkit-inner-spin-button {
+  display: none;
+}
+
+.date-input-with-icon:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgba(25, 160, 217, 0.25);
+  background-color: #fff;
+}
+
+/* Card customizado */
+.card {
+  border-radius: 12px;
+  box-shadow: 0 8px 36px rgba(44, 107, 140, 0.10) !important;
+  border: none !important;
+}
+
+/* Ajustes para altura total */
+html, body {
+  height: 100%;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Botão voltar mobile */
+.mobile-back-btn {
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+/* Responsividade mobile-first */
+@media (max-width: 991.98px) {
+  /* Layout mobile */
+  .mobile-form-container {
+    min-height: 100vh !important;
+    position: relative;
+    flex-direction: column !important;
+  }
+  
+  .bg-gradient-custom {
+    min-height: 100vh !important;
+    background: linear-gradient(140deg, #19a0d9 0%, #63d0f7 100%) !important;
+  }
+  
+  .mobile-header-text {
+    max-width: 400px;
+    padding: 0 20px;
+    margin-top: 80px;
+  }
+  
+  .mobile-header-text h2 {
+    font-size: 1.5rem;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    color: #000 !important;
+  }
+  
+  .mobile-header-text p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    color: #333 !important;
+  }
+  
+  .mobile-card {
+    width: 100%;
+    max-width: 350px;
+    margin: 20px auto 0 auto;
+  }
+  
+  .mobile-illustration {
+    max-width: 300px;
+    height: auto;
+    min-width: 250px;
+  }
+  
+  .mobile-text {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .mobile-description {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  
+  /* Ajustes no painel esquerdo para mobile */
+  .col-12.bg-white {
+    min-height: auto;
+    padding: 30px 20px !important;
+  }
+  
+  /* Formulário otimizado para mobile */
+  .card-body {
+    padding: 25px 20px !important;
+  }
+  
+  .form-control-custom {
+    font-size: 16px; /* Evita zoom no iOS */
+    padding: 14px 16px;
+  }
+  
+  .date-input-with-icon {
+    padding-left: 45px !important;
+    font-size: 16px; /* Evita zoom no iOS */
+  }
+  
+  .date-icon {
+    left: 16px;
+    width: 18px;
+    height: 18px;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  
+  .form-label-custom {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+  }
+  
+  .btn-custom-primary {
+    padding: 14px 0;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  /* Ajustes para telas muito pequenas */
+  .bg-gradient-custom {
+    min-height: 100vh !important;
+    background: linear-gradient(140deg, #19a0d9 0%, #63d0f7 100%) !important;
+  }
+  
+  .mobile-header-text {
+    padding: 0 15px;
+    margin-top: 70px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  .mobile-header-text h2 {
+    font-size: 1.3rem;
+    color: #000 !important;
+  }
+  
+  .mobile-header-text p {
+    font-size: 0.9rem;
+    color: #333 !important;
+  }
+  
+  .mobile-card {
+    margin: 10px;
+    border-radius: 8px;
+    max-width: none;
+  }
+  
+  .card-body {
+    padding: 20px 15px !important;
+  }
+  
+  .mobile-illustration {
+    max-width: 200px;
+  }
+  
+  .mobile-text h2 {
+    font-size: 1.4rem;
+  }
+  
+  .mobile-description {
+    font-size: 0.9rem;
+  }
+  
+  .col-12.bg-white {
+    padding: 20px 15px !important;
+  }
+}
+
+@media (min-width: 992px) {
+  /* Desktop */
+  .mobile-card {
+    max-width: 350px;
+  }
+  
+  .mobile-illustration {
+    max-width: 380px;
+    min-width: 300px;
+  }
+}
