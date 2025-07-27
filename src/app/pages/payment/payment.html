@@ -1,0 +1,176 @@
+<app-header-logged></app-header-logged>
+
+<main class="main-content py-4">
+        <div class="container-fluid">
+            <div class="row g-4 justify-content-center">
+                <!-- Resumo do Pacote -->
+                <div class="col-lg-4 col-md-12">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Resumo do Pacote</h5>
+                            <div class="summary-info mb-3">
+                                <p class="mb-2"><strong>Data de check-in:</strong> Sexta, 18 de julho</p>
+                                <p class="mb-2"><strong>Local:</strong> Pacote01</p>
+                            </div>
+                            <hr>
+                            <div class="price-breakdown">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>01 pacote</span>
+                                    <span class="fw-semibold">R$1.420,00</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2 text-danger">
+                                    <span>Desconto</span>
+                                    <span class="fw-semibold">-R$210,00</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <span class="fw-bold">Total (taxas e impostos inclusos)</span>
+                                    <span class="fw-bold">R$1.210,00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dados dos Viajantes e Pagamento -->
+                <div class="col-lg-8 col-md-12">
+                    <!-- Dados dos Viajantes -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Dados de quem vai viajar</h5>
+                            <div id="travelers-container">
+                                <div class="traveler-card border rounded p-3 mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="fw-semibold">Viajante 1</span>
+                                        <button class="btn btn-outline-danger btn-sm remove-traveler" onclick="removeTraveler(this)" style="display: none;">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-semibold text-muted">NOME COMPLETO</label>
+                                            <input type="text" class="form-control" placeholder="" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-semibold text-muted">DATA DE NASCIMENTO</label>
+                                            <input type="date" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-semibold text-muted">TIPO DE DOCUMENTO</label>
+                                            <select class="form-select" required>
+                                                <option value="">Tipo de Documento</option>
+                                                <option value="cpf">CPF</option>
+                                                <option value="rg">RG</option>
+                                                <option value="passaporte">Passaporte</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label small fw-semibold text-muted">NÚMERO</label>
+                                            <input type="text" class="form-control" placeholder="000.000.000-00" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100 mt-3" onclick="addTraveler()">
+                                Adicionar mais viajantes +R$1.412,00
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Forma de Pagamento -->
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Forma de pagamento</h5>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-4">
+                                    <div class="payment-option card text-center h-100" data-method="cartao">
+                                        <div class="card-body d-flex flex-column justify-content-center">
+                                            <i class="fas fa-credit-card fa-2x text-primary mb-2"></i>
+                                            <span class="fw-semibold">Cartão</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="payment-option card text-center h-100" data-method="pix">
+                                        <div class="card-body d-flex flex-column justify-content-center">
+                                            <i class="fab fa-pix fa-2x text-primary mb-2"></i>
+                                            <span class="fw-semibold">PIX</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="payment-option card text-center h-100" data-method="boleto">
+                                        <div class="card-body d-flex flex-column justify-content-center">
+                                            <i class="fas fa-barcode fa-2x text-primary mb-2"></i>
+                                            <span class="fw-semibold">Boleto</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Formulário de Cartão -->
+                            <div id="cartao-form" class="payment-form active">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-8">
+                                        <label class="form-label small fw-semibold text-muted">NÚMERO DO CARTÃO</label>
+                                        <input type="text" class="form-control" placeholder="0000 0000 0000 0000" maxlength="19" id="card-number">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold text-muted">NOME NO CARTÃO</label>
+                                        <input type="text" class="form-control" placeholder="Diego">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold text-muted">DATA DE VENCIMENTO</label>
+                                        <input type="text" class="form-control" placeholder="00/00" maxlength="5" id="card-expiry">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold text-muted">CVC</label>
+                                        <input type="text" class="form-control" placeholder="***" maxlength="4">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="form-label small fw-semibold text-muted">Quantas parcelas?</label>
+                                        <select class="form-select">
+                                            <option value="1">1x de R$ 1.210,00</option>
+                                            <option value="2">2x de R$ 605,00</option>
+                                            <option value="3">3x de R$ 403,33</option>
+                                            <option value="4">4x de R$ 302,50</option>
+                                            <option value="5">5x de R$ 242,00</option>
+                                            <option value="6">6x de R$ 201,67</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Formulário PIX -->
+                            <div id="pix-form" class="payment-form">
+                                <div class="text-center py-4">
+                                    <i class="fab fa-pix fa-4x text-primary mb-3"></i>
+                                    <h4 class="mb-3">Pagamento via PIX</h4>
+                                    <p class="text-muted mb-3">Após confirmar, você receberá o QR Code para realizar o pagamento via PIX.</p>
+                                    <div class="alert alert-success">
+                                        🎉 5% de desconto no PIX - Total: <strong>R$ 1.149,50</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Formulário Boleto -->
+                            <div id="boleto-form" class="payment-form">
+                                <div class="text-center py-4">
+                                    <i class="fas fa-barcode fa-4x text-primary mb-3"></i>
+                                    <h4 class="mb-3">Pagamento via Boleto</h4>
+                                    <p class="text-muted mb-3">O boleto será enviado para seu email e terá vencimento em 3 dias úteis.</p>
+                                    <div class="alert alert-warning">
+                                        ⚠️ A reserva será confirmada apenas após o pagamento.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-success btn-lg w-100 mt-4">Realizar Pagamento</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
