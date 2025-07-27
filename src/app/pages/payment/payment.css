@@ -1,0 +1,166 @@
+/* Custom CSS para trabalhar com Bootstrap 5 */
+
+/* Cores customizadas */
+:root {
+    --primary-color: #2c5f6f;
+    --secondary-color: #4a9eb8;
+    --accent-color: #3a8da5;
+}
+
+/* Sobrescrever cores do Bootstrap */
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.btn-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-info {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-info:hover,
+.btn-info:focus {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.text-primary {
+    color: var(--secondary-color) !important;
+}
+
+/* Custom styles */
+body {
+    background-color: #f8f9fa;
+}
+
+/* Header customization */
+.header {
+    background-color: var(--primary-color);
+}
+
+/* Payment options styling */
+.payment-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef !important;
+}
+
+.payment-option:hover {
+    border-color: var(--secondary-color) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.payment-option.active {
+    border-color: var(--secondary-color) !important;
+    background-color: #f0f8ff !important;
+}
+
+/* Payment forms */
+.payment-form {
+    display: none;
+}
+
+.payment-form.active {
+    display: block;
+}
+
+/* Traveler card styling */
+.traveler-card {
+    transition: all 0.3s ease;
+}
+
+.traveler-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Form styling improvements */
+.form-label.small {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Custom animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.traveler-card {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .payment-option {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Alert customizations */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+/* Button improvements */
+.btn {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* Card improvements */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* Price styling */
+.text-danger {
+    color: #dc3545 !important;
+}
+
+/* Success button for payment */
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
