@@ -1,9 +1,25 @@
 <main class="container my-5">
   <h2 class="h2 font-weight-bold mb-4">Pacotes recentes</h2>
   <div class="row">
-    <app-card></app-card>
-    <app-card></app-card>
-    <app-card></app-card>
-    <app-card></app-card>
+    <div class="col-lg-3 col-md-6 mb-4" (click)="navigateToDetails()" *ngFor="let package of packages">
+      <div class="card h-100 shadow-sm">
+        <img
+          src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+          class="card-img-top"
+          alt="Recife"
+        />
+        <div class="card-body d-flex flex-column">
+          <span class="badgemb-2 align-self-start">{{ package.duration }} DIAS / {{ package.duration - 1 }} NOITES</span>
+          <small class="text-muted font-weight-bold">PACOTE</small>
+          <h5 class="card-title font-weight-bold">
+            {{ package.title }}
+          </h5>
+          <small class="text-muted">Preço por pessoa</small>
+          <p class="h5 font-weight-bold text-dark">R$ {{ package.price | number:'1.2-2':'pt-BR' }}</p>
+          <small class="text-muted mb-2">Taxas e impostos não inclusos</small>
+          <p class="card-text text-muted mt-auto"></p>
+        </div>
+      </div>
+    </div>
   </div>
 </main>
