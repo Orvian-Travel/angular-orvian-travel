@@ -324,3 +324,15 @@ html, body {
     min-width: 300px;
   }
 }
+
+.document-number-input:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.document-number-input:disabled::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
