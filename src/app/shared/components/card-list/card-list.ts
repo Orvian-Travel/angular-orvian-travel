@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Package as PackageEntity } from '../../../services/entities/package';
-import { Package as PackageService } from '../../../services/api/package/package';
-import { PagedResponse } from '../../../services/entities/paged-response';
+import { PackageService } from '../../../services/api/package/package-service';
+import { PagedResponse } from '../../../services/entities/paged-response.model';
 import { SERVICES_TOKEN } from '../../../services/services-token';
+import { PackageDetail } from '../../../services/entities/package.model';
+import { IPackageService } from '../../../services/api/package/package-service.interface';
 
 @Component({
   selector: 'app-card-list',
@@ -16,10 +17,10 @@ import { SERVICES_TOKEN } from '../../../services/services-token';
   ]
 })
 export class CardList implements OnInit {
-  constructor(private router: Router, @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: PackageService) {
+  constructor(private router: Router, @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService) {
 
   }
-  packages: PackageEntity[] = [];
+  packages: PackageDetail[] = [];
   currentPage: number = 0;
   pageSize: number = 8;
   totalPages: number = 0;

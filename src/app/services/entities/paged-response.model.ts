@@ -1,8 +1,8 @@
-import { Package } from './package';
+import { PackageDetail } from './package.model';
 
 export interface PagedResponse {
   _embedded: {
-    packageSearchResultDTOList: Package[];
+    packageSearchResultDTOList: PackageDetail[];
   };
   _links?: {
     first?: { href: string };

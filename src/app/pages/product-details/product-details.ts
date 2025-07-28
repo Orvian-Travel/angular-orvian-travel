@@ -1,22 +1,31 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { Header } from '../../shared/components/header/header';
 import { CardList } from '../../shared/components/card-list/card-list';
-import { Package as PackageService } from '../../services/api/package/package';
-import { Package as PackageEntity } from '../../services/entities/package';
+import { PackageService } from '../../services/api/package/package-service';
+import { PackageDetail } from '../../services/entities/package.model';
+import { SERVICES_TOKEN } from '../../services/services-token';
+import { IPackageService } from '../../services/api/package/package-service.interface';
 
 @Component({
   selector: 'app-product-details',
   imports: [Header, CardList, CommonModule],
   templateUrl: './product-details.html',
-  styleUrl: './product-details.css'
+  styleUrl: './product-details.css',
+  providers: [
+    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService }
+  ]
 })
 export class ProductDetails implements OnInit, OnDestroy {
-  constructor(private router: Router, private service: PackageService, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
+    private route: ActivatedRoute
+  ) { }
 
-  package: PackageEntity | null = null;
+  package: PackageDetail | null = null;
   private routeSubscription: Subscription = new Subscription();
 
   ngOnInit(): void {
@@ -34,7 +43,7 @@ export class ProductDetails implements OnInit, OnDestroy {
 
   private loadPackage(id: string): void {
     this.package = null;
-    this.service.getPackageById(id).subscribe((response: PackageEntity) => {
+    this.service.getPackageById(id).subscribe((response: PackageDetail) => {
       this.package = response;
     });
   }
