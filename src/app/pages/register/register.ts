@@ -25,6 +25,19 @@ export class Register implements OnInit {
     if (documentTypeSelect) {
       documentTypeSelect.addEventListener('change', (e) => this.onDocumentTypeChange(e));
     }
+
+    const emailInput = document.querySelector('#email');
+    if (emailInput) {
+      emailInput.addEventListener('blur', (e) => this.validateEmail(e));
+      emailInput.addEventListener('input', (e) => this.validateEmail(e));
+    }
+
+    const passwordInput = document.querySelector('#password');
+    if (passwordInput) {
+      passwordInput.addEventListener('input', (e) => this.validatePassword(e));
+      passwordInput.addEventListener('focus', (e) => this.showPasswordRequirements(e));
+      passwordInput.addEventListener('blur', (e) => this.hidePasswordRequirements(e));
+    }
   }
 
   onDocumentTypeChange(event: Event): void {
@@ -129,6 +142,126 @@ export class Register implements OnInit {
         input.focus();
         input.click();
       }
+    }
+  }
+
+  validateEmail(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const email = input.value;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    
+    // Remove classes de validação anteriores
+    input.classList.remove('is-valid', 'is-invalid');
+    
+    // Remove mensagem de erro anterior
+    const existingError = input.parentElement?.querySelector('.invalid-feedback');
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    if (email && !emailRegex.test(email)) {
+      input.classList.add('is-invalid');
+      
+      // Adiciona mensagem de erro
+      const errorMessage = document.createElement('div');
+      errorMessage.className = 'invalid-feedback';
+      errorMessage.textContent = 'Por favor, insira um email válido';
+      input.parentElement?.appendChild(errorMessage);
+    } else if (email) {
+      input.classList.add('is-valid');
+    }
+  }
+
+  validatePassword(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const password = input.value;
+    
+    // Remove classes de validação anteriores
+    input.classList.remove('is-valid', 'is-invalid');
+    
+    // Verifica cada requisito
+    const requirements = {
+      length: password.length >= 8 && password.length <= 20,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[@#$%^&+=!]/.test(password),
+      noSpaces: !/\s/.test(password)
+    };
+
+    // Atualiza a lista de requisitos
+    this.updatePasswordRequirements(requirements);
+
+    // Verifica se todos os requisitos foram atendidos
+    const allValid = Object.values(requirements).every(req => req);
+    
+    if (password && allValid) {
+      input.classList.add('is-valid');
+    } else if (password) {
+      input.classList.add('is-invalid');
+    }
+  }
+
+  showPasswordRequirements(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let requirementsDiv = input.parentElement?.querySelector('.password-requirements') as HTMLElement;
+    
+    if (!requirementsDiv) {
+      requirementsDiv = document.createElement('div') as HTMLElement;
+      requirementsDiv.className = 'password-requirements';
+      requirementsDiv.innerHTML = `
+        <div class="requirement" data-req="length">
+          <span class="req-icon">•</span> Entre 8 e 20 caracteres
+        </div>
+        <div class="requirement" data-req="lowercase">
+          <span class="req-icon">•</span> Pelo menos uma letra minúscula
+        </div>
+        <div class="requirement" data-req="uppercase">
+          <span class="req-icon">•</span> Pelo menos uma letra maiúscula
+        </div>
+        <div class="requirement" data-req="number">
+          <span class="req-icon">•</span> Pelo menos um número
+        </div>
+        <div class="requirement" data-req="special">
+          <span class="req-icon">•</span> Pelo menos um caractere especial (@#$%^&+=!)
+        </div>
+        <div class="requirement" data-req="noSpaces">
+          <span class="req-icon">•</span> Sem espaços em branco
+        </div>
+      `;
+      input.parentElement?.appendChild(requirementsDiv);
+    }
+    
+    requirementsDiv.style.display = 'block';
+  }
+
+  hidePasswordRequirements(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const requirementsDiv = input.parentElement?.querySelector('.password-requirements') as HTMLElement;
+    
+    if (requirementsDiv) {
+      setTimeout(() => {
+        requirementsDiv.style.display = 'none';
+      }, 200);
+    }
+  }
+
+  updatePasswordRequirements(requirements: {[key: string]: boolean}): void {
+    const requirementsDiv = document.querySelector('.password-requirements');
+    
+    if (requirementsDiv) {
+      Object.keys(requirements).forEach(req => {
+        const reqElement = requirementsDiv.querySelector(`[data-req="${req}"]`);
+        if (reqElement) {
+          if (requirements[req]) {
+            reqElement.classList.add('requirement-met');
+            reqElement.classList.remove('requirement-unmet');
+          } else {
+            reqElement.classList.add('requirement-unmet');
+            reqElement.classList.remove('requirement-met');
+          }
+        }
+      });
     }
   }
 }

@@ -336,3 +336,71 @@ html, body {
     color: #adb5bd;
     font-style: italic;
 }
+
+/* Estilos para validação de email */
+.form-control.is-valid {
+    border-color: #198754;
+    border-width: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545;
+    border-width: 2px;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: #dc3545;
+    display: block;
+}
+
+/* Estilos para validação de senha */
+.password-requirements {
+    display: none;
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.requirement {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.25rem;
+    transition: all 0.3s ease;
+}
+
+.requirement:last-child {
+    margin-bottom: 0;
+}
+
+.req-icon {
+    margin-right: 0.5rem;
+    font-weight: bold;
+    min-width: 12px;
+}
+
+.requirement-unmet {
+    color: #dc3545;
+}
+
+.requirement-unmet .req-icon {
+    color: #dc3545;
+}
+
+.requirement-met {
+    color: #198754;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.requirement-met .req-icon {
+    color: #198754;
+}

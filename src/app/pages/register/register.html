@@ -41,8 +41,7 @@
             <div class="form-group mb-3">
               <label for="text">NOME</label>
               <input
-                type="email"
-                id="email"
+                id="name"
                 class="form-control form-control-custom"
                 placeholder="Digite seu nome"
                 required
@@ -58,13 +57,14 @@
               >
                 <option value="">Tipo de documento</option>
                 <option value="cpf">CPF</option>
-                <option value="passaporte">Passaporte</option>
+                <option value="passport">Passaporte</option>
               </select>
             </div>
             <div class="form-group mb-3">
               <label for="text">NÚMERO DO DOCUMENTO</label>
               <input
                 type="text"
+                id="document"
                 class="form-control form-control-custom document-number-input"
                 placeholder="Selecione o tipo de documento"
                 maxlength="8"
@@ -93,6 +93,7 @@
               >
               <input
                 type="tel"
+                id="phone"
                 class="form-control form-control-custom"
                 placeholder="(00) 00000-0000"
                 maxlength="15"
@@ -100,22 +101,25 @@
                 required
               />
             </div>
-                        <div class="form-group mb-3">
-              <label for="text"
+            <div class="form-group mb-3">
+              <label for="email"
                 >EMAIL</label
               >
               <input
                 type="email"
+                id="email"
                 class="form-control form-control-custom"
                 placeholder="exemplo@avanade.com"
+                (blur)="validateEmail($event)"
+                (input)="validateEmail($event)"
                 required
               />
             </div>
             <div class="form-group mb-4">
-              <label for="senha">SENHA</label>
+              <label for="password">SENHA</label>
               <input
                 type="password"
-                id="senha"
+                id="password"
                 class="form-control form-control-custom"
                 placeholder="********"
                 required
