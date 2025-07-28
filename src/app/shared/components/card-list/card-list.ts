@@ -21,7 +21,7 @@ export class CardList implements OnInit {
   }
   packages: PackageEntity[] = [];
   currentPage: number = 0;
-  pageSize: number = 6;
+  pageSize: number = 8;
   totalPages: number = 0;
   totalElements: number = 0;
 
