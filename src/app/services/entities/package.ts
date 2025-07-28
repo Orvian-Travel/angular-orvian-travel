@@ -1,3 +1,5 @@
+import { PackageDate } from './package-date';
+
 export class Package {
     constructor(
         public id: string,
@@ -7,6 +9,7 @@ export class Package {
         public duration: number,
         public price: number,
         public maxPeople: number,
+        public packageDates: PackageDate[],
         public createdAt: Date,
         public updatedAt: Date
     ){
