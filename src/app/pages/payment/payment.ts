@@ -148,28 +148,30 @@ export class Payment implements OnInit {
     const documentInput = travelerCard?.querySelector('.document-number-input') as HTMLInputElement;
     
     if (documentInput) {
+      // Remove todos os event listeners existentes clonando o elemento
+      const newInput = documentInput.cloneNode(true) as HTMLInputElement;
+      documentInput.parentNode?.replaceChild(newInput, documentInput);
+      
       if (select.value) {
-        documentInput.disabled = false;
+        newInput.disabled = false;
         
         if (select.value === 'cpf') {
-          documentInput.placeholder = '000.000.000-00';
-          documentInput.maxLength = 14;
-          documentInput.className = 'form-control document-number-input cpf-input';
-          documentInput.removeEventListener('input', this.formatPassport);
-          documentInput.addEventListener('input', (e) => this.formatCPF(e));
+          newInput.placeholder = '000.000.000-00';
+          newInput.maxLength = 14;
+          newInput.className = 'form-control document-number-input cpf-input';
+          newInput.addEventListener('input', (e) => this.formatCPF(e));
         } else if (select.value === 'passaporte') {
-          documentInput.placeholder = 'AA123456';
-          documentInput.maxLength = 8;
-          documentInput.className = 'form-control document-number-input passport-input';
-          documentInput.removeEventListener('input', this.formatCPF);
-          documentInput.addEventListener('input', (e) => this.formatPassport(e));
+          newInput.placeholder = 'AA123456';
+          newInput.maxLength = 8;
+          newInput.className = 'form-control document-number-input passport-input';
+          newInput.addEventListener('input', (e) => this.formatPassport(e));
         }
         
-        documentInput.value = '';
+        newInput.value = '';
       } else {
-        documentInput.disabled = true;
-        documentInput.placeholder = 'Selecione o tipo de documento';
-        documentInput.value = '';
+        newInput.disabled = true;
+        newInput.placeholder = 'Selecione o tipo de documento';
+        newInput.value = '';
       }
     }
   }
