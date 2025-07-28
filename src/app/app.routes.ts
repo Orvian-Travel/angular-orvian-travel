@@ -4,11 +4,13 @@ import { ProductDetails } from './pages/product-details/product-details';
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Payment } from './pages/payment/payment';
+import { LoginAdmin } from './pages/admin/login-admin/login-admin';
 
 export const routes: Routes = [
   { path: '', component: Home },
   { path: 'login', component: Login},
   { path: 'product-details/:id', component: ProductDetails},
   { path: 'register', component: Register},
-  { path: 'payment', component: Payment}
+  { path: 'payment', component: Payment},
+  { path: 'admin', component: LoginAdmin}
 ];
