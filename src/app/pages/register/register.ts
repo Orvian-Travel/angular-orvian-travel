@@ -59,6 +59,20 @@ export class Register implements OnInit {
     }
   }
 
+  formatPhone(event: Event): void{
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    
+    value = value.substring(0, 11);
+    
+    if (value.length <= 11) {
+      value = value.replace(/(\d{2})(\d)/, '($1) $2');
+      value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    }
+    
+    input.value = value;
+  }
+
   formatPassport(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/[^a-zA-Z0-9]/g, '');

@@ -95,6 +95,8 @@
                 type="tel"
                 class="form-control form-control-custom"
                 placeholder="(00) 00000-0000"
+                maxlength="15"
+                (input)="formatPhone($event)"
                 required
               />
             </div>
