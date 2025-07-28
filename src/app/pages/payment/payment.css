@@ -7,20 +7,19 @@
     --accent-color: #3a8da5;
 }
 
-/* Sobrescrever cores do Bootstrap */
-.bg-primary {
-    background-color: var(--primary-color) !important;
+.btn-custom-primary {
+  font-size: 1.08rem;
+  padding: 12px 100px;
+  border-radius: 6px;
+  transition: background 0.18s;
+  background-color: var(--orvian-primary-variant);
+  border: none;
+  color: white;
 }
 
-.btn-primary {
-    background-color: var(--secondary-color);
-    border-color: var(--secondary-color);
-}
-
-.btn-primary:hover,
-.btn-primary:focus {
-    background-color: var(--accent-color);
-    border-color: var(--accent-color);
+.btn-custom-primary:hover {
+    background-color: white;
+    color: #1B9DBD;
 }
 
 .btn-info {
@@ -36,16 +35,6 @@
 
 .text-primary {
     color: var(--secondary-color) !important;
-}
-
-/* Custom styles */
-body {
-    background-color: #f8f9fa;
-}
-
-/* Header customization */
-.header {
-    background-color: var(--primary-color);
 }
 
 /* Payment options styling */
@@ -124,12 +113,6 @@ body {
     border-radius: 8px;
 }
 
-/* Button improvements */
-.btn {
-    border-radius: 6px;
-    font-weight: 500;
-}
-
 .btn-lg {
     padding: 0.75rem 1.5rem;
     font-size: 1.1rem;
@@ -163,4 +146,74 @@ body {
 .btn-success:hover {
     background-color: #218838;
     border-color: #1e7e34;
+}
+
+/* Document number input styling */
+.document-number-input:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.document-number-input:disabled::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+/* Remove traveler button styling */
+.remove-traveler {
+    border: none !important;
+    background: none !important;
+    padding: 0.25rem !important;
+    box-shadow: none !important;
+}
+
+.remove-traveler:hover,
+.remove-traveler:focus,
+.remove-traveler:active {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.traveler-card .remove-traveler img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) saturate(100%) invert(27%) sepia(92%) saturate(3576%) hue-rotate(336deg) brightness(91%) contrast(97%) !important;
+}
+
+body{
+    background-color: var(--orvian-background-gray);
+}
+
+/* Resume card specific styling */
+.resume-card .card {
+    align-self: flex-start;
+    height: auto !important;
+}
+
+.resume-card {
+    align-self: flex-start;
+}
+
+.payment-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.payment-icon{
+    display: flex;
+    width: 36px;
+    justify-content: center;
+}
+
+.payment-card span{
+    color: var(--orvian-gray-001);
+}
+
+.payment-option::selection {
+    border-color: var(--orvian-primary-variant);
 }
