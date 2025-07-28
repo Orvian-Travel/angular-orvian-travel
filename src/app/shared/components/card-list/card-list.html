@@ -1,7 +1,7 @@
 <main class="container my-5">
   <h2 class="h2 font-weight-bold mb-4">Pacotes recentes</h2>
   <div class="row">
-    <div class="col-lg-3 col-md-6 mb-4" (click)="navigateToDetails()" *ngFor="let package of packages">
+    <div class="col-lg-3 col-md-6 mb-4" (click)="navigateToDetails(package.id)" *ngFor="let package of packages">
       <div class="card h-100 shadow-sm">
         <img
           src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
@@ -9,7 +9,7 @@
           alt="Recife"
         />
         <div class="card-body d-flex flex-column">
-          <span class="badgemb-2 align-self-start">{{ package.duration }} DIAS / {{ package.duration - 1 }} NOITES</span>
+          <span class="badgemb-2 align-self-start">{{ package.duration }} DIAS</span>
           <small class="text-muted font-weight-bold">PACOTE</small>
           <h5 class="card-title font-weight-bold">
             {{ package.title }}

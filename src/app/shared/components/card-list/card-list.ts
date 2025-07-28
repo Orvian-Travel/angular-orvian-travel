@@ -22,7 +22,7 @@ export class CardList implements OnInit {
 
 
 
-  navigateToDetails(){
-    this.router.navigate(['/product-details']);
+  navigateToDetails(id: string){
+    this.router.navigate(['/product-details', id]);
   }
 }

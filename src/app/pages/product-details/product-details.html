@@ -1,6 +1,6 @@
 <app-header></app-header>
 <main class="pacote-main container">
-  <h1 class="mb-4">Pacote de Viagem para Recife</h1>
+  <h1 class="mb-4">{{package?.title}}</h1>
   <section class="pacote-layout">
     <div class="imagem-principal">
       <img
@@ -33,21 +33,15 @@
           </div>
         </div>
         <div class="duration-badge">
-          <span>7 DIAS 6 NOITES</span>
+          <span>{{package?.duration}} DIAS</span>
         </div>
       </div>
 
       <div class="preco-destaque mb-4">
         <span class="text-muted">Preço por pessoa</span>
-        <h2 class="fw-bold text-dark">R$ 960,00</h2>
+        <h2 class="fw-bold text-dark">R$ {{ package?.price | number:'1.2-2':'pt-BR' }}</h2>
       </div>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum...
-      </p>
+      <p>{{package?.description}}</p>
       <button class="botao-reserva btn btn-primary btn-lg w-100 mb-3"  (click)="registerRedirect()">
         Reserve
       </button>

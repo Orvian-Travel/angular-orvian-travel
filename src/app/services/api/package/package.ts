@@ -15,4 +15,8 @@ export class Package {
   public getAllPackages(): Observable<PackageEntity[]>{
     return this.http.get<PackageEntity[]>(this.baseUrl);
   }
+
+  public getPackageById(id: string): Observable<PackageEntity>{
+    return this.http.get<PackageEntity>(`${this.baseUrl}/${id}`);
+  }
 }
