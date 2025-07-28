@@ -1,0 +1,72 @@
+.sidebar{
+    background-color: var(--orvian-primary-color);
+}
+
+span{
+    font-size: 1rem;
+}
+
+.nav{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+li{
+    padding: 0.5px 1rem;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+a{
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+}
+
+.link-img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.nav-link span{
+    padding-left: 1rem;
+}
+
+li:hover{
+    background-color: var(--orvian-primary-variant);
+}
+
+li:active{
+    background-color: var(--orvian-primary-variant);
+}
+
+li.selected{
+    background-color: var(--orvian-primary-variant);
+}
+
+
+@media screen and (max-width: 768px) {
+    .logo{
+        width: 8rem;
+    }
+    
+    /* Centralizar ícones quando o texto está oculto */
+    li {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    a {
+        margin-left: 0;
+        justify-content: center;
+    }
+    
+    .link-img {
+        margin: 0;
+    }
+}

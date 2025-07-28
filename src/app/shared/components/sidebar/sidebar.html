@@ -1,0 +1,33 @@
+<div class="container-fluid">
+  <div class="row flex-nowrap">
+    <div class="sidebar col-auto col-md-3 col-xl-2 px-sm-2 px-0 text-white">
+      <div
+        class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 min-vh-100"
+      >
+        <a
+          href="/"
+          class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+        >
+          <img class="logo" src="assets/logo-branca.svg" alt="" />
+        </a>
+        <ul class="nav align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none" id="menu">
+          <li class="nav-item" 
+              [class.selected]="isSelected('users')"
+              (click)="selectItem('users')">
+            <a class="nav-link text-white px-0 align-middle">
+              <img class="link-img" src="assets/icons/user-circle.svg" alt="" />
+              <span class="ms-1 d-none d-sm-inline">Gerenciar usuários</span>
+            </a>
+          </li>
+          <li [class.selected]="isSelected('packages')"
+              (click)="selectItem('packages')">
+            <a class="nav-link text-white px-0 align-middle">
+              <img class="link-img" src="assets/icons/ticket.svg" alt="" />
+              <span class="ms-1 d-none d-sm-inline">Gerenciar pacotes</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
