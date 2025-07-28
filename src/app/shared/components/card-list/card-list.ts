@@ -1,25 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Package as PackageEntity } from '../../../services/entities/package';
 import { Package as PackageService } from '../../../services/api/package/package';
 import { PagedResponse } from '../../../services/entities/paged-response';
+import { SERVICES_TOKEN } from '../../../services/services-token';
 
 @Component({
   selector: 'app-card-list',
   imports: [CommonModule],
   templateUrl: './card-list.html',
-  styleUrl: './card-list.css'
+  styleUrl: './card-list.css',
+  providers: [
+    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService }
+  ]
 })
 export class CardList implements OnInit {
-    constructor(private router: Router, private service: PackageService ){
+  constructor(private router: Router, @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: PackageService) {
 
   }
-    packages: PackageEntity[] = [];
-    currentPage: number = 0;
-    pageSize: number = 6;
-    totalPages: number = 0;
-    totalElements: number = 0;
+  packages: PackageEntity[] = [];
+  currentPage: number = 0;
+  pageSize: number = 6;
+  totalPages: number = 0;
+  totalElements: number = 0;
 
   ngOnInit(): void {
     this.loadPackages();
@@ -54,7 +58,7 @@ export class CardList implements OnInit {
     }
   }
 
-  navigateToDetails(id: string){
+  navigateToDetails(id: string) {
     this.router.navigate(['/product-details', id]);
   }
 }
