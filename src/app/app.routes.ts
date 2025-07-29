@@ -6,6 +6,7 @@ import { Register } from './pages/register/register';
 import { Payment } from './pages/payment/payment';
 import { LoginAdmin } from './pages/admin/login-admin/login-admin';
 import { PaymentApproved } from './pages/payment-approved/payment-approved';
+import { PaymentRejected } from './pages/payment-rejected/payment-rejected';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'payment', component: Payment},
   { path: 'admin', component: LoginAdmin},
 
-  { path: 'payment/approved', component: PaymentApproved}
+  { path: 'payment/approved', component: PaymentApproved},
+  { path: 'payment/rejected', component: PaymentRejected }
 ];
