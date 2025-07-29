@@ -16,12 +16,12 @@ export const routes: Routes = [
   { path: 'register', component: Register},
   { path: 'payment', component: Payment},
   { path: 'admin', component: LoginAdmin},
-<<<<<<< HEAD
+
   { path: 'admin-tela', component: AdminTela},
-  { path: 'payment/approved', component: PaymentApproved}
-=======
+  { path: 'payment/approved', component: PaymentApproved},
+
 
   { path: 'payment/approved', component: PaymentApproved},
   { path: 'payment/rejected', component: PaymentRejected }
->>>>>>> 117cfc2691ecf846f814cce750f1aabb2daf3e01
+
 ];
