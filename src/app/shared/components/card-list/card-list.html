@@ -22,37 +22,36 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="totalPages > 1">
-    <div class="col-12">
-      <nav aria-label="Navegação de páginas">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" [class.disabled]="currentPage === 0">
-            <button class="page-link" (click)="previousPage()" [disabled]="currentPage === 0">
-              Anterior
-            </button>
-          </li>
-          
-          <li class="page-item" 
-              *ngFor="let page of [].constructor(totalPages); let i = index" 
-              [class.active]="i === currentPage">
-            <button class="page-link" (click)="goToPage(i)">
-              {{ i + 1 }}
-            </button>
-          </li>
-          
-          <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
-            <button class="page-link" (click)="nextPage()" [disabled]="currentPage === totalPages - 1">
-              Próximo
-            </button>
-          </li>
-        </ul>
-      </nav>
+  <!-- Paginação -->
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <nav class="pagination-nav">
+      <button 
+        class="pagination-btn pagination-prev" 
+        [disabled]="currentPage === 0"
+        (click)="previousPage()">
+        Anterior
+      </button>
       
-      <div class="text-center mt-3">
-        <small class="text-muted">
-          Mostrando {{ packages.length }} de {{ totalElements }} pacotes (Página {{ currentPage + 1 }} de {{ totalPages }})
-        </small>
+      <div class="pagination-numbers">
+        <button 
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          class="pagination-number"
+          [class.active]="i === currentPage"
+          (click)="goToPage(i)">
+          {{ i + 1 }}
+        </button>
       </div>
+      
+      <button 
+        class="pagination-btn pagination-next" 
+        [disabled]="currentPage === totalPages - 1"
+        (click)="nextPage()">
+        Próximo
+      </button>
+    </nav>
+    
+    <div class="pagination-info">
+      Página {{ currentPage + 1 }} de {{ totalPages }} ({{ totalElements }} pacotes no total)
     </div>
   </div>
 </main>
