@@ -5,6 +5,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Payment } from './pages/payment/payment';
 import { LoginAdmin } from './pages/admin/login-admin/login-admin';
+import { PaymentApproved } from './pages/payment-approved/payment-approved';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -12,5 +13,7 @@ export const routes: Routes = [
   { path: 'product-details/:id', component: ProductDetails},
   { path: 'register', component: Register},
   { path: 'payment', component: Payment},
-  { path: 'admin', component: LoginAdmin}
+  { path: 'admin', component: LoginAdmin},
+
+  { path: 'payment/approved', component: PaymentApproved}
 ];
