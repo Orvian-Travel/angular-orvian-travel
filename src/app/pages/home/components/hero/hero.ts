@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-hero',
@@ -7,5 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './hero.css'
 })
 export class Hero {
+  @ViewChild('dateInput') dateInput!: ElementRef<HTMLInputElement>;
 
+  openDatePicker() {
+    this.dateInput.nativeElement.showPicker();
+  }
 }
