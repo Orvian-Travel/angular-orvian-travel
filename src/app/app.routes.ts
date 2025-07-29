@@ -5,6 +5,7 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Payment } from './pages/payment/payment';
 import { LoginAdmin } from './pages/admin/login-admin/login-admin';
+import { AdminTela } from './pages/admin/admin-tela/admin-tela';
 import { PaymentApproved } from './pages/payment-approved/payment-approved';
 
 export const routes: Routes = [
@@ -14,6 +15,6 @@ export const routes: Routes = [
   { path: 'register', component: Register},
   { path: 'payment', component: Payment},
   { path: 'admin', component: LoginAdmin},
-
+  { path: 'admin-tela', component: AdminTela},
   { path: 'payment/approved', component: PaymentApproved}
 ];
