@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Header } from '../../shared/components/header/header';
 import { CardList } from '../../shared/components/card-list/card-list';
@@ -8,10 +9,15 @@ import { PackageService } from '../../services/api/package/package-service';
 import { PackageDetail } from '../../services/entities/package.model';
 import { SERVICES_TOKEN } from '../../services/services-token';
 import { IPackageService } from '../../services/api/package/package-service.interface';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCalendarCellClassFunction, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-product-details',
-  imports: [Header, CardList, CommonModule],
+  imports: [Header, CardList, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
   providers: [
@@ -27,6 +33,8 @@ export class ProductDetails implements OnInit, OnDestroy {
 
   package: PackageDetail | null = null;
   private routeSubscription: Subscription = new Subscription();
+  selectedDate: Date | null = null;
+  endDate: Date | null = null;
 
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
@@ -39,6 +47,69 @@ export class ProductDetails implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.routeSubscription.unsubscribe();
+  }
+
+  dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
+    if (view === 'month' && this.package?.packageDates) {
+      const cellDateString = cellDate.toISOString().split('T')[0];
+      
+      const isAvailableDate = this.package.packageDates.some(
+        packageDate => {
+          const packageStartDate = new Date(packageDate.startDate).toISOString().split('T')[0];
+          return packageStartDate === cellDateString;
+        }
+      );
+      
+      return isAvailableDate ? 'example-custom-date-class' : '';
+    }
+    return '';
+  };
+
+  dateFilter = (date: Date | null): boolean => {
+    if (!date || !this.package?.packageDates) {
+      return false;
+    }
+    
+    const dateString = date.toISOString().split('T')[0];
+    return this.package.packageDates.some(
+      packageDate => {
+        const packageStartDate = new Date(packageDate.startDate).toISOString().split('T')[0];
+        return packageStartDate === dateString;
+      }
+    );
+  };
+
+  onDateSelected(selectedDate: Date | null): void {
+    if (selectedDate && this.dateFilter(selectedDate)) {
+      this.selectedDate = selectedDate;
+      const selectedPackageDate = this.getSelectedPackageDate();
+      
+      if (selectedPackageDate?.endDate) {
+        this.endDate = new Date(selectedPackageDate.endDate);
+      } else {
+        this.endDate = null;
+      }
+      
+      console.log('Data selecionada:', selectedDate);
+      console.log('Data de fim:', this.endDate);
+      console.log('Informações do pacote:', selectedPackageDate);
+    } else {
+      this.endDate = null;
+    }
+  }
+
+  getSelectedPackageDate() {
+    if (!this.selectedDate || !this.package?.packageDates) {
+      return null;
+    }
+    
+    const selectedDateString = this.selectedDate.toISOString().split('T')[0];
+    return this.package.packageDates.find(
+      packageDate => {
+        const packageStartDate = new Date(packageDate.startDate).toISOString().split('T')[0];
+        return packageStartDate === selectedDateString;
+      }
+    );
   }
 
   private loadPackage(id: string): void {

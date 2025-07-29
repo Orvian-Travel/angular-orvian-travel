@@ -135,3 +135,58 @@
     font-size: 0.9rem;
   }
 }
+
+::ng-deep .custom-datepicker .mat-form-field-infix {
+  padding: 0 0 0 8px;
+  border: none;
+}
+
+::ng-deep .custom-datepicker .mat-form-field-label {
+  display: none;
+}
+
+::ng-deep .custom-datepicker .mat-datepicker-toggle {
+  order: -1;
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+::ng-deep .custom-datepicker .mat-datepicker-toggle .mat-icon {
+  font-size: 32px;
+}
+
+::ng-deep .custom-datepicker .mat-form-field-suffix {
+  margin-left: 0;
+  margin-right: 12px;
+}
+
+.date-inputs .mat-form-field {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+::ng-deep .custom-datepicker .mat-form-field.mat-form-field-disabled {
+  opacity: 0.8;
+}
+
+/* Estilos para o datepicker customizado */
+::ng-deep .example-custom-date-class {
+  background-color: #ff6600 !important;
+  color: white !important;
+  border-radius: 50% !important;
+  font-weight: bold !important;
+}
+
+/* Fix para z-index dos datepickers */
+::ng-deep .mat-datepicker-content {
+  z-index: 1050 !important;
+}
+
+::ng-deep .cdk-overlay-container {
+  z-index: 1050 !important;
+}
+
+::ng-deep .cdk-overlay-pane {
+  z-index: 1050 !important;
+}

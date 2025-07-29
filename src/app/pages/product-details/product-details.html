@@ -1,6 +1,6 @@
 <app-header></app-header>
 <main class="pacote-main container">
-  <h1 class="mb-4">{{package?.title}}</h1>
+  <h1 class="mb-4">{{ package?.title }}</h1>
   <section class="pacote-layout">
     <div class="imagem-principal">
       <img
@@ -18,31 +18,52 @@
           loading="lazy"
         ></iframe>
       </div>
-      <div class="dates-section mb-3">
+      <div class="dates-section">
         <h4 class="dates-title">Check-in & Check-out</h4>
-        <div class="date-inputs row g-2 mb-3">
-          <div class="col-6">
-            <div class="date-box">
-              <span class="date-value">18/07/2025</span>
-            </div>
+        <div class="date-inputs">
+          <div>
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>Data de partida</mat-label>
+              <input 
+                matInput 
+                [matDatepicker]="startPicker" 
+                [matDatepickerFilter]="dateFilter"
+                [(ngModel)]="selectedDate"
+                (dateChange)="onDateSelected($event.value)"
+                readonly 
+                placeholder="Selecione uma data disponível" />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="startPicker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker [dateClass]="dateClass" #startPicker></mat-datepicker>
+            </mat-form-field>
           </div>
-          <div class="col-6">
-            <div class="date-box">
-              <span class="date-value">23/07/2025</span>
-            </div>
+          <div>
+            <mat-form-field class="w-100" appearance="outline">
+              <mat-label>Data de retorno</mat-label>
+              <input 
+                matInput 
+                [value]="endDate | date:'dd/MM/yyyy'"
+                readonly 
+                disabled 
+                placeholder="Será preenchido automaticamente" />
+              <mat-icon matIconSuffix>calendar_today</mat-icon>
+            </mat-form-field>
           </div>
-        </div>
-        <div class="duration-badge">
-          <span>{{package?.duration}} DIAS</span>
         </div>
       </div>
-
       <div class="preco-destaque mb-4">
         <span class="text-muted">Preço por pessoa</span>
-        <h2 class="fw-bold text-dark">R$ {{ package?.price | number:'1.2-2':'pt-BR' }}</h2>
+        <h2 class="fw-bold text-dark">
+          R$ {{ package?.price | number : "1.2-2" : "pt-BR" }}
+        </h2>
       </div>
-      <p>{{package?.description}}</p>
-      <button class="botao-reserva btn btn-primary btn-lg w-100 mb-3"  (click)="registerRedirect()">
+      <p>{{ package?.description }}</p>
+      <button
+        class="botao-reserva btn btn-primary btn-lg w-100 mb-3"
+        (click)="registerRedirect()"
+      >
         Reserve
       </button>
     </aside>
