@@ -44,6 +44,8 @@
                 id="name"
                 class="form-control form-control-custom"
                 placeholder="Digite seu nome"
+                [(ngModel)]="user.name"
+                name="name"
                 required
               />
             </div>
@@ -65,9 +67,11 @@
               <input
                 type="text"
                 id="document"
+                name="document"
                 class="form-control form-control-custom document-number-input"
                 placeholder="Selecione o tipo de documento"
                 maxlength="8"
+                [(ngModel)]="user.document"
                 disabled
                 required
               />
@@ -81,8 +85,10 @@
                 <input
                   type="date"
                   id="birthdate"
+                  name="birthDate"
                   #birthdateInput
                   class="date form-control form-control-custom date-input-with-icon"
+                  [(ngModel)]="user.birthDate"
                   required
                 />
               </div>
@@ -94,10 +100,12 @@
               <input
                 type="tel"
                 id="phone"
+                name="phone"
                 class="form-control form-control-custom"
                 placeholder="(00) 00000-0000"
                 maxlength="15"
                 (input)="formatPhone($event)"
+                [(ngModel)]="user.phone"
                 required
               />
             </div>
@@ -108,10 +116,12 @@
               <input
                 type="email"
                 id="email"
+                name="email"
                 class="form-control form-control-custom"
                 placeholder="exemplo@avanade.com"
                 (blur)="validateEmail($event)"
                 (input)="validateEmail($event)"
+                [(ngModel)]="user.email"
                 required
               />
             </div>
@@ -120,14 +130,17 @@
               <input
                 type="password"
                 id="password"
+                name="password"
                 class="form-control form-control-custom"
                 placeholder="********"
+                [(ngModel)]="user.password"
                 required
               />
             </div>
             <button
               class="btn btn-primary btn-block btn-custom-primary font-weight-bold mb-2"
               type="submit"
+              (click)="register(user)"
             >
                 Criar conta
             </button>

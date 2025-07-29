@@ -12,9 +12,10 @@ export interface UserDetail {
 export interface SaveUserRequest {
   name: string;
   email: string;
+  password: string;
   phone: string;
   document: string;
-  role: string;
+  birthDate: Date;
 }
 
 export interface SaveUserResponse {
@@ -23,9 +24,7 @@ export interface SaveUserResponse {
   email: string;
   phone: string;
   document: string;
-  role: string;
-  createdAt: Date;
-  updatedAt: Date;
+  birthDate: Date;
 }
 
 export interface UpdateUserRequest {

@@ -25,8 +25,8 @@ export class UserService implements IUserService {
     throw new Error('Method not implemented.');
   }
 
-  createUser(SaveUserRequest: SaveUserRequest): Observable<SaveUserResponse> {
-    throw new Error('Method not implemented.');
+  createUser(saveUserRequest: SaveUserRequest): Observable<SaveUserResponse> {
+    return this.http.post<SaveUserResponse>(this.baseUrl, saveUserRequest);
   }
 
   updateUser(id: string, UpdateUserRequest: UpdateUserRequest): Observable<void> {

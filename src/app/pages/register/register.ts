@@ -1,18 +1,21 @@
+import { UserService } from './../../services/api/user/user-service';
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SaveUserRequest } from '../../services/entities/user.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
 export class Register implements OnInit {
   @ViewChild('birthdateInput') birthdateInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private router : Router){
+  constructor(private router : Router, private userService: UserService){}
 
-  }
+  user: SaveUserRequest = {} as SaveUserRequest;
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -45,29 +48,39 @@ export class Register implements OnInit {
     const documentInput = document.querySelector('.document-number-input') as HTMLInputElement;
     
     if (documentInput) {
-      const newInput = documentInput.cloneNode(true) as HTMLInputElement;
-      documentInput.parentNode?.replaceChild(newInput, documentInput);
+      // Limpa o valor do modelo
+      this.user.document = '';
       
       if (select.value) {
-        newInput.disabled = false;
+        documentInput.disabled = false;
         
         if (select.value === 'cpf') {
-          newInput.placeholder = '000.000.000-00';
-          newInput.maxLength = 14;
-          newInput.className = 'form-control form-control-custom document-number-input cpf-input';
-          newInput.addEventListener('input', (e) => this.formatCPF(e));
-        } else if (select.value === 'passaporte') {
-          newInput.placeholder = 'AA123456';
-          newInput.maxLength = 8;
-          newInput.className = 'form-control form-control-custom document-number-input passport-input';
-          newInput.addEventListener('input', (e) => this.formatPassport(e));
+          documentInput.placeholder = '000.000.000-00';
+          documentInput.maxLength = 14;
+          documentInput.className = 'form-control form-control-custom document-number-input cpf-input';
+          // Remove listeners anteriores
+          documentInput.removeEventListener('input', this.formatPassport.bind(this));
+          documentInput.addEventListener('input', (e) => {
+            this.formatCPF(e);
+            this.user.document = (e.target as HTMLInputElement).value;
+          });
+        } else if (select.value === 'passport') {
+          documentInput.placeholder = 'AB123456';
+          documentInput.maxLength = 8;
+          documentInput.className = 'form-control form-control-custom document-number-input passport-input';
+          // Remove listeners anteriores
+          documentInput.removeEventListener('input', this.formatCPF.bind(this));
+          documentInput.addEventListener('input', (e) => {
+            this.formatPassport(e);
+            this.user.document = (e.target as HTMLInputElement).value;
+          });
         }
         
-        newInput.value = '';
+        documentInput.value = '';
       } else {
-        newInput.disabled = true;
-        newInput.placeholder = 'Selecione o tipo de documento';
-        newInput.value = '';
+        documentInput.disabled = true;
+        documentInput.placeholder = 'Selecione o tipo de documento';
+        documentInput.value = '';
       }
     }
   }
@@ -84,6 +97,7 @@ export class Register implements OnInit {
     }
     
     input.value = value;
+    this.user.phone = value;
   }
 
   formatPassport(event: Event): void {
@@ -112,6 +126,7 @@ export class Register implements OnInit {
     }
     
     input.value = formattedValue;
+    this.user.document = formattedValue;
   }
 
   formatCPF(event: Event): void {
@@ -127,6 +142,7 @@ export class Register implements OnInit {
     }
     
     input.value = value;
+    this.user.document = value;
   }
 
   returnPage(): void {
@@ -263,5 +279,18 @@ export class Register implements OnInit {
         }
       });
     }
+  }
+
+  register(user: SaveUserRequest): void {
+    this.userService.createUser(user).subscribe({
+      next: (response) => {
+        console.log('User created successfully:', response);
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Error creating user:', error);
+        
+      }
+    });
   }
 }
