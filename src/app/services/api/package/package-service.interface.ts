@@ -11,7 +11,7 @@ export interface IPackageService {
 
   getAllPackages(pageNumber: number, pageSize: number): Observable<PackageDetail[]>;
 
-  getAllPackagesWithPagination(pageNumber: number, pageSize: number): Observable<PagedResponse>;
+  getAllPackagesWithPagination(pageNumber: number, pageSize: number): Observable<PagedResponse<PackageDetail>>;
 
   getPackageById(id: string): Observable<PackageDetail>;
 

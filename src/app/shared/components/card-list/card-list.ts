@@ -31,8 +31,8 @@ export class CardList implements OnInit {
   }
 
   loadPackages(page: number = 0): void {
-    this.service.getAllPackagesWithPagination(page, this.pageSize).subscribe((response: PagedResponse) => {
-      this.packages = response._embedded.packageSearchResultDTOList;
+    this.service.getAllPackagesWithPagination(page, this.pageSize).subscribe((response: PagedResponse<PackageDetail>) => {
+      this.packages = response._embedded.DTOList;
       if (response.page) {
         this.currentPage = response.page.number;
         this.totalPages = response.page.totalPages;
