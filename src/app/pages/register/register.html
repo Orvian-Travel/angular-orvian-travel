@@ -149,4 +149,13 @@
       </div>
     </div>
   </div>
+
+  <!-- Popup de conflito -->
+  <div *ngIf="showConflictPopup" class="popup-overlay" (click)="closeConflictPopup()">
+    <div class="popup-content" (click)="$event.stopPropagation()">
+      <h4>⚠️ Credenciais já cadastradas</h4>
+      <p>O email, telefone ou documento informado já está em uso. Verifique os dados e tente novamente.</p>
+      <button class="btn btn-primary" (click)="closeConflictPopup()">Entendi</button>
+    </div>
+  </div>
 </div>

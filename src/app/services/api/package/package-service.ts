@@ -4,8 +4,14 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PagedResponse } from '../../entities/paged-response.model';
 import { environment } from '../../../../environments/environment';
-import { PackageDetail, SavePackageRequest, SavePackageResponse, UpdatePackageRequest } from '../../entities/package.model';
+import {
+  PackageDetail,
+  SavePackageRequest,
+  SavePackageResponse,
+  UpdatePackageRequest
+} from '../../entities/package.model';
 import { IPackageService } from './package-service.interface';
+import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
 
 
 @Injectable({
@@ -18,14 +24,17 @@ export class PackageService implements IPackageService {
 
   public getAllPackages(pageNumber: number = 0, pageSize: number = 6): Observable<PackageDetail[]> {
     const url = `${this.baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
-    return this.http.get<PagedResponse>(url).pipe(
-      map(response => response._embedded.packageSearchResultDTOList)
+    return this.http.get<any>(url).pipe(
+      map(response => transformPagedResponse<PackageDetail>(response, 'packageSearchResultDTOList')),
+      map(pagedResponse => pagedResponse._embedded.DTOList)
     );
   }
 
-  public getAllPackagesWithPagination(pageNumber: number = 0, pageSize: number = 6): Observable<PagedResponse> {
+  public getAllPackagesWithPagination(pageNumber: number = 0, pageSize: number = 6): Observable<PagedResponse<PackageDetail>> {
     const url = `${this.baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
-    return this.http.get<PagedResponse>(url);
+    return this.http.get<any>(url).pipe(
+      map(response => transformPagedResponse<PackageDetail>(response, 'packageSearchResultDTOList'))
+    );
   }
 
   public getPackageById(id: string): Observable<PackageDetail> {
@@ -33,14 +42,14 @@ export class PackageService implements IPackageService {
   }
 
   createPackage(savePackageRequest: SavePackageRequest): Observable<SavePackageResponse> {
-    throw new Error('Method not implemented.');
+    return this.http.post<SavePackageResponse>(this.baseUrl, savePackageRequest);
   }
 
   updatePackage(id: string, UpdatePackageRequest: UpdatePackageRequest): Observable<void> {
-    throw new Error('Method not implemented.');
+    return this.http.put<void>(`${this.baseUrl}/${id}`, UpdatePackageRequest);
   }
 
   deletePackage(id: string): Observable<void> {
-    throw new Error('Method not implemented.');
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
