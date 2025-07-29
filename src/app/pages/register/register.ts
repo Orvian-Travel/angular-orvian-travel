@@ -3,10 +3,11 @@ import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaveUserRequest } from '../../services/entities/user.model';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
@@ -16,6 +17,7 @@ export class Register implements OnInit {
   constructor(private router : Router, private userService: UserService){}
 
   user: SaveUserRequest = {} as SaveUserRequest;
+  showConflictPopup: boolean = false;
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -290,7 +292,18 @@ export class Register implements OnInit {
       error: (error) => {
         console.error('Error creating user:', error);
         
+        if (error.status === 409) {
+          this.showConflictPopup = true;
+          setTimeout(() => {
+            this.showConflictPopup = false;
+          }, 3000);
+        }
       }
     });
+  }
+
+
+  closeConflictPopup(): void {
+    this.showConflictPopup = false;
   }
 }
