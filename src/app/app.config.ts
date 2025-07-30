@@ -3,6 +3,7 @@ import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 import { routes } from './app.routes';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
@@ -16,9 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling({
       scrollPositionRestoration: 'enabled'
     })),
-    provideHttpClient(
-      withInterceptors([AuthInterceptor])
-    ),
-    { provide: LOCALE_ID, useValue: 'pt-BR' },
+    provideHttpClient(),
+    { provide: LOCALE_ID, useValue: 'pt-BR' }
   ]
 };
