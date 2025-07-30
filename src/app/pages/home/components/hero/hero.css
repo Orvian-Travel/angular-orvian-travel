@@ -77,12 +77,12 @@ select:focus{
 }
 
 button{
-  border: none;
   padding: 0.5rem 1.2rem;
-  background-color: var(--orvian-primary-variant);
-  color: white;
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
+  border: 2px solid var(--orvian-button-button-background-color);
   font-size: 16px;
-  border-radius: 0.4rem;
+  border-radius: 8px;
   transition: all 0.3s ease;
 }
 

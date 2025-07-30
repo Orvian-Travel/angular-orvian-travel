@@ -16,18 +16,17 @@
 .botao-reserva {
   background-color: var(--orvian-button-button-background-color);
   color: var(--orvian-button-button-text-color);
+  border: 2px solid var(--orvian-button-button-background-color);
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1.1rem;
+  padding: 0.575rem 1.5rem;
   transition: all 0.3s ease-in-out;
-
-  /* background-color: #1b9dbd;
-  color: white; */
 }
 
 .botao-reserva:hover {
   background-color: var(--orvian-button-button-background-color-hover);
   color: var(--orvian-button-button-text-color-hover);
-
-  /* background-color: white;
-  color: #1b9dbd; */
 }
 
 .pacote-layout {
@@ -170,9 +169,8 @@
   opacity: 0.8;
 }
 
-/* Estilos para o datepicker customizado */
 ::ng-deep .example-custom-date-class {
-  background-color: #ff6600 !important;
+  background-color: var(--orvian-primary-variant) !important;
   color: white !important;
   border-radius: 50% !important;
   font-weight: bold !important;
