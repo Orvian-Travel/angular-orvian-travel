@@ -8,6 +8,7 @@ import { LoginAdmin } from './pages/admin/login-admin/login-admin';
 import { AdminTela } from './pages/admin/admin-tela/admin-tela';
 import { PaymentApproved } from './pages/payment-approved/payment-approved';
 import { PaymentRejected } from './pages/payment-rejected/payment-rejected';
+import { Reservations } from './pages/reservations/reservations';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -16,6 +17,8 @@ export const routes: Routes = [
   { path: 'register', component: Register},
   { path: 'payment', component: Payment},
   { path: 'admin', component: LoginAdmin},
+
+  { path: 'reservations', component: Reservations },
 
   { path: 'admin-tela', component: AdminTela},
   { path: 'payment/approved', component: PaymentApproved},

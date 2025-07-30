@@ -16,18 +16,6 @@ app-card {
   position: relative;
 }
 
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 4px;
-  background: linear-gradient(135deg, var(--orvian-primary-variant), var(--orvian-secondary-variant));
-  border-radius: 2px;
-}
-
 .section-subtitle {
   font-size: 1.1rem;
   color: var(--orvian-gray-003);
@@ -85,11 +73,10 @@ app-card {
   color: white;
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 1px 4px rgba(27, 157, 189, 0.2);
 }
 
 .card-content {
