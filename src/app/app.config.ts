@@ -1,8 +1,9 @@
 import { ApplicationConfig, LOCALE_ID, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 import { routes } from './app.routes';
 
@@ -15,7 +16,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling({
       scrollPositionRestoration: 'enabled'
     })),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([loadingInterceptor])),
     { provide: LOCALE_ID, useValue: 'pt-BR' }
   ]
 };
