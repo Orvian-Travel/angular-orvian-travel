@@ -16,4 +16,9 @@ export class LoginAdmin {
     this.router.navigate(['/admin-tela']);
   }
 
+  adminRedirect(): void {
+  this.router.navigate(['/login'], { 
+    queryParams: { from: '/admin-tela' } 
+  });
+}
 }
