@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling({
       scrollPositionRestoration: 'enabled'
     })),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([loadingInterceptor])),
     { provide: LOCALE_ID, useValue: 'pt-BR' }
   ]
 };
