@@ -1,4 +1,4 @@
-import { PackageDateDetail, SavePackageDateResponse } from "./package-date.model";
+import { PackageDateDetail, SavePackageDateRequest, SavePackageDateResponse } from "./package-date.model";
 
 
 export interface PackageDetail {
@@ -21,6 +21,7 @@ export interface SavePackageRequest {
   duration: number;
   price: number;
   maxPeople: number;
+  packageDates: SavePackageDateRequest[];
 }
 
 export interface SavePackageResponse {
