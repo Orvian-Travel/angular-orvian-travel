@@ -75,6 +75,31 @@
   cursor: pointer;
 }
 
+/* Estilo do link de cadastro */
+.register-link {
+  margin-top: 20px;
+  padding: 15px 0;
+}
+
+.register-text {
+  color: #666;
+  font-size: 15px;
+  margin-right: 4px;
+}
+
+.register-link-action {
+  color: #1486b4;
+  font-weight: 550;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.register-link-action:hover {
+  color: #0f6b8a;
+  text-decoration: underline;
+}
+
 /* Inputs customizados */
 .form-control-custom {
   padding: 12px 15px;

@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCalendarCellClassFunction, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import { AuthStateService } from '../../services/auth/auth-state-service';
 
 @Component({
   selector: 'app-product-details',
@@ -27,10 +28,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 export class ProductDetails implements OnInit, OnDestroy {
   constructor(
     private router: Router,
+    private authStateService: AuthStateService,
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
     private route: ActivatedRoute
   ) { }
 
+  isLoggedIn: boolean = false;
   package: PackageDetail | null = null;
   private routeSubscription: Subscription = new Subscription();
   selectedDate: Date | null = null;
@@ -42,6 +45,9 @@ export class ProductDetails implements OnInit, OnDestroy {
       if (id) {
         this.loadPackage(id);
       }
+    });
+    this.authStateService.isAuthenticated$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
     });
   }
 
@@ -127,7 +133,7 @@ export class ProductDetails implements OnInit, OnDestroy {
     this.router.navigate(['/payment']);
   }
 
-  registerRedirect(): void {
-    this.router.navigate(['/payment']);
+  loginRedirect(): void {
+    this.router.navigate(['/login']);
   }
 }

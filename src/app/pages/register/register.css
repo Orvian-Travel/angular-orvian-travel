@@ -22,17 +22,24 @@ select{
 
 /* Botão customizado marrom */
 .btn-custom-brown {
-  background-color: var(--brown-color);
-  border-color: var(--brown-color);
-  border-radius: 6px;
-  padding: 8px 20px;
-  font-size: 1rem;
-  transition: background 0.2s;
   background-color: #7e4e34;
+  border: 1px solid #7e4e34;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: white;
+  box-shadow: 0 2px 6px rgba(126, 78, 52, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .btn-custom-brown:hover {
   background-color: #5e3a26;
+  border-color: #5e3a26;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(126, 78, 52, 0.3);
+  color: white;
 }
 
 .text-container{
@@ -59,18 +66,27 @@ select{
 
 /* Botão primário customizado */
 .btn-custom-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
-  font-size: 1.08rem;
-  padding: 12px 100px;
-  border-radius: 6px;
-  transition: background 0.18s;
-  background-color: #1486b4;
+  background: linear-gradient(135deg, #1486b4 0%, #16a6d9 100%);
+  border: 1px solid #1486b4;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 14px 0;
+  border-radius: 8px;
+  color: white;
+  width: 100%;
+  box-shadow: 0 3px 8px rgba(20, 134, 180, 0.25);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .btn-custom-primary:hover {
-    background-color: white;
-    color: #1B9DBD;
+  background: linear-gradient(135deg, #0f6b8a 0%, #1486b4 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(20, 134, 180, 0.35);
+  color: white;
+  border-color: #0f6b8a;
 }
 
 /* Labels customizados */
@@ -82,6 +98,31 @@ select{
   letter-spacing: 0.01em;
   text-transform: uppercase;
   display: block;
+}
+
+/* Estilo do link de login */
+.login-link {
+  margin-top: 20px;
+  padding: 15px 0;
+}
+
+.login-text {
+  color: #666;
+  font-size: 15px;
+  margin-right: 4px;
+}
+
+.login-link-action {
+  color: #1486b4;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.login-link-action:hover {
+  color: #0f6b8a;
+  text-decoration: underline;
 }
 
 /* Inputs customizados */
@@ -203,7 +244,7 @@ html, body {
   
   .mobile-card {
     width: 100%;
-    max-width: 350px;
+    max-width: 3500px;
     margin: 20px auto 0 auto;
   }
   
@@ -316,7 +357,7 @@ html, body {
 @media (min-width: 992px) {
   /* Desktop */
   .mobile-card {
-    max-width: 350px;
+    max-width: 3500px;
   }
   
   .mobile-illustration {

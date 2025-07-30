@@ -23,16 +23,17 @@
             <form>
               <div class="form-group mb-3">
                 <label for="email" class="form-label-custom">E-MAIL</label>
-                <input type="email" id="email" class="form-control form-control-custom" placeholder="exemplo@avanade.com" required>
+                <input type="email" id="email" class="form-control form-control-custom" placeholder="exemplo@avanade.com" [(ngModel)]="email" name="email" required>
               </div>
               <div class="form-group mb-4">
                 <label for="password" class="form-label-custom">SENHA</label>
-                <input type="password" id="password" class="form-control form-control-custom" placeholder="********" required>
+                <input type="password" id="password" class="form-control form-control-custom" placeholder="********" [(ngModel)]="password" name="password" required>
               </div>
-              <button class="btn btn-primary btn-block btn-custom-primary font-weight-bold mb-2" type="submit">Entrar</button>
+              <button class="btn btn-primary btn-block btn-custom-primary font-weight-bold mb-2" type="button" (click)="login(email, password)">Entrar</button>
             </form>
-            <div class="text-center">
-              <a class="text-muted" target="_blank" rel="noopener noreferrer" (click)="registerRedirect()">não tem uma conta?</a>
+            <div class="text-center register-link">
+              <span class="register-text">Não tem uma conta? </span>
+              <a class="register-link-action" (click)="registerRedirect()">Cadastre-se</a>
             </div>
           </div>
         </div>

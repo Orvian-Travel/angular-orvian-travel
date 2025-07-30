@@ -29,3 +29,55 @@ button:hover {
   background-color: var(--orvian-button-button-background-color-hover);
   color: var(--orvian-button-button-text-color-hover);
 }
+
+.user-info {
+  color: white;
+  font-size: 16px;
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.user-name {
+  color: white;
+  font-weight: 500;
+  margin-right: 15px;
+}
+
+.user-info .user-name {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Estilo específico para o botão Sair */
+.user-info .btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.user-info .btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo específico para os botões de Login e Registre-se */
+.buttons .btn.font-weight-bold {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.buttons .btn.font-weight-bold:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}

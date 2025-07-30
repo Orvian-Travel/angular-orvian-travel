@@ -4,6 +4,7 @@ import { IPackageService } from "./api/package/package-service.interface";
 import { ITravelerService } from "./api/traveler/traveler-service.interface";
 import { IReservationService } from "./api/reservation/reservation-service.interface";
 import { IPaymentService } from "./api/payment/payment-service.interface";
+import { IAuthService } from "./api/auth/auth-service.interface";
 
 export const SERVICES_TOKEN = {
   HTTP: {
@@ -12,5 +13,6 @@ export const SERVICES_TOKEN = {
     TRAVELER: new InjectionToken<ITravelerService>('SERVICES_TOKEN.HTTP.TRAVELER'),
     RESERVATION: new InjectionToken<IReservationService>('SERVICES_TOKEN.HTTP.RESERVATION'),
     PAYMENT: new InjectionToken<IPaymentService>('SERVICES_TOKEN.HTTP.PAYMENT'),
+    AUTH: new InjectionToken<IAuthService>('SERVICES_TOKEN.HTTP.AUTH')
   }
 }

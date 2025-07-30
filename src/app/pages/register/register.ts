@@ -306,4 +306,8 @@ export class Register implements OnInit {
   closeConflictPopup(): void {
     this.showConflictPopup = false;
   }
+
+  loginRedirect(): void {
+    this.router.navigate(['/login']);
+  }
 }

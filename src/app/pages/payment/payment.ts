@@ -1,15 +1,18 @@
+import { AuthStateService } from './../../services/auth/auth-state-service';
 import { Component, OnInit } from '@angular/core';
-import { HeaderLogged } from "../../shared/components/header-logged/header-logged";
+import { Header } from "../../shared/components/header/header";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-payment',
-  imports: [HeaderLogged],
+  imports: [ Header ],
   templateUrl: './payment.html',
   styleUrl: './payment.css'
 })
 export class Payment implements OnInit {
 
-  constructor() {}
+  isLoggedIn: boolean = false;
+  constructor(private authStateService: AuthStateService, private router: Router) {}
 
   // Função para adicionar viajante
   addTraveler(): void {
@@ -242,6 +245,9 @@ export class Payment implements OnInit {
     setTimeout(() => {
       this.initializeEventListeners();
     }, 100);
+    this.authStateService.isAuthenticated$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
   }
 
   private initializeEventListeners(): void {
@@ -277,5 +283,27 @@ export class Payment implements OnInit {
       (icon as HTMLElement).style.width = '20px';
       (icon as HTMLElement).style.height = '20px';
     });
+  }
+
+  loginRedirect() : void{
+    this.router.navigate(['/login']);
+  }
+
+  registerRedirect(): void{
+    this.router.navigate(['/register']);
+  }
+
+  logout(): void {
+    this.authStateService.logout();
+    this.router.navigate(['/']);
+  }
+
+  getUser(): any {
+    return this.authStateService.getUser();
+  }
+
+  getUserName(): string {
+    const user = this.authStateService.getUser();
+    return user?.name || 'Usuário';
   }
 }
