@@ -37,6 +37,40 @@ export class AuthStateService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+
+      const payload = parts[1];
+
+      const decodedPayload = atob(payload);
+
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      console.error('Erro ao decodificar token:', error);
+      return null;
+    }
+  }
+
+  getUserRole(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.role || null;
+  }
+
+  isAdmin(): boolean {
+    const role = this.getUserRole();
+    return role === 'ADMIN';
+  }
+
+  isAttendant(): boolean {
+    const role = this.getUserRole();
+    return role === 'ATENDENTE';
+  }
+
   getUser(): any {
     const userData = localStorage.getItem(this.USER_KEY);
     return userData ? JSON.parse(userData) : null;
@@ -62,5 +96,4 @@ export class AuthStateService {
   private checkAuthState(): void {
     this.isAuthenticatedSubject.next(this.hasValidToken());
   }
-
 }
