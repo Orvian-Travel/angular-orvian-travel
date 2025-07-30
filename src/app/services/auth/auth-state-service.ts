@@ -10,7 +10,7 @@ export class AuthStateService {
   private readonly USER_KEY = 'orvian_user';
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(
-    this.hasToken()
+    this.hasValidToken()
   );
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
@@ -43,15 +43,24 @@ export class AuthStateService {
   }
 
   isLoggedIn(): boolean {
-    return this.hasToken();
+    return this.hasValidToken();
   }
 
-  private hasToken(): boolean {
+  private hasValidToken(): boolean {
     const token = this.getToken();
-    return token !== null && token !== '';
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp > currentTime;
+    } catch {
+      return false;
+    }
   }
 
   private checkAuthState(): void {
-    this.isAuthenticatedSubject.next(this.hasToken());
+    this.isAuthenticatedSubject.next(this.hasValidToken());
   }
+
 }
