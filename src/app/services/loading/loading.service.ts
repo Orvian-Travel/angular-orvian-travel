@@ -16,7 +16,9 @@ export class LoadingService {
     this.activeRequests++;
     if (this.activeRequests === 1) {
       this.loadingStartTime = Date.now();
-      this.loadingSubject.next(true);
+      Promise.resolve().then(() => {
+        this.loadingSubject.next(true);
+      });
     }
   }
 
@@ -31,22 +33,30 @@ export class LoadingService {
         
         if (remainingTime > 0) {
           setTimeout(() => {
-            this.loadingSubject.next(false);
-            this.loadingStartTime = null;
+            Promise.resolve().then(() => {
+              this.loadingSubject.next(false);
+              this.loadingStartTime = null;
+            });
           }, remainingTime);
         } else {
-          this.loadingSubject.next(false);
-          this.loadingStartTime = null;
+          Promise.resolve().then(() => {
+            this.loadingSubject.next(false);
+            this.loadingStartTime = null;
+          });
         }
       } else {
-        this.loadingSubject.next(false);
+        Promise.resolve().then(() => {
+          this.loadingSubject.next(false);
+        });
       }
     }
   }
 
   forceHide(): void {
     this.activeRequests = 0;
-    this.loadingSubject.next(false);
-    this.loadingStartTime = null;
+    Promise.resolve().then(() => {
+      this.loadingSubject.next(false);
+      this.loadingStartTime = null;
+    });
   }
 }
