@@ -9,7 +9,8 @@ import { AdminTela } from './pages/admin/admin-tela/admin-tela';
 import { PaymentApproved } from './pages/payment-approved/payment-approved';
 import { PaymentRejected } from './pages/payment-rejected/payment-rejected';
 import { Reservations } from './pages/reservations/reservations';
-import { AuthGuard } from './guards/auth-guard';
+import { authGuard } from './guards/auth-guard';
+import { adminGuard } from './guards/admin-guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -20,9 +21,9 @@ export const routes: Routes = [
 
   { path: 'reservations', component: Reservations },
 
-  { path: 'admin-tela', component: AdminTela, canActivate: [AuthGuard] },
-  { path: 'payment', component: Payment, canActivate: [AuthGuard] },
-  { path: 'payment/approved', component: PaymentApproved, canActivate: [AuthGuard] },
-  { path: 'payment/rejected', component: PaymentRejected, canActivate: [AuthGuard] }
+  { path: 'admin-tela', component: AdminTela, canActivate: [authGuard, adminGuard] },
+  { path: 'payment', component: Payment, canActivate: [authGuard] },
+  { path: 'payment/approved', component: PaymentApproved, canActivate: [authGuard] },
+  { path: 'payment/rejected', component: PaymentRejected, canActivate: [authGuard] }
 
 ];
