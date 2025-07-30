@@ -1,0 +1,141 @@
+<div class="users-container">
+    <div class="section-header mb-4">
+        <h1 class="display-6 fw-bold text-dark">Controle de Usuários</h1>
+        <p class="text-muted">Gerencie todos os usuários cadastrados na plataforma.</p>
+    </div>
+
+    <div class="users-management card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h4 fw-bold text-dark mb-0">Lista de Usuários</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                    <i class="fas fa-plus me-2"></i>Adicionar Usuário
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Tipo</th>
+                            <th>Data de Cadastro</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of users; index as i">
+                            <td>{{ user.id }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>
+                                <span class="badge" 
+                                      [class]="user.role === 'Administrador' ? 'bg-warning text-dark' : 'bg-primary'">
+                                    {{ user.role }}
+                                </span>
+                            </td>
+                            <td>{{ user.createdAt }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-2" 
+                                        (click)="editUser(user)" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editUserModal">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        (click)="deleteUser(user.id)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addUserModalLabel">Adicionar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #addUserForm="ngForm" (ngSubmit)="addUser(addUserForm)">
+                    <div class="mb-3">
+                        <label for="userName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="userName" name="name" ngModel required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="userEmail" name="email" ngModel required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPhone" class="form-label">Telefone</label>
+                        <input type="tel" class="form-control" id="userPhone" name="phone" ngModel required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="userRole" class="form-label">Tipo de Usuário</label>
+                        <select class="form-control" id="userRole" name="role" ngModel required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="Usuário">Usuário</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserModalLabel">Editar Usuário</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form #editUserForm="ngForm" (ngSubmit)="updateUser(editUserForm)">
+                    <input type="hidden" name="id" [ngModel]="selectedUser?.id">
+                    <div class="mb-3">
+                        <label for="editUserName" class="form-label">Nome</label>
+                        <input type="text" class="form-control" id="editUserName" name="name" [ngModel]="selectedUser?.name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editUserEmail" name="email" [ngModel]="selectedUser?.email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserPhone" class="form-label">Telefone</label>
+                        <input type="tel" class="form-control" id="editUserPhone" name="phone" [ngModel]="selectedUser?.phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editUserRole" class="form-label">Tipo de Usuário</label>
+                        <select class="form-control" id="editUserRole" name="role" [ngModel]="selectedUser?.role" required>
+                            <option value="">Selecione o tipo</option>
+                            <option value="Usuário">Usuário</option>
+                            <option value="Administrador">Administrador</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

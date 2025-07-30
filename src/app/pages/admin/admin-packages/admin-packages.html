@@ -1,0 +1,351 @@
+<div class="packages-container">
+    <div class="section-header mb-4">
+        <h1 class="display-6 fw-bold text-dark">Controle de Pacotes</h1>
+        <p class="text-muted">Gerencie todos os pacotes de viagem disponíveis na plataforma.</p>
+    </div>
+
+    <div class="packages-management card border-0 shadow-sm">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h4 fw-bold text-dark mb-0">Lista de Pacotes</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+                    <i class="fas fa-plus me-2"></i>Adicionar Pacote
+                </button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Imagem</th>
+                            <th>Destino</th>
+                            <th>Preço</th>
+                            <th>Duração</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let package of packages; index as i">
+                            <td>{{ package.id }}</td>
+                            <td>
+                                <img [src]="package.image" [alt]="package.destination" 
+                                     class="package-thumbnail">
+                            </td>
+                            <td>{{ package.destination }}</td>
+                            <td>{{ formatCurrencyBrazilian(package.price) }}</td>
+                            <td>{{ package.duration }}</td>
+                            <td>
+                                <span class="badge" 
+                                      [class]="package.status === 'Ativo' ? 'bg-success' : 'bg-danger'">
+                                    {{ package.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-2" 
+                                        (click)="editPackage(package)" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editPackageModal">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" 
+                                        (click)="deletePackage(package.id)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Package Modal -->
+<div class="modal fade" id="addPackageModal" tabindex="-1" aria-labelledby="addPackageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addPackageModalLabel">
+                    {{ currentStep === 1 ? 'Adicionar Pacote' : 'Confirmação do Pacote' }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetModal()"></button>
+            </div>
+            
+            <!-- Etapa 1: Formulário -->
+            <div *ngIf="currentStep === 1" class="modal-body">
+                <form #addPackageForm="ngForm" (ngSubmit)="addPackage(addPackageForm)">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="packageDestination" class="form-label">Destino</label>
+                            <input type="text" class="form-control" id="packageDestination" name="destination" ngModel required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="packagePrice" class="form-label">Preço</label>
+                            <input type="number" class="form-control" id="packagePrice" name="price" ngModel required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="packageDuration" class="form-label">Duração</label>
+                            <input type="text" class="form-control" id="packageDuration" name="duration" ngModel required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="packageStatus" class="form-label">Status</label>
+                            <select class="form-control" id="packageStatus" name="status" ngModel required>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="packageDescription" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="packageDescription" name="description" rows="3" ngModel required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="packageImage" class="form-label">Imagem</label>
+                        <input type="file" class="form-control" id="packageImage" name="image" accept="image/*" (change)="onImageSelected($event)">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Avançar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Etapa 2: Confirmação -->
+            <div *ngIf="currentStep === 2" class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="confirmation-card card border-0 shadow-sm p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 text-center mb-3 mb-md-0">
+                                <img [src]="tempPackageData.image" alt="Pacote" class="img-fluid rounded shadow-sm" style="max-height: 150px; object-fit: cover;">
+                            </div>
+                            <div class="col-md-8">
+                                <h4 class="text-primary mb-3">{{ tempPackageData.destination }}</h4>
+                                <div class="package-details">
+                                    <div *ngFor="let dateEntry of packageDates; let i = index" class="date-entry mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="text-primary mb-0">Data {{ i + 1 }}</h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    (click)="removeDateEntry(i)" 
+                                                    [disabled]="packageDates.length === 1"
+                                                    title="Remover data">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-4">
+                                                <label class="text-muted small form-label">DATA DE INÍCIO</label>
+                                                <input type="date" 
+                                                       class="form-control form-control-sm" 
+                                                       [(ngModel)]="dateEntry.startDate"
+                                                       style="font-weight: bold; color: #2D3748;">
+                                                <small class="text-muted">{{ formatDateBrazilian(dateEntry.startDate) }}</small>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="text-muted small form-label">DATA FINAL</label>
+                                                <input type="date" 
+                                                       class="form-control form-control-sm" 
+                                                       [(ngModel)]="dateEntry.endDate"
+                                                       style="font-weight: bold; color: #2D3748;">
+                                                <small class="text-muted">{{ formatDateBrazilian(dateEntry.endDate) }}</small>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="text-muted small form-label">RESERVAS DISPONÍVEIS</label>
+                                                <input type="number" 
+                                                       class="form-control form-control-sm" 
+                                                       [(ngModel)]="dateEntry.availableReservations"
+                                                       min="1"
+                                                       style="font-weight: bold; color: #2D3748;">
+                                                <small class="text-muted">{{ formatNumberBrazilian(dateEntry.availableReservations) }} reservas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mb-3">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="addNewDate()">
+                                            <i class="fas fa-plus me-2"></i>Adicionar outra data
+                                        </button>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-12">
+                                            <span class="text-muted small">STATUS</span>
+                                            <div class="fw-bold">
+                                                <span class="badge" [class]="tempPackageData.status === 'Ativo' ? 'bg-success' : 'bg-danger'">
+                                                    {{ tempPackageData.status }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="package-info mt-3">
+                                        <p class="mb-2"><strong>Duração:</strong> {{ tempPackageData.duration }}</p>
+                                        <p class="mb-2"><strong>Preço:</strong> 
+                                            <span class="text-success fw-bold fs-5">{{ formatCurrencyBrazilian(tempPackageData.price) }}</span>
+                                        </p>
+                                        <p class="mb-0"><strong>Descrição:</strong> {{ tempPackageData.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="goBackToForm()">Voltar</button>
+                    <button type="button" class="btn btn-info text-white" (click)="confirmAddPackage()">
+                        <i class="fas fa-check me-2"></i>Adicionar pacote
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Package Modal -->
+<div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPackageModalLabel">
+                    {{ currentEditStep === 1 ? 'Editar Pacote' : 'Confirmação da Edição' }}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetEditModal()"></button>
+            </div>
+            
+            <!-- Etapa 1: Formulário -->
+            <div *ngIf="currentEditStep === 1" class="modal-body">
+                <form #editPackageForm="ngForm" (ngSubmit)="updatePackage(editPackageForm)">
+                    <input type="hidden" name="id" [ngModel]="selectedPackage?.id">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editPackageDestination" class="form-label">Destino</label>
+                            <input type="text" class="form-control" id="editPackageDestination" name="destination" [ngModel]="selectedPackage?.destination" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editPackagePrice" class="form-label">Preço</label>
+                            <input type="number" class="form-control" id="editPackagePrice" name="price" [ngModel]="selectedPackage?.price" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="editPackageDuration" class="form-label">Duração</label>
+                            <input type="text" class="form-control" id="editPackageDuration" name="duration" [ngModel]="selectedPackage?.duration" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="editPackageStatus" class="form-label">Status</label>
+                            <select class="form-control" id="editPackageStatus" name="status" [ngModel]="selectedPackage?.status" required>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPackageDescription" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="editPackageDescription" name="description" rows="3" [ngModel]="selectedPackage?.description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPackageImage" class="form-label">Imagem</label>
+                        <input type="file" class="form-control" id="editPackageImage" name="image" accept="image/*" (change)="onImageSelected($event)">
+                        <div *ngIf="selectedPackage?.image" class="mt-2">
+                            <img [src]="selectedPackage?.image" alt="Preview" class="img-thumbnail" style="max-width: 200px;">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetEditModal()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Avançar</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Etapa 2: Confirmação -->
+            <div *ngIf="currentEditStep === 2" class="modal-body">
+                <div class="text-center mb-4">
+                    <div class="confirmation-card card border-0 shadow-sm p-4">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 text-center mb-3 mb-md-0">
+                                <img [src]="tempEditPackageData.image" alt="Pacote" class="img-fluid rounded shadow-sm" style="max-height: 150px; object-fit: cover;">
+                            </div>
+                            <div class="col-md-8">
+                                <h4 class="text-primary mb-3">{{ tempEditPackageData.destination }}</h4>
+                                <div class="package-details">
+                                    <div *ngFor="let dateEntry of editPackageDates; let i = index" class="date-entry mb-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <h6 class="text-primary mb-0">Data {{ i + 1 }}</h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    (click)="removeEditDateEntry(i)" 
+                                                    [disabled]="editPackageDates.length === 1"
+                                                    title="Remover data">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-4">
+                                                <label class="text-muted small form-label">DATA DE INÍCIO</label>
+                                                <input type="date" 
+                                                       class="form-control form-control-sm" 
+                                                       [(ngModel)]="dateEntry.startDate"
+                                                       style="font-weight: bold; color: #2D3748;">
+                                                <small class="text-muted">{{ formatDateBrazilian(dateEntry.startDate) }}</small>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="text-muted small form-label">DATA FINAL</label>
+                                                <input type="date" 
+                                                       class="form-control form-control-sm" 
+                                                       [(ngModel)]="dateEntry.endDate"
+                                                       style="font-weight: bold; color: #2D3748;">
+                                                <small class="text-muted">{{ formatDateBrazilian(dateEntry.endDate) }}</small>
+                                            </div>
+                                            <div class="col-4">
+                                                <label class="text-muted small form-label">RESERVAS DISPONÍVEIS</label>
+                                                <input type="number" 
+                                                       class="form-control form-control-sm" 
+                                                       [(ngModel)]="dateEntry.availableReservations"
+                                                       min="1"
+                                                       style="font-weight: bold; color: #2D3748;">
+                                                <small class="text-muted">{{ formatNumberBrazilian(dateEntry.availableReservations) }} reservas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mb-3">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" (click)="addNewEditDate()">
+                                            <i class="fas fa-plus me-2"></i>Adicionar outra data
+                                        </button>
+                                    </div>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-12">
+                                            <span class="text-muted small">STATUS</span>
+                                            <div class="fw-bold">
+                                                <span class="badge" [class]="tempEditPackageData.status === 'Ativo' ? 'bg-success' : 'bg-danger'">
+                                                    {{ tempEditPackageData.status }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="package-info mt-3">
+                                        <p class="mb-2"><strong>Duração:</strong> {{ tempEditPackageData.duration }}</p>
+                                        <p class="mb-2"><strong>Preço:</strong> 
+                                            <span class="text-success fw-bold fs-5">{{ formatCurrencyBrazilian(tempEditPackageData.price) }}</span>
+                                        </p>
+                                        <p class="mb-0"><strong>Descrição:</strong> {{ tempEditPackageData.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="goBackToEditForm()">Voltar</button>
+                    <button type="button" class="btn btn-success text-white" (click)="confirmUpdatePackage()">
+                        <i class="fas fa-save me-2"></i>Salvar Alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

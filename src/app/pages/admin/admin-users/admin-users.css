@@ -1,0 +1,100 @@
+.users-container {
+    padding: 2rem;
+}
+
+.section-header h1 {
+    color: #2D3748;
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: #718096;
+}
+
+.users-management {
+    border-radius: 12px;
+}
+
+.users-management h2 {
+    color: #2D3748;
+}
+
+.table th {
+    color: #4A5568;
+    font-weight: 600;
+    border-bottom: 2px solid #E2E8F0;
+}
+
+.table td {
+    color: #2D3748;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #F7FAFC;
+}
+
+.btn-outline-primary {
+    border-color: #3182CE;
+    color: #3182CE;
+}
+
+.btn-outline-primary:hover {
+    background-color: #3182CE;
+    border-color: #3182CE;
+}
+
+.btn-outline-danger {
+    border-color: #E53E3E;
+    color: #E53E3E;
+}
+
+.btn-outline-danger:hover {
+    background-color: #E53E3E;
+    border-color: #E53E3E;
+}
+
+.modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.modal-header {
+    border-bottom: 1px solid #E2E8F0;
+}
+
+.modal-header h5 {
+    color: #2D3748;
+    font-weight: 600;
+}
+
+.form-label {
+    color: #4A5568;
+    font-weight: 500;
+}
+
+.form-control {
+    border: 1px solid #E2E8F0;
+    border-radius: 6px;
+}
+
+.form-control:focus {
+    border-color: #3182CE;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+}
+
+@media (max-width: 768px) {
+    .users-container {
+        padding: 1rem;
+    }
+    
+    .table-responsive {
+        font-size: 0.875rem;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
