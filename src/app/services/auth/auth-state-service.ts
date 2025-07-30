@@ -10,7 +10,7 @@ export class AuthStateService {
   private readonly USER_KEY = 'orvian_user';
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(
-    this.hasToken()
+    this.hasValidToken()
   );
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
@@ -37,21 +37,63 @@ export class AuthStateService {
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+
+      const payload = parts[1];
+
+      const decodedPayload = atob(payload);
+
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      console.error('Erro ao decodificar token:', error);
+      return null;
+    }
+  }
+
+  getUserRole(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.role || null;
+  }
+
+  isAdmin(): boolean {
+    const role = this.getUserRole();
+    return role === 'ADMIN';
+  }
+
+  isAttendant(): boolean {
+    const role = this.getUserRole();
+    return role === 'ATENDENTE';
+  }
+
   getUser(): any {
     const userData = localStorage.getItem(this.USER_KEY);
     return userData ? JSON.parse(userData) : null;
   }
 
   isLoggedIn(): boolean {
-    return this.hasToken();
+    return this.hasValidToken();
   }
 
-  private hasToken(): boolean {
+  private hasValidToken(): boolean {
     const token = this.getToken();
-    return token !== null && token !== '';
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp > currentTime;
+    } catch {
+      return false;
+    }
   }
 
   private checkAuthState(): void {
-    this.isAuthenticatedSubject.next(this.hasToken());
+    this.isAuthenticatedSubject.next(this.hasValidToken());
   }
 }

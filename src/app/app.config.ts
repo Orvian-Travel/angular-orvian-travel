@@ -6,6 +6,7 @@ import localePt from '@angular/common/locales/pt';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 import { routes } from './app.routes';
+import { AuthInterceptor } from './interceptors/auth-interceptor';
 
 registerLocaleData(localePt);
 
@@ -16,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withInMemoryScrolling({
       scrollPositionRestoration: 'enabled'
     })),
-    provideHttpClient(withInterceptors([loadingInterceptor])),
+    provideHttpClient(),
     { provide: LOCALE_ID, useValue: 'pt-BR' }
   ]
 };

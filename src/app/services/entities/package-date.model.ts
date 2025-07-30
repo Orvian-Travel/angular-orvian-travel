@@ -10,7 +10,6 @@ export interface SavePackageDateRequest {
   startDate: Date;
   endDate: Date;
   qtd_available: number;
-  travelPackageId: string;
 }
 
 export interface SavePackageDateResponse {
@@ -22,10 +21,10 @@ export interface SavePackageDateResponse {
 }
 
 export interface UpdatePackageDateRequest {
+  id: string;
   startDate: Date;
   endDate: Date;
   qtd_available: number;
-  travelPackageId: string;
 }
 
 // export interface UpdatePackageDateResponse {
