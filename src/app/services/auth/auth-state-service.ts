@@ -8,6 +8,7 @@ import { TokenModel } from '../entities/token-model';
 export class AuthStateService {
   private readonly TOKEN_KEY = 'orvian_token';
   private readonly USER_KEY = 'orvian_user';
+  private readonly REDIRECT_KEY = 'orvian_redirect_after_login';
 
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(
     this.hasValidToken()
@@ -91,6 +92,28 @@ export class AuthStateService {
     } catch {
       return false;
     }
+  }
+
+  setRedirectUrl(url: string): void {
+    localStorage.setItem(this.REDIRECT_KEY, url);
+  }
+
+  getAndClearRedirectUrl(): string | null {
+    const redirectUrl = localStorage.getItem(this.REDIRECT_KEY);
+    if (redirectUrl) {
+      localStorage.removeItem(this.REDIRECT_KEY);
+    }
+    return redirectUrl;
+  }
+
+  getRedirectUrl(): string {
+    const savedRedirect: string | null = this.getAndClearRedirectUrl();
+
+    if (savedRedirect) {
+      return savedRedirect;
+    }
+
+    return '/';
   }
 
   private checkAuthState(): void {

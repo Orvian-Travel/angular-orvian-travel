@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { from, Subscription } from 'rxjs';
 import { Header } from '../../shared/components/header/header';
 import { CardList } from '../../shared/components/card-list/card-list';
 import { PackageService } from '../../services/api/package/package-service';
@@ -133,7 +133,9 @@ export class ProductDetails implements OnInit, OnDestroy {
     this.router.navigate(['/payment']);
   }
 
-  loginRedirect(): void {
-    this.router.navigate(['/login']);
+  loginRedirectWithReturn(): void {
+    this.router.navigate(['/login'], {
+       queryParams: { from: '/payment' } 
+    });
   }
 }
