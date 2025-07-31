@@ -45,8 +45,9 @@ export class PackageService implements IPackageService {
     maxPeople: number
   ): Observable<PagedResponse<PackageDetail>> {
     const url = `${this.baseUrl}/search?pageNumber=${pageNumber}&pageSize=${pageSize}&title=${title}&startDate=${startDate}&maxPeople=${maxPeople}`;
+    console.log('URL for search:', url);
     return this.http.get<any>(url).pipe(
-      map(response => transformPagedResponse<PackageDetail>(response, 'PackageSearchResultDTOList'))
+      map(response => transformPagedResponse<PackageDetail>(response, 'packageSearchResultDTOList'))
     )
   }
 
