@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Hero } from "../components/hero/hero";
 import { Header } from '../../../shared/components/header/header';
 import { CardList } from '../../../shared/components/card-list/card-list';
+import { SearchData } from '../../../services/entities/search-data.model';
 
 @Component({
   selector: 'app-home',
@@ -10,5 +11,15 @@ import { CardList } from '../../../shared/components/card-list/card-list';
   styleUrl: './home.css'
 })
 export class Home {
+
+  @Output()
+  updateData = new EventEmitter<SearchData>();
+
+  searchData: SearchData | null = null;
+
+  onSearchRequest($event: SearchData) {
+    this.searchData = $event;
+    console.log('Dados de busca recebidos no Home:', this.searchData);
+  }
 
 }

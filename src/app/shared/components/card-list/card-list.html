@@ -1,10 +1,16 @@
 <main class="container my-5">
   <div class="section-header">
-    <h2 class="section-title">Pacotes recentes</h2>
-    <p class="section-subtitle">Descubra destinos incríveis com os melhores preços</p>
+    <h2 class="section-title">{{ cardListTitle }}</h2>
+    <p class="section-subtitle">
+      Descubra destinos incríveis com os melhores preços
+    </p>
   </div>
   <div class="packages-grid">
-    <div class="package-card" (click)="navigateToDetails(package.id)" *ngFor="let package of packages">
+    <div
+      class="package-card"
+      (click)="navigateToDetails(package.id)"
+      *ngFor="let package of packages"
+    >
       <div class="card-image-wrapper">
         <img
           src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
@@ -22,7 +28,9 @@
           <span class="price-label">A partir de</span>
           <div class="price-wrapper">
             <span class="currency">R$</span>
-            <span class="price">{{ package.price | number:'1.0-0':'pt-BR' }}</span>
+            <span class="price">{{
+              package.price | number : "1.0-0" : "pt-BR"
+            }}</span>
             <span class="price-period">/pessoa</span>
           </div>
           <p class="price-disclaimer">*Taxas não incluídas</p>
@@ -32,30 +40,34 @@
   </div>
   <div *ngIf="totalPages > 1" class="pagination-container">
     <nav class="pagination-nav">
-      <button 
-        class="pagination-btn pagination-prev" 
+      <button
+        class="pagination-btn pagination-prev"
         [disabled]="currentPage === 0"
-        (click)="previousPage()">
+        (click)="previousPage()"
+      >
         Anterior
       </button>
       <div class="pagination-numbers">
-        <button 
+        <button
           *ngFor="let page of [].constructor(totalPages); let i = index"
           class="pagination-number"
           [class.active]="i === currentPage"
-          (click)="goToPage(i)">
+          (click)="goToPage(i)"
+        >
           {{ i + 1 }}
         </button>
       </div>
-      <button 
-        class="pagination-btn pagination-next" 
+      <button
+        class="pagination-btn pagination-next"
         [disabled]="currentPage === totalPages - 1"
-        (click)="nextPage()">
+        (click)="nextPage()"
+      >
         Próximo
       </button>
     </nav>
     <div class="pagination-info">
-      Página {{ currentPage + 1 }} de {{ totalPages }} ({{ totalElements }} pacotes no total)
+      Página {{ currentPage + 1 }} de {{ totalPages }} ({{ totalElements }}
+      pacotes no total)
     </div>
   </div>
 </main>

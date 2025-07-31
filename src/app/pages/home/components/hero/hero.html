@@ -7,25 +7,38 @@
   <div class="search-container">
     <div class="search-elements">
       <div class="input-with-icon">
-        <img src="assets/icons/pin.svg" alt="Destino" class="input-icon">
-        <input type="text" placeholder="Para onde vamos?">
+        <img src="assets/icons/pin.svg" alt="Destino" class="input-icon" />
+        <input
+          type="text"
+          placeholder="Para onde vamos?"
+          [(ngModel)]="searchData.destination"
+        />
       </div>
       <div class="input-with-icon">
-        <img src="assets/icons/calendar-date.svg" alt="Data" class="input-icon clickable" (click)="openDatePicker()">
-        <input type="date" #dateInput>
+        <img
+          src="assets/icons/calendar-date.svg"
+          alt="Data"
+          class="input-icon clickable"
+          (click)="openDatePicker()"
+        />
+        <input type="date" #dateInput [(ngModel)]="searchData.date" />
       </div>
       <div class="input-with-icon">
-        <img src="assets/icons/user-circle.svg" alt="Pessoas" class="input-icon">
-        <select>
-          <option selected>Quantas pessoas?</option>
-          <option>1 Pessoa</option>
-          <option>2 Pessoas</option>
-          <option>3 Pessoas</option>
-          <option>4 Pessoas</option>
-          <option>5+ Pessoas</option>
+        <img
+          src="assets/icons/user-circle.svg"
+          alt="Pessoas"
+          class="input-icon"
+        />
+        <select [(ngModel)]="searchData.people">
+          <option value="">Quantas pessoas?</option>
+          <option value="1">1 Pessoa</option>
+          <option value="2">2 Pessoas</option>
+          <option value="3">3 Pessoas</option>
+          <option value="4">4 Pessoas</option>
+          <option value="5+">5+ Pessoas</option>
         </select>
       </div>
-      <button>Procurar</button>
+      <button (click)="onSearch()">Procurar</button>
     </div>
   </div>
 </div>
