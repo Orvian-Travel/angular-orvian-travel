@@ -34,18 +34,12 @@
             </p>
             <div class="booking-details">
               <div class="detail-item">
-                <span class="detail-label">Número da Reserva:</span>
-                <span class="detail-value"
-                  >#0465f570-4ff4-4d8a-adf4-ee519712be17</span
-                >
-              </div>
-              <div class="detail-item">
                 <span class="detail-label">Data da Compra:</span>
-                <span class="detail-value">29 de Julho, 2025</span>
+                <span class="detail-value">{{ getFormattedPurshaseDate() }}</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">Valor Total:</span>
-                <span class="detail-value price">R$ 2.450,00</span>
+                <span class="detail-value price">{{ totalValue | currency:'BRL':'symbol':'1.2-2' }}</span>
               </div>
             </div>
           </div>
@@ -57,8 +51,8 @@
               <img src="/assets/icons/pin.svg" alt="Destino" class="icon" />
             </div>
             <div class="destination-info">
-              <h4>Pacote Completo - Rio de Janeiro</h4>
-              <p>5 dias</p>
+              <h4>{{ packageName }}</h4>
+              <p>{{ packageDuration }} dias</p>
             </div>
           </div>
           <div class="trip-dates">
@@ -72,7 +66,7 @@
               </div>
               <div class="date-info">
                 <span class="date-label">Check-in</span>
-                <span class="date-value">15 Agosto, 2025</span>
+                <span class="date-value">{{ getFormattedCheckinDate() }}</span>
               </div>
             </div>
             <div class="date-separator">→</div>
@@ -86,7 +80,7 @@
               </div>
               <div class="date-info">
                 <span class="date-label">Check-out</span>
-                <span class="date-value">20 Agosto, 2025</span>
+                <span class="date-value">{{ getFormattedCheckoutDate() }}</span>
               </div>
             </div>
           </div>
@@ -117,14 +111,6 @@
           </div>
         </div>
         <div class="action-buttons">
-          <button class="btn btn-primary-custom">
-            <img
-              src="/assets/icons/ticket.svg"
-              alt="Voucher"
-              class="btn-icon"
-            />
-            Baixar Voucher
-          </button>
           <button class="btn btn-secondary-custom">Minhas Reservas</button>
         </div>
         <app-contact-support></app-contact-support>

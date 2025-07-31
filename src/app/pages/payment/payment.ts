@@ -371,7 +371,18 @@ export class Payment implements OnInit {
         if (reservation?.id) {
           this.currentReservationId = reservation.id;
         }
-        this.router.navigate(['/payment/approved']);
+
+        const checkinDate = this.packageCheckin || '';
+
+        this.router.navigate(['/payment/approved'], {
+          queryParams: {
+            purshaseDate: new Date().toISOString().split('T')[0],
+            totalValue: this.getFinalPriceWithTax().toFixed(2),
+            packageName: this.packageDetail?.title,
+            packageDuration: this.packageDetail?.duration,
+            checkinDate: checkinDate.split('T')[0]
+          }
+        });
       },
       error: (err) => {
         console.error('Erro ao criar reserva confirmada:', err);
@@ -390,7 +401,17 @@ export class Payment implements OnInit {
         if (reservation?.id) {
           this.currentReservationId = reservation.id;
         }
-        this.router.navigate(['/payment/pending']);
+
+        const checkinDate = this.packageCheckin || '';
+
+        this.router.navigate(['/payment/pending'], {
+          queryParams: {
+            totalValue: this.getFinalPriceWithTax().toFixed(2),
+            packageName: this.packageDetail?.title,
+            packageDuration: this.packageDetail?.duration,
+            checkinDate: checkinDate.split('T')[0]
+          }
+        });
       },
       error: (err) => {
         console.error('Erro ao criar reserva pendente:', err);
