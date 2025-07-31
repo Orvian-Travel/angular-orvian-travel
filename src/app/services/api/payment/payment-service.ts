@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPaymentService } from './payment-service.interface';
-import { Observable } from 'rxjs';
+import { delay, Observable, of } from 'rxjs';
 import {
   PaymentDetail,
   SavePaymentRequest,
@@ -17,6 +17,17 @@ export class PaymentService implements IPaymentService {
   constructor(private http: HttpClient) { }
 
   private readonly baseUrl = `${environment.apiUrl}/payments`;
+
+  authorizePayment(paymentMethod: string): Observable<any>{
+    const isApproved = paymentMethod === 'CREDITO' || paymentMethod === 'PIX';
+    const mockResponse = {
+      authorize: isApproved,
+      method: paymentMethod,
+      status: isApproved ? 'APROVADO' : 'PENDENTE',
+    };
+
+    return of(mockResponse).pipe(delay(1000));
+  }
 
   getAllPayments(): Observable<PaymentDetail[]> {
     return this.http.get<PaymentDetail[]>(this.baseUrl);
