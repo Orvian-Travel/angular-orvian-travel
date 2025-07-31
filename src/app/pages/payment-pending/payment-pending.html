@@ -7,15 +7,15 @@
         <div class="error-card">
           <div class="error-icon">
             <div class="error-circle">
-              <svg class="error-x" width="60" height="60" viewBox="0 0 60 60">
-                <circle cx="30" cy="30" r="28" fill="none" stroke="#dc3545" stroke-width="3"/>
-                <path d="M20 20l20 20M40 20l-20 20" fill="none" stroke="#dc3545" stroke-width="4" stroke-linecap="round"/>
+              <svg class="pending-clock" width="60" height="60" viewBox="0 0 60 60">
+                <circle cx="30" cy="30" r="28" fill="none" stroke="#ffc107" stroke-width="3"/>
+                <path d="M30 15v15l10 10" fill="none" stroke="#ffc107" stroke-width="3" stroke-linecap="round"/>
               </svg>
             </div>
           </div>
           <div class="error-content">
-            <h1 class="error-title">Pagamento Recusado</h1>
-            <p class="error-subtitle">Houve um problema ao processar seu pagamento</p>
+            <h1 class="error-title">Pagamento em Processamento</h1>
+            <p class="error-subtitle">Seu boleto foi registrado e está aguardando compensação</p>
             <div class="booking-status">
               <div class="status-item">
                 <span class="status-label">Status da Reserva:</span>
@@ -26,6 +26,10 @@
                 <span class="status-value">#0465f570-4ff4-4d8a-adf4-ee519712be17</span>
               </div>
               <div class="status-item">
+                <span class="status-label">Prazo de Compensação:</span>
+                <span class="status-value">24 a 48 horas úteis</span>
+              </div>
+              <div class="status-item">
                 <span class="status-label">Valor Total:</span>
                 <span class="status-value price">R$ 2.450,00</span>
               </div>
@@ -33,14 +37,14 @@
           </div>
         </div>
         <div class="problem-info-card">
-          <h3 class="problem-title">O que aconteceu?</h3>
+          <h3 class="problem-title">O que acontece agora?</h3>
           <div class="problem-description">
             <div class="problem-icon">
-              <img src="/assets/icons/money-bag.svg" alt="Pagamento" class="icon">
+              <img src="/assets/icons/boleto.svg" alt="Boleto" class="icon">
             </div>
             <div class="problem-text">
-              <h4>Problema com o Pagamento</h4>
-              <p>Tivemos um problema ao processar o seu pagamento. Isso pode acontecer por dados incorretos, falta de saldo/limite, ou problemas temporários do sistema.</p>
+              <h4>Aguardando Compensação do Boleto</h4>
+              <p>Seu boleto foi gerado com sucesso! O pagamento será processado automaticamente pelo banco em <strong>24 a 48 horas úteis</strong> após o pagamento.</p>
             </div>
           </div>
         </div>
@@ -78,35 +82,35 @@
           </div>
         </div>
         <div class="next-steps-card">
-          <h3 class="steps-title">Como resolver?</h3>
+          <h3 class="steps-title">Próximos Passos</h3>
           <div class="steps-list">
             <div class="step-item">
               <div class="step-number">1</div>
               <div class="step-content">
-                <h4>Verifique os Dados</h4>
-                <p>Confirme se todas as informações de pagamento estão corretas e se há saldo/limite disponível.</p>
+                <h4>Pague o Boleto</h4>
+                <p>Se ainda não pagou, acesse o boleto através do seu email ou banco e efetue o pagamento até a data de vencimento.</p>
               </div>
             </div>
             <div class="step-item">
               <div class="step-number">2</div>
               <div class="step-content">
-                <h4>Tente Novamente</h4>
-                <p>Refaça o pagamento com os dados corrigidos ou aguarde alguns minutos e tente novamente.</p>
+                <h4>Aguarde a Compensação</h4>
+                <p>Após o pagamento, o processo de compensação leva de 24 a 48 horas úteis. Você receberá uma notificação por email.</p>
               </div>
             </div>
             <div class="step-item">
               <div class="step-number">3</div>
               <div class="step-content">
-                <h4>Outras Formas de Pagamento</h4>
-                <p>Você pode tentar com cartão de crédito, PIX ou boleto bancário na próxima tela.</p>
+                <h4>Confirmação Automática</h4>
+                <p>Assim que o pagamento for identificado, sua reserva será automaticamente confirmada e você receberá os vouchers.</p>
               </div>
             </div>
           </div>
         </div>
         <div class="action-buttons">
           <button class="btn btn-primary-custom">
-            <img src="/assets/icons/money-bag.svg" alt="Pagar" class="btn-icon">
-            Tentar Novamente
+            <img src="/assets/icons/boleto.svg" alt="Boleto" class="btn-icon">
+            Visualizar Boleto
           </button>
           <button class="btn btn-secondary-custom">
             Minhas Reservas

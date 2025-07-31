@@ -3,11 +3,11 @@ import { HeaderLogged } from '../../shared/components/header-logged/header-logge
 import { ContactSupport } from "../../shared/components/contact-support/contact-support";
 
 @Component({
-  selector: 'app-payment-rejected',
+  selector: 'app-payment-pending',
   imports: [HeaderLogged, ContactSupport],
-  templateUrl: './payment-rejected.html',
-  styleUrl: './payment-rejected.css'
+  templateUrl: './payment-pending.html',
+  styleUrl: './payment-pending.css'
 })
-export class PaymentRejected {
+export class PaymentPending {
 
 }

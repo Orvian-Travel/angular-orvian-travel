@@ -390,7 +390,7 @@ export class Payment implements OnInit {
         if (reservation?.id) {
           this.currentReservationId = reservation.id;
         }
-        this.router.navigate(['/payment/rejected']);
+        this.router.navigate(['/payment/pending']);
       },
       error: (err) => {
         console.error('Erro ao criar reserva pendente:', err);
