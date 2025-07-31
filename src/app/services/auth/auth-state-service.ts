@@ -57,6 +57,11 @@ export class AuthStateService {
     }
   }
 
+  getUserId(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.sub || null;
+  }
+
   getUserRole(): string | null {
     const decoded = this.getDecodedToken();
     return decoded?.role || null;
