@@ -73,4 +73,8 @@ export class Login implements OnInit {
       },
     });
   }
+
+  forgotPasswordRedirect(): void {
+    this.router.navigate(['/forgot-password']);
+  }
 }

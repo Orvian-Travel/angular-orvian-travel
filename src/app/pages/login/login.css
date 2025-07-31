@@ -137,6 +137,10 @@ html, body {
   z-index: 10;
 }
 
+.forgot-password-link {
+  cursor: pointer;
+}
+
 /* Responsividade mobile-first */
 @media (max-width: 991.98px) {
   /* Layout mobile */

@@ -11,6 +11,8 @@ import { PaymentRejected } from './pages/payment-rejected/payment-rejected';
 import { Reservations } from './pages/reservations/reservations';
 import { authGuard } from './guards/auth-guard';
 import { adminGuard } from './guards/admin-guard';
+import { ForgotPassword } from './pages/forgot-password/forgot-password';
+import { ResetPassword } from './pages/reset-password/reset-password';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -18,6 +20,8 @@ export const routes: Routes = [
   { path: 'product-details/:id', component: ProductDetails },
   { path: 'register', component: Register },
   { path: 'admin', component: LoginAdmin },
+  { path: 'forgot-password', component: ForgotPassword },
+  { path: 'reset-password/:token', component: ResetPassword },
 
   { path: 'reservations', component: Reservations },
 
