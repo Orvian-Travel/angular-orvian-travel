@@ -130,7 +130,17 @@ export class ProductDetails implements OnInit, OnDestroy {
   }
 
   paymentRedirect(): void {
-    this.router.navigate(['/payment']);
+    if(this.selectedDate){
+          this.router.navigate(['/payment'], {
+      queryParams: {
+        packageId: this.package?.id,
+        packageDestination: this.package?.destination,
+        checkin: this.selectedDate.toISOString()
+      }
+    });
+    }else{
+      alert('Preencha uma data para continuar.');
+    }
   }
 
   loginRedirectWithReturn(): void {
