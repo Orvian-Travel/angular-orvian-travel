@@ -22,16 +22,12 @@
                 <span class="status-value pending">Pendente</span>
               </div>
               <div class="status-item">
-                <span class="status-label">Número da Reserva:</span>
-                <span class="status-value">#0465f570-4ff4-4d8a-adf4-ee519712be17</span>
-              </div>
-              <div class="status-item">
                 <span class="status-label">Prazo de Compensação:</span>
                 <span class="status-value">24 a 48 horas úteis</span>
               </div>
               <div class="status-item">
                 <span class="status-label">Valor Total:</span>
-                <span class="status-value price">R$ 2.450,00</span>
+                <span class="status-value price">{{ totalValue | currency:'BRL':'symbol':'1.2-2' }}</span>
               </div>
             </div>
           </div>
@@ -55,8 +51,8 @@
               <img src="/assets/icons/pin.svg" alt="Destino" class="icon">
             </div>
             <div class="destination-info">
-              <h4>Pacote Completo - Rio de Janeiro</h4>
-              <p>5 dias</p>
+              <h4>{{packageName}}</h4>
+              <p>{{packageDuration}} dias</p>
             </div>
           </div>
           <div class="trip-dates">
@@ -66,7 +62,7 @@
               </div>
               <div class="date-info">
                 <span class="date-label">Check-in</span>
-                <span class="date-value">15 Agosto, 2025</span>
+                <span class="date-value">{{ getFormattedCheckinDate() }}</span>
               </div>
             </div>
             <div class="date-separator">→</div>
@@ -76,7 +72,7 @@
               </div>
               <div class="date-info">
                 <span class="date-label">Check-out</span>
-                <span class="date-value">20 Agosto, 2025</span>
+                <span class="date-value">{{ getFormattedCheckoutDate() }}</span>
               </div>
             </div>
           </div>
@@ -108,10 +104,6 @@
           </div>
         </div>
         <div class="action-buttons">
-          <button class="btn btn-primary-custom">
-            <img src="/assets/icons/boleto.svg" alt="Boleto" class="btn-icon">
-            Visualizar Boleto
-          </button>
           <button class="btn btn-secondary-custom">
             Minhas Reservas
           </button>
