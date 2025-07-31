@@ -18,7 +18,7 @@ export class Home {
   searchData: SearchData | null = null;
 
   onSearchRequest($event: SearchData) {
-    this.searchData = $event;
+    this.searchData = { ...$event };
     console.log('Dados de busca recebidos no Home:', this.searchData);
   }
 

@@ -50,6 +50,7 @@ export class CardList implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('Changes detected:', changes['searchData']);
     if (changes['searchData'] && changes['searchData'].currentValue) {
       console.log('Search data changed:', changes['searchData'].currentValue);
       this.currentPage = 0;
@@ -100,7 +101,6 @@ export class CardList implements OnInit, OnChanges {
       },
       error: (error) => {
         console.error('Erro na busca:', error);
-        // this.currentSearchKey = null;
         this.loadPackages();
       }
     });
