@@ -46,13 +46,12 @@
 
 /* Botão primário customizado */
 .btn-custom-primary {
-  background-color: var(--primary-color);
-  border-color: var(--primary-color);
+  background-color: var(--orvian-primary-variant);
   font-size: 1.08rem;
   padding: 12px 100px;
   border-radius: 6px;
   transition: background 0.18s;
-  background-color: #1486b4;
+  border: solid 2px var(--orvian-primary-variant);
 }
 
 .btn-custom-primary:hover {
@@ -77,7 +76,6 @@
 
 /* Estilo do link de cadastro */
 .register-link {
-  margin-top: 20px;
   padding: 15px 0;
 }
 
@@ -139,7 +137,16 @@ html, body {
 }
 
 .forgot-password-link {
+  color: #1486b4;
+  font-weight: 550;
+  text-decoration: none;
   cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.forgot-password-link:hover {
+  color: #0f6b8a;
+  text-decoration: underline;
 }
 
 /* Responsividade mobile-first */
@@ -206,7 +213,7 @@ html, body {
   
   /* Formulário otimizado para mobile */
   .card-body {
-    padding: 25px 20px !important;
+    padding: 3rem 20px !important;
   }
   
   .form-control-custom {
@@ -250,7 +257,7 @@ html, body {
   }
   
   .card-body {
-    padding: 20px 15px !important;
+    padding: 4rem 15px !important;
   }
   
   .mobile-illustration {
@@ -311,4 +318,11 @@ html, body {
 .logo-voltar-mobile {
   height: 50px;
   width: auto;
+}
+
+@media screen and (max-width: 575.98px) {
+  .card-body {
+    padding: 2rem !important;
+  }
+  
 }
