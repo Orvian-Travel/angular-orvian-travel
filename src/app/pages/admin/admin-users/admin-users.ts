@@ -17,6 +17,15 @@ export class AdminUsers implements OnInit {
   error: string | null = null;
   documentType: string = '';
 
+  selectedUser: UserDetail | null = null;
+
+  currentPage = 0;
+  pageSize = 10;
+  totalUsers = 0;
+  totalPages = 0;
+
+  constructor(private userService: UserService){}
+
   newUser: any = {
     name: '',
     email: '',
@@ -26,13 +35,14 @@ export class AdminUsers implements OnInit {
     birthDate: ''
   };
 
-  currentPage = 0;
-  pageSize = 10;
-  totalUsers = 0;
-  totalPages = 0;
+  editUserFormData: any = {
+    name: '',
+    email: '',
+    phone: '',
+    document: '',
+    role: ''
+  };
 
-  constructor(private userService: UserService){}
-  
   ngOnInit() {
     this.loadUsers();
   }
@@ -134,9 +144,60 @@ export class AdminUsers implements OnInit {
     }
   }
 
-  onDocumentTypeChange(event: Event): void {
+  openEditUserModal(user: UserDetail) {
+    this.selectedUser = { ...user };
+    this.editUserFormData = {
+      name: user.name,
+      email: user.email,
+      phone: user.phone,
+      document: user.document,
+      role: user.role
+    };
+
+    this.documentType = user.document && user.document.length === 14 ? 'cpf' : 'passport';
+
+    const modal = document.getElementById('editUserModal');
+    if(modal){
+      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(modal);
+      modalInstance.show();
+    }
+  }
+
+  editUser(form: NgForm) {
+    if (form.valid && this.selectedUser) {
+      this.userService.updateUser(this.selectedUser.id, {
+        name: this.editUserFormData.name,
+        email: this.editUserFormData.email,
+        phone: this.editUserFormData.phone,
+        document: this.editUserFormData.document,
+        role: this.editUserFormData.role
+      }).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.selectedUser = null;
+          const modal = document.getElementById('editUserModal');
+          if (modal) {
+            const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
+            if(modalInstance){
+              modalInstance.hide();
+            }
+          }
+        },
+        error: (err) => {
+          alert('Erro ao editar usuário: ' + (err?.error?.message || 'Tente novamente.'));
+        }
+      });
+    }
+  }
+
+  onDocumentTypeChange(event: Event, isEdit: boolean = false): void {
     const select = event.target as HTMLSelectElement;
     this.documentType = select.value;
+    if(isEdit) {
+      this.editUserFormData.document = '';
+    }else{
+      this.newUser.document = '';
+    }
     this.newUser.document = '';
     const documentInput = document.querySelector('#userDocument') as HTMLInputElement;
     if (documentInput) {
@@ -157,7 +218,7 @@ export class AdminUsers implements OnInit {
     }
   }
 
-  formatCPF(event: Event): void {
+  formatCPF(event: Event, isEdit: boolean = false): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
     value = value.substring(0, 11);
@@ -167,10 +228,14 @@ export class AdminUsers implements OnInit {
       value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     }
     input.value = value;
-    this.newUser.document = value;
+    if(isEdit){
+      this.editUserFormData.document = value;
+    }else{
+      this.newUser.document = value;
+    }
   }
 
-  formatPassport(event: Event): void {
+  formatPassport(event: Event, isEdit: boolean = false): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/[^a-zA-Z0-9]/g, '');
     let formattedValue = '';
@@ -191,7 +256,11 @@ export class AdminUsers implements OnInit {
       }
     }
     input.value = formattedValue;
-    this.newUser.document = formattedValue;
+    if(isEdit){
+      this.editUserFormData.document = formattedValue;
+    }else{
+      this.newUser.document = formattedValue;
+    }
   }
 
   formatPhone(event: Event): void {

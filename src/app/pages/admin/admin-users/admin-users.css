@@ -187,6 +187,25 @@
   font-size: 0.9rem;
 }
 
+.btn-edit{
+  color: var(--orvian-primary-variant);
+  transition: all 0.3s ease;
+}
+
+.btn-edit:hover{
+  color: var(--orvian-primary);
+}
+
+.btn-delete{
+  color: #E53E3E;
+  transition: all 0.3s ease;
+}
+
+.btn-delete:hover{
+  color: #851d1d;
+  transition: all 0.3s ease;
+}
+
 @media (max-width: 768px) {
   .pagination-nav {
     flex-direction: column;

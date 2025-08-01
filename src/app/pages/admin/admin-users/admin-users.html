@@ -39,12 +39,10 @@
                             </td>
                             <td>{{ user.document }}</td>
                             <td>
-                                <button class="btn btn-sm btn-outline-primary me-2" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#editUserModal">
+                                <button class="btn btn-sm btn-edit me-2" (click)="openEditUserModal(user)">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger">
+                                <button class="btn btn-sm btn-delete">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -88,8 +86,6 @@
     </div>
   </div>
 
-
-<!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -150,7 +146,6 @@
         </div>
     </div>
 </div>
-<!-- 
 
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -160,35 +155,57 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form #editUserForm="ngForm" (ngSubmit)="updateUser(editUserForm)">
-                    <input type="hidden" name="id" [ngModel]="selectedUser?.id">
+                <form #editUserForm="ngForm" (ngSubmit)="editUser(editUserForm)">
+                    <input type="hidden" name="id">
                     <div class="mb-3">
                         <label for="editUserName" class="form-label">Nome</label>
-                        <input type="text" class="form-control" id="editUserName" name="name" [ngModel]="selectedUser?.name" required>
+                        <input type="text" class="form-control" id="editUserName" name="name" [(ngModel)]="editUserFormData.name" required>
                     </div>
                     <div class="mb-3">
                         <label for="editUserEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="editUserEmail" name="email" [ngModel]="selectedUser?.email" required>
+                        <input type="email" class="form-control" id="editUserEmail" name="email" [(ngModel)]="editUserFormData.email" required>
                     </div>
                     <div class="mb-3">
                         <label for="editUserPhone" class="form-label">Telefone</label>
-                        <input type="tel" class="form-control" id="editUserPhone" name="phone" [ngModel]="selectedUser?.phone" required>
+                        <input type="tel" class="form-control" id="editUserPhone" name="phone" [(ngModel)]="editUserFormData.phone" required>
+                    </div>
+                    <div class="form-group mb-3">
+                    <label for="text">Tipo de Documento</label>
+                        <select class="form-select form-control form-control-custom document-type-select"
+                                [(ngModel)]="documentType"
+                                name="userDocument"
+                                (change)="onDocumentTypeChange($event, true)">
+                            <option value="">Selecione um tipo</option>
+                            <option value="cpf">CPF</option>
+                            <option value="passport">Passaporte</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="text">Número do Documento</label>
+                        <input type="text" id="editUserDocument" name="document" [(ngModel)]="editUserFormData.document"
+                            class="form-control form-control-custom document-number-input"
+                            [placeholder]="documentType === 'cpf' ? '000.000.000-00' : documentType === 'passport' ? 'AB123456' : 'Selecione o tipo de documento'"
+                            [maxLength]="documentType === 'cpf' ? 14 : documentType === 'passport' ? 8 : 8"
+                            [disabled]="!documentType"
+                            required
+                            (input)="documentType === 'cpf' ? formatCPF($event, true) : documentType === 'passport' ? formatPassport($event, true) : null"
+                        />
                     </div>
                     <div class="mb-3">
                         <label for="editUserRole" class="form-label">Tipo de Usuário</label>
-                        <select class="form-control" id="editUserRole" name="role" [ngModel]="selectedUser?.role" required>
+                        <select class="form-control" id="editUserRole" name="role" [(ngModel)]="editUserFormData.role" required>
                             <option value="">Selecione o tipo</option>
-                            <option value="Usuário">Usuário</option>
-                            <option value="Administrador">Administrador</option>
+                            <option value="USER">Usuário</option>
+                            <option value="ATENDENTE">Atendente</option>
+                            <option value="ADMIN">Administrador</option>
                         </select>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                        <button type="button" class="btn btn-orvian-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-orvian-primary">Salvar Alterações</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
--->
