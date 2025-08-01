@@ -4,6 +4,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { UserDetail } from '../../../services/entities/user.model';
 import { UserService } from '../../../services/api/user/user-service';
 import { PagedResponse } from '../../../services/entities/paged-response.model';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-users',
@@ -188,6 +189,37 @@ export class AdminUsers implements OnInit {
         }
       });
     }
+  }
+
+  deleteUser(userId: string) {
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: 'Você não poderá reverter esta ação!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userService.deleteUser(userId).subscribe({
+          next: () => {
+            Swal.fire(
+              'Excluído!',
+              'O usuário foi excluído com sucesso.',
+              'success'
+            );
+            this.loadUsers();
+          },
+          error: (err) => {
+            Swal.fire(
+              'Erro!',
+              'Não foi possível excluir o usuário: ' + (err?.error?.message || 'Tente novamente.'),
+              'error'
+            );
+          }
+        });
+      }
+    });
   }
 
   onDocumentTypeChange(event: Event, isEdit: boolean = false): void {
