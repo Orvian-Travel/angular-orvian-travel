@@ -24,7 +24,7 @@
 /* Sidebar */
 .sidebar {
     width: 250px;
-    background: linear-gradient(180deg, #2E7D8A 0%, #4A9CA6 100%);
+    background: var(--orvian-primary-variant);
     color: white;
     padding: 20px 0;
     position: fixed;
