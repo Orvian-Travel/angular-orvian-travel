@@ -1,3 +1,17 @@
-body{
+body {
     background-color: var(--orvian-background-gray);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Garante que o conteúdo principal ocupe o espaço disponível */
+app-hero,
+app-card-list {
+    flex-grow: 1;
+}
+
+/* O footer ficará sempre no final */
+app-footer {
+    margin-top: auto;
 }

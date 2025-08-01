@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { from, Subscription } from 'rxjs';
 import { Header } from '../../shared/components/header/header';
 import { CardList } from '../../shared/components/card-list/card-list';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 import { PackageService } from '../../services/api/package/package-service';
 import { PackageDetail } from '../../services/entities/package.model';
 import { SERVICES_TOKEN } from '../../services/services-token';
@@ -18,7 +19,7 @@ import { AuthStateService } from '../../services/auth/auth-state-service';
 
 @Component({
   selector: 'app-product-details',
-  imports: [Header, CardList, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [Header, CardList, FooterComponent, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
   providers: [

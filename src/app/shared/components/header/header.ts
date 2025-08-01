@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 export class Header implements OnInit {
 
   isLoggedIn: boolean = false;
+  isMenuOpen: boolean = false;
 
   constructor(private router: Router, private authStateService: AuthStateService) {}
 
@@ -21,17 +22,29 @@ export class Header implements OnInit {
     });
   }
 
+  goHome(): void {
+    this.router.navigate(['/']);
+    this.isMenuOpen = false; // Fecha o menu após navegar
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
   loginRedirect() : void{
     this.router.navigate(['/login']);
+    this.isMenuOpen = false; // Fecha o menu após navegar
   }
 
   registerRedirect(): void{
     this.router.navigate(['/register']);
+    this.isMenuOpen = false; // Fecha o menu após navegar
   }
 
   logout(): void {
     this.authStateService.logout();
     this.router.navigate(['/']);
+    this.isMenuOpen = false; // Fecha o menu após navegar
   }
 
   getUser(): any {

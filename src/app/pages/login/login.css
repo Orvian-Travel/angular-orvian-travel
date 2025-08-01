@@ -148,6 +148,7 @@ html, body {
     min-height: 100vh !important;
     position: relative;
     flex-direction: column !important;
+    padding-top: 80px !important; /* Espaço para o logo */
   }
   
   .bg-gradient-custom {
@@ -283,4 +284,35 @@ html, body {
     max-width: 380px;
     min-width: 300px;
   }
+}
+
+/* ===== LOGOS DE VOLTA ===== */
+.logo-back {
+  display: inline-block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logo-back:hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.logo-voltar {
+  height: 60px;
+  width: auto;
+}
+
+.logo-back-mobile {
+  display: inline-block;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.logo-back-mobile:hover {
+  opacity: 0.8;
+  transform: scale(0.95);
+}
+
+.logo-voltar-mobile {
+  height: 50px;
+  width: auto;
 }

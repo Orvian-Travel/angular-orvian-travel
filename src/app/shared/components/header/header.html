@@ -1,15 +1,26 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="brand navbar-brand d-flex align-items-center" href="#">
+            <!-- Logo clicável para voltar -->
+            <a class="brand navbar-brand d-flex align-items-center" (click)="goHome()" style="cursor: pointer;">
                 <img src="assets/logo-branca.svg" alt="Logo Orvian">
             </a>
-            <div class="buttons navbar-nav ml-auto">
-                <button class="btn font-weight-bold" *ngIf="!isLoggedIn" (click)="registerRedirect()">Registre-se</button>
-                <button class="btn font-weight-bold" *ngIf="!isLoggedIn" (click)="loginRedirect()">Login</button>
-                <div class="user-info" *ngIf="isLoggedIn">
-                    <span class="user-name">Olá, {{ getUserName() }}</span>
-                    <button class="btn" (click)="logout()">Sair</button>
+            
+            <!-- Botão do menu hambúrguer (visível apenas em mobile) -->
+            <button class="navbar-toggler" type="button" (click)="toggleMenu()" 
+                    [attr.aria-expanded]="isMenuOpen" aria-controls="navbarNav" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Menu de navegação -->
+            <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="navbarNav">
+                <div class="buttons navbar-nav ms-auto">
+                    <button class="btn font-weight-bold" *ngIf="!isLoggedIn" (click)="registerRedirect()">Registre-se</button>
+                    <button class="btn font-weight-bold" *ngIf="!isLoggedIn" (click)="loginRedirect()">Login</button>
+                    <div class="user-info" *ngIf="isLoggedIn">
+                        <span class="user-name">Olá, {{ getUserName() }}</span>
+                        <button class="btn" (click)="logout()">Sair</button>
+                    </div>
                 </div>
             </div>
         </div>
