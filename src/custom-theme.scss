@@ -4,14 +4,14 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use "@angular/material" as mat;
-@import "./app/styleTokens/orvian-material-custom-theme.scss";
+@use "./app/styleTokens/orvian-material-custom-theme.scss" as customTheme;
 
 html {
   @include mat.theme(
     (
       color: (
-        primary: $primary-palette,
-        tertiary: $tertiary-palette,
+        primary: customTheme.$primary-palette,
+        tertiary: customTheme.$tertiary-palette,
       ),
       typography: Roboto,
       density: 0,
