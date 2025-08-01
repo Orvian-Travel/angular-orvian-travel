@@ -3,12 +3,16 @@ import { Component, Inject, inject, OnInit } from '@angular/core';
 import { SERVICES_TOKEN } from '../../../../services/services-token';
 import { IReservationService } from '../../../../services/api/reservation/reservation-service.interface';
 import { AuthStateService } from '../../../../services/auth/auth-state-service';
+import { ReservationService } from '../../../../services/api/reservation/reservation-service';
 
 @Component({
   selector: 'app-reservations-list',
   imports: [CommonModule],
   templateUrl: './reservations-list.html',
-  styleUrl: './reservations-list.css'
+  styleUrl: './reservations-list.css',
+  providers: [
+    { provide: SERVICES_TOKEN.HTTP.RESERVATION, useClass: ReservationService }
+  ]
 })
 export class ReservationsList implements OnInit {
   selectedStatus: string = 'todas';
