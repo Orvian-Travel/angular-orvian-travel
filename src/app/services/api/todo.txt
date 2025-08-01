@@ -1,2 +1,0 @@
-Pasta para colocar todos os models e services, separados por Entidade
-(e.g pasta com o model e service de reserva)

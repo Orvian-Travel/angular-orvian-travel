@@ -20,7 +20,6 @@ export class Home {
 
   onSearchRequest($event: SearchData) {
     this.searchData = { ...$event };
-    console.log('Dados de busca recebidos no Home:', this.searchData);
   }
 
 }

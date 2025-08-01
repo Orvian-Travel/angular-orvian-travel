@@ -1,6 +1,5 @@
-
 app-card {
-    display: contents;
+  display: contents;
 }
 
 .section-header {
@@ -158,35 +157,50 @@ app-card {
   font-style: italic;
 }
 
+.btnClear {
+  padding: 0.5rem 1.2rem;
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
+  border: 2px solid var(--orvian-button-button-background-color);
+  font-size: 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btnClear:hover {
+  background-color: var(--orvian-button-button-background-color-hover);
+  color: var(--orvian-button-button-text-color-hover);
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .section-title {
     font-size: 2rem;
   }
-  
+
   .packages-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
-  
+
   .package-card {
     margin: 0;
     height: 380px;
   }
-  
+
   .card-image-wrapper {
     height: 180px;
   }
-  
+
   .card-content {
     padding: 1.2rem;
   }
-  
+
   .package-title {
     font-size: 1.2rem;
     min-height: 2.6rem;
   }
-  
+
   .price {
     font-size: 1.8rem;
   }
@@ -196,34 +210,34 @@ app-card {
   .section-header {
     margin-bottom: 2rem;
   }
-  
+
   .section-title {
     font-size: 1.8rem;
   }
-  
+
   .section-subtitle {
     font-size: 1rem;
   }
-  
+
   .packages-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
   }
-  
+
   .package-card {
     margin: 0;
     border-radius: 6px;
     height: 360px;
   }
-  
+
   .card-image-wrapper {
     height: 160px;
   }
-  
+
   .card-content {
     padding: 1rem;
   }
-  
+
   .duration-badge {
     top: 0.5rem;
     right: 0.5rem;
@@ -231,13 +245,13 @@ app-card {
     font-size: 0.8rem;
     border-radius: 4px;
   }
-  
+
   .package-title {
     font-size: 1.1rem;
     margin-bottom: 0.8rem;
     min-height: 2.4rem;
   }
-  
+
   .price {
     font-size: 1.6rem;
   }
@@ -317,7 +331,7 @@ app-card {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .pagination-numbers {
     flex-wrap: wrap;
     justify-content: center;
@@ -328,13 +342,13 @@ app-card {
   .pagination-numbers {
     gap: 0.3rem;
   }
-  
+
   .pagination-number {
     width: 35px;
     height: 35px;
     font-size: 0.9rem;
   }
-  
+
   .pagination-btn {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;
@@ -415,7 +429,7 @@ app-card {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .pagination-numbers {
     flex-wrap: wrap;
     justify-content: center;
@@ -426,13 +440,13 @@ app-card {
   .pagination-numbers {
     gap: 0.3rem;
   }
-  
+
   .pagination-number {
     width: 35px;
     height: 35px;
     font-size: 0.9rem;
   }
-  
+
   .pagination-btn {
     padding: 0.6rem 1.2rem;
     font-size: 0.9rem;

@@ -7,6 +7,8 @@ import { SERVICES_TOKEN } from '../../../services/services-token';
 import { PackageDetail } from '../../../services/entities/package.model';
 import { IPackageService } from '../../../services/api/package/package-service.interface';
 import { SearchData } from '../../../services/entities/search-data.model';
+import { DialogManager } from '../../../services/dialog/dialog-manager';
+import { IDialogManager } from '../../../services/dialog/dialog-manager.interface';
 
 interface CacheEntry {
   data: PackageDetail[];
@@ -20,13 +22,15 @@ interface CacheEntry {
   templateUrl: './card-list.html',
   styleUrl: './card-list.css',
   providers: [
-    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService }
+    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService },
+    { provide: SERVICES_TOKEN.DIALOG, useClass: DialogManager }
   ]
 })
 export class CardList implements OnInit, OnChanges {
   constructor(
     private router: Router,
-    @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService
+    @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
+    @Inject(SERVICES_TOKEN.DIALOG) private readonly dialogManager: IDialogManager
   ) { }
 
 
@@ -38,6 +42,8 @@ export class CardList implements OnInit, OnChanges {
   pageSize: number = 8;
   totalPages: number = 0;
   totalElements: number = 0;
+
+  isSearching: boolean = false;
 
   private allCurrentData: PackageDetail[] = [];
 
@@ -52,7 +58,6 @@ export class CardList implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     console.log('Changes detected:', changes['searchData']);
     if (changes['searchData'] && changes['searchData'].currentValue) {
-      console.log('Search data changed:', changes['searchData'].currentValue);
       this.currentPage = 0;
       this.loadSearch(changes['searchData'].currentValue);
     }
@@ -77,7 +82,8 @@ export class CardList implements OnInit, OnChanges {
       people: maxPeople
     });
 
-    // Fazer requisição com size maior para buscar todos os resultados
+
+    this.isSearching = true;
     this.service.getAllPackagesBySearchPagination(
       0,
       1000,
@@ -86,10 +92,16 @@ export class CardList implements OnInit, OnChanges {
       maxPeople
     ).subscribe({
       next: (response: PagedResponse<PackageDetail>) => {
-        const allData = response._embedded.DTOList;
+        if (response._embedded.DTOList.length === 0) {
+          this.dialogManager.showNotificationAlert(
+            'Nenhum resultado',
+            'Nenhum pacote encontrado para a busca informada.',
+            true)
+          this.loadPackages();
+          return;
+        }
 
-        // Salvar no cache
-        this.setCachedData(allData, allData.length);
+        const allData = response._embedded.DTOList;
 
         // Atualizar dados locais
         this.allCurrentData = allData;
@@ -97,20 +109,32 @@ export class CardList implements OnInit, OnChanges {
         this.currentPage = 0;
         this.updateLocalPagination();
 
-        console.log(`Busca completa: ${allData.length} pacotes encontrados`);
+        this.dialogManager.showNotificationAlert(
+          'Busca completa',
+          'Pacotes encontrados, Aproveite!',
+          true
+        )
       },
-      error: (error) => {
-        console.error('Erro na busca:', error);
+      error: () => {
+        this.dialogManager.showErrorAlert(
+          'Erro inesperado',
+          'Ocorreu um erro ao buscar os pacotes. Tente novamente mais tarde.',
+          true
+        )
         this.loadPackages();
       }
     });
   }
 
   loadPackages(): void {
-    // Verificar cache primeiro
+
     const cachedData = this.getCachedData();
+    if (this.isSearching) {
+      this.allCurrentData = [];
+      this.isSearching = false;
+    }
+
     if (cachedData) {
-      console.log('Usando pacotes padrão do cache');
       this.allCurrentData = cachedData.data;
       this.cardListTitle = 'Pacotes recentes';
       this.currentPage = 0;
@@ -132,11 +156,13 @@ export class CardList implements OnInit, OnChanges {
         this.cardListTitle = 'Pacotes recentes';
         this.currentPage = 0;
         this.updateLocalPagination();
-
-        console.log(`Pacotes carregados: ${allData.length} pacotes`);
       },
-      error: (error) => {
-        console.error('Erro ao carregar pacotes:', error);
+      error: () => {
+        this.dialogManager.showErrorAlert(
+          'Erro ao carregar pacotes:',
+          'Ocorreu um erro ao carregar os pacotes. Tente novamente mais tarde.',
+          true
+        );
       }
     });
   }
@@ -155,6 +181,8 @@ export class CardList implements OnInit, OnChanges {
       totalElements,
       timestamp: Date.now()
     };
+
+    this.allPackagesCache = cacheEntry;
   }
 
   private updateLocalPagination(): void {
@@ -164,8 +192,6 @@ export class CardList implements OnInit, OnChanges {
     this.packages = this.allCurrentData.slice(startIndex, endIndex);
     this.totalElements = this.allCurrentData.length;
     this.totalPages = Math.ceil(this.totalElements / this.pageSize);
-
-    console.log(`Página ${this.currentPage + 1}: Mostrando ${this.packages.length} de ${this.totalElements} pacotes`);
   }
 
   nextPage(): void {
@@ -197,7 +223,10 @@ export class CardList implements OnInit, OnChanges {
   // Método para limpar todo o cache
   clearCache(): void {
     this.allPackagesCache = null;
-    console.log('Cache limpo');
+  }
+
+  limparBusca() {
+    this.loadPackages();
   }
 
   navigateToDetails(id: string) {

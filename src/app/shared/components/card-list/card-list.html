@@ -4,6 +4,9 @@
     <p class="section-subtitle">
       Descubra destinos incríveis com os melhores preços
     </p>
+    <button (click)="limparBusca()" class="btnClear mt-2" *ngIf="isSearching">
+      Limpar Busca
+    </button>
   </div>
   <div class="packages-grid">
     <div
