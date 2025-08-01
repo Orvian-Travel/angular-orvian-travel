@@ -14,11 +14,16 @@ export class DialogManager implements IDialogManager {
       text: message,
       timer: 3000,
       showConfirmButton: false,
-      animation: true,
       position: 'top-end',
       width: '400px',
       background: '#f8f9fa',
       toast: true,
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      },
       ...(showIcon && { icon: 'info' })
     });
 

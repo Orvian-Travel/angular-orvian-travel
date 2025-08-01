@@ -1,5 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Inject, inject, OnInit } from '@angular/core';
+import { SERVICES_TOKEN } from '../../../../services/services-token';
+import { IReservationService } from '../../../../services/api/reservation/reservation-service.interface';
+import { AuthStateService } from '../../../../services/auth/auth-state-service';
 
 @Component({
   selector: 'app-reservations-list',
@@ -7,13 +10,23 @@ import { Component } from '@angular/core';
   templateUrl: './reservations-list.html',
   styleUrl: './reservations-list.css'
 })
-export class ReservationsList {
+export class ReservationsList implements OnInit {
   selectedStatus: string = 'todas';
   reservations: any[] = [];
   currentPage: number = 0;
   pageSize: number = 10;
   totalElements: number = 0;
   totalPages: number = 0;
+
+  constructor(
+    @Inject(SERVICES_TOKEN.HTTP.RESERVATION) private readonly reservationService: IReservationService,
+    private authStateService: AuthStateService
+  ) { }
+
+
+  ngOnInit(): void {
+    this.loadReservations();
+  }
 
   onStatusFilterChange(status: string): void {
     this.selectedStatus = status;
@@ -22,13 +35,28 @@ export class ReservationsList {
   }
 
   private loadReservations(): void {
-    // Aqui você fará a requisição para o backend
-    // Exemplo:
-    // this.reservationService.getReservationsByStatus(status).subscribe(...)
+
     const statusParam = this.selectedStatus === '' ? undefined : this.selectedStatus;
 
-    console.log(`Filtrar reservas por status: ${statusParam}`);
-    // TODO: Implementar chamada para API
+    const userId = this.authStateService.getUserId() || undefined;
+
+    this.reservationService.getAllReservationsWithPaginationWithStatus(
+      this.currentPage,
+      this.pageSize,
+      userId,
+      statusParam
+    ).subscribe({
+      next: (response) => {
+        this.reservations = response._embedded.DTOList;
+        this.totalElements = response.page?.totalElements || 0;
+        this.totalPages = response.page?.totalPages || 0;
+        console.log('Reservas carregadas:', this.reservations);
+      },
+      error: (error) => {
+        console.error('Erro ao carregar reservas:', error);
+      }
+    });
+
   }
 
   onPageChange(page: number): void {
