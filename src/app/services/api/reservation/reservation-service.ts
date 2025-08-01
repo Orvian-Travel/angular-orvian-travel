@@ -8,7 +8,7 @@ import {
   SaveReservationResponse,
   UpdateReservationRequest
 } from '../../entities/reservation.model';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
 
@@ -31,6 +31,31 @@ export class ReservationService implements IReservationService {
     return this.http.get<any>(`${this.baseUrl}?page=${pageNumber}&size=${pageSize}`).pipe(
       map(response => transformPagedResponse<ReservationDetail>(response, 'ReservationSearchResultDTOList'))
     );
+  }
+
+  getAllReservationsWithPaginationWithStatus(
+    pageNumber: number,
+    pageSize: number,
+    userId?: string,
+    status?: string
+  ) {
+
+    let params = new HttpParams()
+      .set('page', pageNumber.toString())
+      .set('size', pageSize.toString());
+
+    if (userId) {
+      params = params.set('userId', userId);
+    }
+
+    if (status && status !== 'todas') {
+      params = params.set('status', status);
+    }
+
+    return this.http.get<any>(this.baseUrl, { params }).pipe(
+      map(response => transformPagedResponse<ReservationDetail>(response, 'ReservationSearchResultDTOList'))
+    );
+
   }
 
   getReservationById(id: string): Observable<ReservationDetail> {

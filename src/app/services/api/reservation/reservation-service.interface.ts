@@ -14,4 +14,11 @@ export interface IReservationService {
 
   updateReservation(id: string, updateReservationRequest: UpdateReservationRequest): Observable<void>;
 
+  getAllReservationsWithPaginationWithStatus(
+    pageNumber: number,
+    pageSize: number,
+    userId?: string,
+    status?: string
+  ): Observable<PagedResponse<ReservationDetail>>;
+
 }
