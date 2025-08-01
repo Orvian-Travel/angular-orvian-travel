@@ -22,15 +22,15 @@ export class UserService implements IUserService {
 
   getAllUsers(): Observable<UserDetail[]> {
     return this.http.get<any>(this.baseUrl).pipe(
-      map(response => transformPagedResponse<UserDetail>(response, 'UserSearchResultDTOList')),
+      map(response => transformPagedResponse<UserDetail>(response, 'userSearchResultDTOList')),
       map(pagedResponse => pagedResponse._embedded.DTOList)
     );
   }
 
   getAllUsersWithPagination(pageNumber: number, pageSize: number): Observable<PagedResponse<UserDetail>> {
-    const url = `${this.baseUrl}?page=${pageNumber}&size=${pageSize}`;
+    const url = `${this.baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
     return this.http.get<any>(url).pipe(
-      map(response => transformPagedResponse<UserDetail>(response, 'UserSearchResultDTOList'))
+      map(response => transformPagedResponse<UserDetail>(response, 'userSearchResultDTOList'))
     );
   }
 
