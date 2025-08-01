@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "serve dist/angular-orvian-travel -s -p 8080",
+    "start": "serve dist/angular-orvian-travel/browser -s -p 8080",
     "dev": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
