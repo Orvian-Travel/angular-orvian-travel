@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="h4 fw-bold text-dark mb-0">Lista de Usuários</h2>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                <button class="btn btn-orvian-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
                     <i class="fas fa-plus me-2"></i>Adicionar Usuário
                 </button>
             </div>
@@ -22,7 +22,7 @@
                             <th>Email</th>
                             <th>Telefone</th>
                             <th>Tipo</th>
-                            <th>Data de Cadastro</th>
+                            <th>Documento</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -33,21 +33,18 @@
                             <td>{{ user.email }}</td>
                             <td>{{ user.phone }}</td>
                             <td>
-                                <span class="badge" 
-                                      [class]="user.role === 'Administrador' ? 'bg-warning text-dark' : 'bg-primary'">
-                                    {{ user.role }}
+                                <span class="badge">
+                                    {{ getRoleDisplayName(user.role) }}
                                 </span>
                             </td>
-                            <td>{{ user.createdAt }}</td>
+                            <td>{{ user.document }}</td>
                             <td>
                                 <button class="btn btn-sm btn-outline-primary me-2" 
-                                        (click)="editUser(user)" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#editUserModal">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" 
-                                        (click)="deleteUser(user.id)">
+                                <button class="btn btn-sm btn-outline-danger">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -58,6 +55,39 @@
         </div>
     </div>
 </div>
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <nav class="pagination-nav">
+      <button
+        class="pagination-btn pagination-prev"
+        [disabled]="currentPage === 0"
+        (click)="previousPage()"
+      >
+        Anterior
+      </button>
+      <div class="pagination-numbers">
+        <button
+            *ngFor="let page of getPageNumbers()"
+            class="pagination-number"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+        >
+            {{ page + 1 }}
+        </button>
+      </div>
+      <button
+        class="pagination-btn pagination-next"
+        [disabled]="currentPage === totalPages - 1"
+        (click)="nextPage()"
+      >
+        Próximo
+      </button>
+    </nav>
+    <div class="pagination-info">
+        Página {{ currentPage + 1 }} de {{ totalPages }} 
+        ({{ totalUsers }} usuários no total)
+    </div>
+  </div>
+
 
 <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
@@ -68,7 +98,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form #addUserForm="ngForm" (ngSubmit)="addUser(addUserForm)">
+                <form #addUserForm="ngForm">
                     <div class="mb-3">
                         <label for="userName" class="form-label">Nome</label>
                         <input type="text" class="form-control" id="userName" name="name" ngModel required>
@@ -98,8 +128,8 @@
         </div>
     </div>
 </div>
+<!-- 
 
-<!-- Edit User Modal -->
 <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -139,3 +169,4 @@
         </div>
     </div>
 </div>
+-->

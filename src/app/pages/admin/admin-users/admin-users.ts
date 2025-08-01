@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  createdAt: string;
-}
+import { UserDetail } from '../../../services/entities/user.model';
+import { UserService } from '../../../services/api/user/user-service';
+import { PagedResponse } from '../../../services/entities/paged-response.model';
 
 @Component({
   selector: 'app-admin-users',
@@ -18,43 +12,91 @@ interface User {
   styleUrl: './admin-users.css'
 })
 export class AdminUsers implements OnInit {
-  users: User[] = [];
-  selectedUser: User | null = null;
+  users: UserDetail[] = [];
+  loading = false;
+  error: string | null = null;
 
+  currentPage = 0;
+  pageSize = 10;
+  totalUsers = 0;
+  totalPages = 0;
+
+  constructor(private userService: UserService){}
+  
   ngOnInit() {
     this.loadUsers();
   }
 
   private loadUsers() {
-    // Mock data - replace with actual API call
-    this.users = [
-      {
-        id: 1,
-        name: 'João Silva',
-        email: 'joao.silva@email.com',
-        phone: '(11) 98765-4321',
-        role: 'Administrador',
-        createdAt: '15/01/2024'
+    this.loading = true;
+    this.error = null;
+
+    this.userService.getAllUsersWithPagination(this.currentPage, this.pageSize).subscribe({
+      next: (response: PagedResponse<UserDetail>) => {
+        this.users = response._embedded.DTOList;
+        this.totalUsers = response.page?.totalElements || 0;
+        this.totalPages = response.page?.totalPages || 0;
+        this.loading = false;
       },
-      {
-        id: 2,
-        name: 'Maria Santos',
-        email: 'maria.santos@email.com',
-        phone: '(21) 97654-3210',
-        role: 'Usuário',
-        createdAt: '10/01/2024'
-      },
-      {
-        id: 3,
-        name: 'Pedro Oliveira',
-        email: 'pedro.oliveira@email.com',
-        phone: '(31) 96543-2109',
-        role: 'Usuário',
-        createdAt: '05/01/2024'
+      error: (err) => {
+        this.error = 'Erro ao carregar usuários. Por favor, tente novamente mais tarde.';
+        this.loading = false;
       }
-    ];
+    });
   }
 
+  getRoleDisplayName(role: string): string {
+    const roleMap: { [key: string]: string } = {
+      'USER': 'Usuário',
+      'ADMIN': 'Administrador',
+      'ATENDENTE': 'Atendente'
+    };
+    return roleMap[role?.toUpperCase()] || role || 'N/A';
+  }
+  
+  previousPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+      this.loadUsers();
+    }
+  }
+
+  nextPage() {
+    if(this.currentPage < this.totalPages - 1) {
+      this.currentPage++;
+      this.loadUsers();
+    }
+  }
+
+  goToPage(page: number) {
+    console.log('Mudando da página', this.currentPage, 'para a página', page);
+    if (page >= 0 && page < this.totalPages) {
+      this.currentPage = page;
+      this.loadUsers();
+    }
+  }
+
+  getPageNumbers(): number[]{
+    const pages: number[] = [];
+    const maxPagesToShow = 5;
+
+    if(this.totalPages <= maxPagesToShow) {
+      for(let i = 0; i < this.totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      const startPage = Math.max(0, this.currentPage - 2);
+      const endPage = Math.min(this.totalPages - 1, startPage + maxPagesToShow - 1);
+      for(let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+    }
+    return pages;
+  }
+
+  
+
+  /*
   addUser(form: NgForm) {
     if (form.valid) {
       const newUser: User = {
@@ -115,4 +157,5 @@ export class AdminUsers implements OnInit {
       this.users = this.users.filter(user => user.id !== userId);
     }
   }
+     */
 }
