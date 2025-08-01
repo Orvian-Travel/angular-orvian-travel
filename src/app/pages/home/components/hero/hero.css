@@ -1,7 +1,17 @@
+/* ===== SEÇÃO HERO ===== */
 .hero-section {
   position: relative;
 }
 
+.hero-image {
+  width: 100%;
+  height: auto;
+  min-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ===== CONTAINER DE BUSCA ===== */
 .search-container {
   background-color: var(--orvian-background-gray);
   position: absolute;
@@ -104,16 +114,6 @@ button:hover {
 @media (max-width: 768px) {
   .hero-section {
     min-height: 500px;
-  }
-
-  .search-container {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 95%;
-    max-width: none;
-    border-radius: 15px 15px 0 0;
   }
 
   .search-elements {

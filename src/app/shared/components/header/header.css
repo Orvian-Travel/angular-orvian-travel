@@ -11,12 +11,12 @@ header {
 }
 
 .navbar {
-  padding: 0.5rem 0;
+  padding: 0.05rem 0;
 }
 
 /* ===== LOGO/BRAND ===== */
 .brand {
-  height: 3.2rem;
+  height: 5.2rem;
   transition: opacity 0.3s ease;
 }
 
