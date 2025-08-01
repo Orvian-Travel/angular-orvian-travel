@@ -39,10 +39,9 @@ export class ReservationService implements IReservationService {
     userId?: string,
     status?: string
   ) {
-
     let params = new HttpParams()
-      .set('page', pageNumber.toString())
-      .set('size', pageSize.toString());
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
 
     if (userId) {
       params = params.set('userId', userId);
@@ -52,10 +51,11 @@ export class ReservationService implements IReservationService {
       params = params.set('status', status);
     }
 
-    return this.http.get<any>(this.baseUrl, { params }).pipe(
-      map(response => transformPagedResponse<ReservationDetail>(response, 'ReservationSearchResultDTOList'))
-    );
+    console.log('URL da requisição:', `${this.baseUrl}/search?${params.toString()}`);
 
+    return this.http.get<any>(`${this.baseUrl}/search`, { params }).pipe(
+      map(response => transformPagedResponse<ReservationDetail>(response, 'reservationSearchResultDTOList')) // Mudança aqui
+    );
   }
 
   getReservationById(id: string): Observable<ReservationDetail> {

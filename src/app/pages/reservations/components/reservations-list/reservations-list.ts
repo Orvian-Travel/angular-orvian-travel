@@ -40,9 +40,16 @@ export class ReservationsList implements OnInit {
 
   private loadReservations(): void {
 
-    const statusParam = this.selectedStatus === '' ? undefined : this.selectedStatus;
+    const statusParam = this.selectedStatus === 'todas' ? undefined : this.selectedStatus; // Mudança aqui
 
     const userId = this.authStateService.getUserId() || undefined;
+
+    console.log('Parâmetros da requisição:', {
+      page: this.currentPage,
+      size: this.pageSize,
+      userId: userId,
+      status: statusParam
+    });
 
     this.reservationService.getAllReservationsWithPaginationWithStatus(
       this.currentPage,
@@ -51,13 +58,17 @@ export class ReservationsList implements OnInit {
       statusParam
     ).subscribe({
       next: (response) => {
-        this.reservations = response._embedded.DTOList;
+        console.log('Resposta completa da API:', response);
+        this.reservations = response._embedded?.DTOList || [];
         this.totalElements = response.page?.totalElements || 0;
         this.totalPages = response.page?.totalPages || 0;
         console.log('Reservas carregadas:', this.reservations);
       },
       error: (error) => {
         console.error('Erro ao carregar reservas:', error);
+        this.reservations = [];
+        this.totalElements = 0;
+        this.totalPages = 0;
       }
     });
 
