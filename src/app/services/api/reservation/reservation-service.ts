@@ -9,16 +9,16 @@ import {
   UpdateReservationRequest
 } from '../../entities/reservation.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService implements IReservationService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/reservations`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/reservations`; }
 
   getAllReservations(): Observable<ReservationDetail[]> {
     return this.http.get<any>(this.baseUrl).pipe(

@@ -8,17 +8,17 @@ import {
   UpdateUserRequest
 } from '../../entities/user.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { PagedResponse } from '../../entities/paged-response.model';
 import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService implements IUserService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/users`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/users`; }
 
   getAllUsers(): Observable<UserDetail[]> {
     return this.http.get<any>(this.baseUrl).pipe(
