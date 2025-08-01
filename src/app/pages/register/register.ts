@@ -287,7 +287,7 @@ export class Register implements OnInit {
     this.userService.createUser(user).subscribe({
       next: (response) => {
         console.log('User created successfully:', response);
-        this.router.navigate(['/']);
+        this.router.navigate(['/login']);
       },
       error: (error) => {
         console.error('Error creating user:', error);
