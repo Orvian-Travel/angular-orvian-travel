@@ -7,19 +7,19 @@
     <div class="filter-section">
       <h3>Filtrar por status:</h3>
       <div class="filter-buttons">
-        <button class="filter-btn" [class.active]="selectedStatus === 'todas'" (click)="onStatusFilterChange('todas')">
+        <button class="filter-btn" [class.active]="selectedStatus === ''" (click)="onStatusFilterChange('')">
           Todas
         </button>
-        <button class="filter-btn" [class.active]="selectedStatus === 'aprovadas'"
-          (click)="onStatusFilterChange('aprovadas')">
-          Aprovadas
+        <button class="filter-btn" [class.active]="selectedStatus === 'CONFIRMADA'"
+          (click)="onStatusFilterChange('CONFIRMADA')">
+          Confirmadas
         </button>
-        <button class="filter-btn" [class.active]="selectedStatus === 'pendentes'"
-          (click)="onStatusFilterChange('pendentes')">
+        <button class="filter-btn" [class.active]="selectedStatus === 'PENDENTE'"
+          (click)="onStatusFilterChange('PENDENTE')">
           Pendentes
         </button>
-        <button class="filter-btn" [class.active]="selectedStatus === 'canceladas'"
-          (click)="onStatusFilterChange('canceladas')">
+        <button class="filter-btn" [class.active]="selectedStatus === 'CANCELADA'"
+          (click)="onStatusFilterChange('CANCELADA')">
           Canceladas
         </button>
       </div>
