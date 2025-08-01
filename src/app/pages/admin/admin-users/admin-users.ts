@@ -15,6 +15,16 @@ export class AdminUsers implements OnInit {
   users: UserDetail[] = [];
   loading = false;
   error: string | null = null;
+  documentType: string = '';
+
+  newUser: any = {
+    name: '',
+    email: '',
+    password: '',
+    phone: '',
+    document: '',
+    birthDate: ''
+  };
 
   currentPage = 0;
   pageSize = 10;
@@ -46,12 +56,16 @@ export class AdminUsers implements OnInit {
   }
 
   getRoleDisplayName(role: string): string {
-    const roleMap: { [key: string]: string } = {
-      'USER': 'Usuário',
-      'ADMIN': 'Administrador',
-      'ATENDENTE': 'Atendente'
-    };
-    return roleMap[role?.toUpperCase()] || role || 'N/A';
+    switch (role?.toUpperCase()) {
+      case 'USER':
+        return 'Usuário';
+      case 'ADMIN':
+        return 'Administrador';
+      case 'ATENDENTE':
+        return 'Atendente';
+      default:
+        return role || 'N/A';
+    }
   }
   
   previousPage() {
@@ -94,34 +108,106 @@ export class AdminUsers implements OnInit {
     return pages;
   }
 
-  
-
-  /*
   addUser(form: NgForm) {
     if (form.valid) {
-      const newUser: User = {
-        id: this.users.length + 1,
-        name: form.value.name,
-        email: form.value.email,
-        phone: form.value.phone,
-        role: form.value.role,
-        createdAt: new Date().toLocaleDateString('pt-BR')
-      };
-      
-      this.users.push(newUser);
-      form.resetForm();
-      
-      // Close modal programmatically
-      const modal = document.getElementById('addUserModal');
-      if (modal) {
-        const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
-        if (modalInstance) {
-          modalInstance.hide();
+      this.userService.createUser(this.newUser).subscribe({
+        next: () => {
+          this.loadUsers();
+          form.resetForm();
+          this.newUser = { name: '', email: '', password: '', phone: '', document: '', birthDate: ''};
+
+          const modal = document.getElementById('addUserModal');
+          if (modal) {
+            if(document.activeElement instanceof HTMLElement) {
+              document.activeElement.blur();
+            }
+            const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
+            if (modalInstance) {
+              modalInstance.hide();
+            }
+          }
+        },
+        error: (err) => {
+          alert('Erro ao adicionar usuário: ' + (err?.error?.message || 'Tente novamente.'));
         }
+      });
+    }
+  }
+
+  onDocumentTypeChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.documentType = select.value;
+    this.newUser.document = '';
+    const documentInput = document.querySelector('#userDocument') as HTMLInputElement;
+    if (documentInput) {
+      documentInput.disabled = !select.value;
+      documentInput.value = '';
+      if (select.value === 'cpf') {
+        documentInput.placeholder = '000.000.000-00';
+        documentInput.maxLength = 14;
+        documentInput.className = 'form-control form-control-custom document-number-input cpf-input';
+      } else if (select.value === 'passport') {
+        documentInput.placeholder = 'AB123456';
+        documentInput.maxLength = 8;
+        documentInput.className = 'form-control form-control-custom document-number-input passport-input';
+      } else {
+        documentInput.placeholder = 'Selecione o tipo de documento';
+        documentInput.className = 'form-control form-control-custom document-number-input';
       }
     }
   }
 
+  formatCPF(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    value = value.substring(0, 11);
+    if (value.length <= 11) {
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d)/, '$1.$2');
+      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    }
+    input.value = value;
+    this.newUser.document = value;
+  }
+
+  formatPassport(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/[^a-zA-Z0-9]/g, '');
+    let formattedValue = '';
+    let letterCount = 0;
+    let numberCount = 0;
+    for (let i = 0; i < value.length && formattedValue.length < 8; i++) {
+      const char = value[i];
+      if (letterCount < 2) {
+        if (/[a-zA-Z]/.test(char)) {
+          formattedValue += char.toUpperCase();
+          letterCount++;
+        }
+      } else if (numberCount < 6) {
+        if (/[0-9]/.test(char)) {
+          formattedValue += char;
+          numberCount++;
+        }
+      }
+    }
+    input.value = formattedValue;
+    this.newUser.document = formattedValue;
+  }
+
+  formatPhone(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    let value = input.value.replace(/\D/g, '');
+    value = value.substring(0, 11);
+    if (value.length <= 11) {
+      value = value.replace(/(\d{2})(\d)/, '($1) $2');
+      value = value.replace(/(\d{5})(\d)/, '$1-$2');
+    }
+    input.value = value;
+    this.newUser.phone = value;
+  }
+
+
+  /*
   editUser(user: User) {
     this.selectedUser = { ...user };
   }

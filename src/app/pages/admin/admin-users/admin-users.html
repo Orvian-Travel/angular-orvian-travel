@@ -101,27 +101,49 @@
                 <form #addUserForm="ngForm">
                     <div class="mb-3">
                         <label for="userName" class="form-label">Nome</label>
-                        <input type="text" class="form-control" id="userName" name="name" ngModel required>
+                        <input type="text" class="form-control" id="userName" name="name" [(ngModel)]="newUser.name" required autocomplete="off">
                     </div>
                     <div class="mb-3">
                         <label for="userEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="userEmail" name="email" ngModel required>
+                        <input type="text" class="form-control" id="userEmail" name="email" [(ngModel)]="newUser.email" required autocomplete="off">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userPassword" class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="userPassword" name="password" [(ngModel)]="newUser.password" required autocomplete="new-password">
                     </div>
                     <div class="mb-3">
                         <label for="userPhone" class="form-label">Telefone</label>
-                        <input type="tel" class="form-control" id="userPhone" name="phone" ngModel required>
+                        <input type="text" class="form-control" id="userPhone" name="phone" [(ngModel)]="newUser.phone" required maxlength="15" (input)="formatPhone($event)" />
                     </div>
-                    <div class="mb-3">
-                        <label for="userRole" class="form-label">Tipo de Usuário</label>
-                        <select class="form-control" id="userRole" name="role" ngModel required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="Usuário">Usuário</option>
-                            <option value="Administrador">Administrador</option>
+                    <div class="form-group mb-3">
+                    <label for="text">Tipo de Documento</label>
+                        <select class="form-select form-control form-control-custom document-type-select"
+                                (change)="onDocumentTypeChange($event)">
+                            <option value="">Selecione um tipo</option>
+                            <option value="cpf">CPF</option>
+                            <option value="passport">Passaporte</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="text">Número do Documento</label>
+                        <input type="text" id="userDocument" name="document" [(ngModel)]="newUser.document"
+                            class="form-control form-control-custom document-number-input"
+                            [placeholder]="documentType === 'cpf' ? '000.000.000-00' : documentType === 'passport' ? 'AB123456' : 'Selecione o tipo de documento'"
+                            [maxLength]="documentType === 'cpf' ? 14 : documentType === 'passport' ? 8 : 8"
+                            [disabled]="!documentType"
+                            required
+                            (input)="documentType === 'cpf' ? formatCPF($event) : documentType === 'passport' ? formatPassport($event) : null"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="userBirthdate" class="form-label">Data de nascimento</label>
+                        <input type="date" class="form-control" id="userBirthdate" name="birthdate" [(ngModel)]="newUser.birthDate" required>
+                    </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                        <button type="button" class="btn btn-orvian-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form #addUserForm="ngForm" (ngSubmit)="addUser(addUserForm)">
+                            <button type="submit" class="btn btn-orvian-primary">Adicionar</button>
+                        </form>
                     </div>
                 </form>
             </div>

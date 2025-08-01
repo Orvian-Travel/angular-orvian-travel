@@ -19,7 +19,20 @@
 .btn-orvian-primary:hover {
     background-color: var(--orvian-primary);
     color: var(--orvian-primary-variant);
-    border: solid 2px var(--orvian-primary-variant);
+}
+
+.btn-orvian-secondary{
+    background-color: var(--orvian-secondary-variant);
+    border: solid 2px var(--orvian-secondary-variant);
+    color: white;
+    border-radius: 8px;
+    padding: 0.4rem 1rem;
+    font-weight: 500;
+}
+
+.btn-orvian-secondary:hover{
+    background-color: var(--orvian-primary);
+    color: var(--orvian-secondary-variant);
 }
 
 .badge{
