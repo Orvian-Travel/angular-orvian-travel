@@ -157,3 +157,132 @@ button:hover {
     transform: translateY(0);
   }
 }
+
+/* ===== DROPDOWN STYLES ===== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle-custom {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: none !important;
+}
+
+.dropdown-toggle-custom:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: none !important;
+}
+
+.dropdown-toggle-custom:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+  background: transparent;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
+
+.dropdown-menu-custom.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item-custom {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f8f9fa;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown-item-custom i {
+  margin-right: 8px;
+  width: 16px;
+  font-size: 14px;
+}
+
+.dropdown-item-custom.logout-item {
+  color: #dc3545;
+}
+
+.dropdown-item-custom.logout-item:hover {
+  background-color: #f8f9fa;
+  color: #dc3545;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 0;
+}
+
+/* ===== RESPONSIVIDADE DROPDOWN ===== */
+@media (max-width: 991.98px) {
+  .dropdown-menu-custom {
+    right: -16px;
+    min-width: 180px;
+  }
+  
+  /* Ajuste para o dropdown em mobile */
+  .dropdown {
+    width: 100%;
+  }
+  
+  .dropdown-toggle-custom {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 16px;
+  }
+  
+  .dropdown-menu-custom {
+    right: 16px;
+    left: 16px;
+    min-width: auto;
+  }
+}

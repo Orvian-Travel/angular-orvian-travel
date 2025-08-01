@@ -13,6 +13,7 @@ export class Header implements OnInit {
 
   isLoggedIn: boolean = false;
   isMenuOpen: boolean = false;
+  isDropdownOpen: boolean = false;
 
   constructor(private router: Router, private authStateService: AuthStateService) {}
 
@@ -42,6 +43,7 @@ export class Header implements OnInit {
   }
 
   logout(): void {
+    this.closeDropdown();
     this.authStateService.logout();
     this.router.navigate(['/']);
     this.isMenuOpen = false; // Fecha o menu após navegar
@@ -54,6 +56,21 @@ export class Header implements OnInit {
   getUserName(): string {
     const user = this.authStateService.getUser();
     return user?.name || 'Usuário';
+  }
+
+  // Métodos para o dropdown
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  closeDropdown(): void {
+    this.isDropdownOpen = false;
+  }
+
+  navigateToReservations(): void {
+    this.router.navigate(['/reservations']);
+    this.closeDropdown();
+    this.isMenuOpen = false;
   }
   
 }
