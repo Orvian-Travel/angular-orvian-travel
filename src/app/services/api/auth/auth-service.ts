@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { TokenModel } from '../../entities/token-model';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment.development';
 import { HttpClient } from '@angular/common/http';
 import { IAuthService } from './auth-service.interface';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService implements IAuthService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/auth`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/auth`; }
 
   login(email: string, password: string): Observable<TokenModel> {
     const loginRequest = { email, password };
