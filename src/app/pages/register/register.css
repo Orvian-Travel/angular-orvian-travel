@@ -2,6 +2,12 @@
   overflow-x: hidden;
 }
 
+h3{
+  color: var(--orvian-gray-003);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
 .bg-gradient-custom {
   background: linear-gradient(140deg, #19a0d9 0%, #63d0f7 100%) !important;
   min-height: 100vh;
@@ -44,27 +50,18 @@ select{
 
 /* Botão primário customizado */
 .btn-custom-primary {
-  background: linear-gradient(135deg, #1486b4 0%, #16a6d9 100%);
-  border: 1px solid #1486b4;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 14px 0;
-  border-radius: 8px;
-  color: white;
+  background-color: var(--orvian-primary-variant);
+  font-size: 1.08rem;
+  padding: 12px 100px;
+  border-radius: 6px;
+  transition: background 0.18s;
+  border: solid 2px var(--orvian-primary-variant);
   width: 100%;
-  box-shadow: 0 3px 8px rgba(20, 134, 180, 0.25);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .btn-custom-primary:hover {
-  background: linear-gradient(135deg, #0f6b8a 0%, #1486b4 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(20, 134, 180, 0.35);
-  color: white;
-  border-color: #0f6b8a;
+    background-color: white;
+    color: #1B9DBD;
 }
 
 /* Labels customizados */
@@ -80,7 +77,6 @@ select{
 
 /* Estilo do link de login */
 .login-link {
-  margin-top: 20px;
   padding: 15px 0;
 }
 
