@@ -20,28 +20,6 @@ select{
     color: var(--orvian-gray-003);
 }
 
-/* Botão customizado marrom */
-.btn-custom-brown {
-  background-color: #7e4e34;
-  border: 1px solid #7e4e34;
-  border-radius: 8px;
-  padding: 10px 24px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: white;
-  box-shadow: 0 2px 6px rgba(126, 78, 52, 0.2);
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.btn-custom-brown:hover {
-  background-color: #5e3a26;
-  border-color: #5e3a26;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(126, 78, 52, 0.3);
-  color: white;
-}
-
 .text-container{
   box-sizing: border-box;
   margin-bottom: 190px;
@@ -193,7 +171,8 @@ select{
 .card {
   border-radius: 12px;
   box-shadow: 0 8px 36px rgba(44, 107, 140, 0.10) !important;
-  border: none !important;
+  height: auto;
+  width: 70%;
 }
 
 /* Ajustes para altura total */
@@ -244,7 +223,7 @@ html, body {
   }
   
   .mobile-card {
-    width: 100%;
+    width: 90%;
     max-width: 3500px;
     margin: 20px auto 0 auto;
   }
@@ -522,7 +501,7 @@ html, body {
 }
 
 .logo-voltar {
-  height: 60px;
+  height: 120px;
   width: auto;
 }
 

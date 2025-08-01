@@ -1,61 +1,45 @@
 <div class="container-fluid p-0">
   <div class="row no-gutters min-vh-100">
     <div
-      class="col-12 col-lg-6 bg-white d-flex flex-column align-items-center justify-content-center p-3 p-md-4 order-2 order-lg-1"
-    >
-      <div class="align-self-start mb-3 d-none d-lg-block flex-grow-1">
+      class="col-12 col-lg-6 bg-white d-flex flex-column align-items-center justify-content-center p-3 p-md-4 order-2 order-lg-1">
+      <div class="mb-3 d-none d-lg-block flex-grow-1">
         <div class="logo-back" (click)="returnPage()" style="cursor: pointer;">
-          <img src="assets/logo.svg" alt="Orvian Travel" class="logo-voltar">
+          <img src="assets/logo.svg" alt="Orvian Travel" class="logo-voltar ">
         </div>
       </div>
-      <div
-        class="d-flex justify-content-center align-items-center mb-5 mb-lg-4"
-      >
-        <img
-          src="assets/images/draw-2.svg"
-          alt="Ilustração"
-          class="img-fluid mobile-illustration"
-        />
+      <div class="d-flex justify-content-center align-items-center mb-5 mb-lg-4">
+        <img src="assets/images/draw-2.svg" alt="Ilustração" class="img-fluid mobile-illustration" />
       </div>
       <div class="text-container text-center text-lg-left w-100 mobile-text">
         <h2 class="h4 h-lg-3 font-weight-bold mb-2">
           Pronto para embarcar?
         </h2>
         <p class="text-muted mobile-description">
-          Crie sua conta e comece agora a descobrir experiências únicas, destinos dos sonhos e pacotes personalizados só para você.
+          Crie sua conta e comece agora a descobrir experiências únicas, destinos dos sonhos e pacotes personalizados só
+          para você.
         </p>
       </div>
     </div>
     <div
-      class="col-12 col-lg-6 bg-gradient-custom d-flex align-items-center justify-content-center p-3 p-md-4 order-1 order-lg-2 mobile-form-container"
-    >
+      class="col-12 col-lg-6 bg-gradient-custom d-flex align-items-center justify-content-center p-3 p-md-4 order-1 order-lg-2 mobile-form-container">
       <div class="position-absolute mobile-back-btn d-lg-none">
         <div class="logo-back-mobile" (click)="returnPage()" style="cursor: pointer;">
           <img src="assets/logo-branca.svg" alt="Orvian Travel" class="logo-voltar-mobile">
         </div>
       </div>
-      <div class="card shadow border-0 mobile-card">
+      <div class="card shadow mobile-card">
+        <h3 class="text-center mt-4">REGISTRE-SE</h3>
         <div class="card-body p-3 p-md-4">
           <form>
             <div class="form-group mb-3">
               <label for="text">NOME</label>
-              <input
-                id="name"
-                class="form-control form-control-custom"
-                placeholder="Digite seu nome"
-                [(ngModel)]="user.name"
-                name="name"
-                required
-              />
+              <input id="name" class="form-control form-control-custom" placeholder="Digite seu nome"
+                [(ngModel)]="user.name" name="name" required />
             </div>
             <div class="form-group mb-3">
-              <label for="text"
-                >TIPO DE DOCUMENTO</label
-              >
-              <select
-                class="form-select form-control form-control-custom document-type-select"
-                (change)="onDocumentTypeChange($event)"
-              >
+              <label for="text">TIPO DE DOCUMENTO</label>
+              <select class="form-select form-control form-control-custom document-type-select"
+                (change)="onDocumentTypeChange($event)">
                 <option value="">Tipo de documento</option>
                 <option value="cpf">CPF</option>
                 <option value="passport">Passaporte</option>
@@ -63,85 +47,40 @@
             </div>
             <div class="form-group mb-3">
               <label for="text">NÚMERO DO DOCUMENTO</label>
-              <input
-                type="text"
-                id="document"
-                name="document"
+              <input type="text" id="document" name="document"
                 class="form-control form-control-custom document-number-input"
-                placeholder="Selecione o tipo de documento"
-                maxlength="8"
-                [(ngModel)]="user.document"
-                disabled
-                required
-              />
+                placeholder="Selecione o tipo de documento" maxlength="8" [(ngModel)]="user.document" disabled
+                required />
             </div>
             <div class="form-group mb-3">
-              <label for="birthdate"
-                >DATA DE NASCIMENTO</label
-              >
+              <label for="birthdate">DATA DE NASCIMENTO</label>
               <div class="date-input-container">
                 <img src="assets/icons/calendar-date.svg" alt="Calendário" class="date-icon" (click)="openDatePicker()">
-                <input
-                  type="date"
-                  id="birthdate"
-                  name="birthDate"
-                  #birthdateInput
-                  class="date form-control form-control-custom date-input-with-icon"
-                  [(ngModel)]="user.birthDate"
-                  required
-                />
+                <input type="date" id="birthdate" name="birthDate" #birthdateInput
+                  class="date form-control form-control-custom date-input-with-icon" [(ngModel)]="user.birthDate"
+                  required />
               </div>
             </div>
             <div class="form-group mb-3">
-              <label for="text"
-                >TELEFONE</label
-              >
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                class="form-control form-control-custom"
-                placeholder="(00) 00000-0000"
-                maxlength="15"
-                (input)="formatPhone($event)"
-                [(ngModel)]="user.phone"
-                required
-              />
+              <label for="text">TELEFONE</label>
+              <input type="tel" id="phone" name="phone" class="form-control form-control-custom"
+                placeholder="(00) 00000-0000" maxlength="15" (input)="formatPhone($event)" [(ngModel)]="user.phone"
+                required />
             </div>
             <div class="form-group mb-3">
-              <label for="email"
-                >EMAIL</label
-              >
-              <input
-                type="email"
-                id="email"
-                name="email"
-                class="form-control form-control-custom"
-                placeholder="exemplo@avanade.com"
-                (blur)="validateEmail($event)"
-                (input)="validateEmail($event)"
-                [(ngModel)]="user.email"
-                required
-              />
+              <label for="email">EMAIL</label>
+              <input type="email" id="email" name="email" class="form-control form-control-custom"
+                placeholder="exemplo@avanade.com" (blur)="validateEmail($event)" (input)="validateEmail($event)"
+                [(ngModel)]="user.email" required />
             </div>
             <div class="form-group mb-4">
               <label for="password">SENHA</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                class="form-control form-control-custom"
-                placeholder="********"
-                [(ngModel)]="user.password"
-                required
-              />
+              <input type="password" id="password" name="password" class="form-control form-control-custom"
+                placeholder="********" [(ngModel)]="user.password" required />
             </div>
-            <button
-              class="btn btn-primary btn-block btn-custom-primary font-weight-bold mb-2"
-              type="submit"
-              (click)="register(user)"
-            >
-                Criar conta
+            <button class="btn btn-primary btn-block btn-custom-primary font-weight-bold mb-2" type="submit"
+              (click)="register(user)">
+              Criar conta
             </button>
           </form>
           <div class="text-center login-link">

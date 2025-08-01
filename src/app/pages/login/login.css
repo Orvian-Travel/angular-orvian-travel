@@ -121,9 +121,10 @@
 .card {
   border-radius: 12px;
   box-shadow: 0 8px 36px rgba(44, 107, 140, 0.10) !important;
-  border: none !important;
+  height: auto;
+  width: auto;
+  align-items:center;
 }
-
 /* Ajustes para altura total */
 html, body {
   height: 100%;
@@ -176,7 +177,7 @@ html, body {
   }
   
   .mobile-card {
-    width: 100%;
+    width: 80%;
     max-width: 350px;
     margin: 20px auto 0 auto;
   }
@@ -216,11 +217,6 @@ html, body {
   .form-label-custom {
     font-size: 0.8rem;
     margin-bottom: 4px;
-  }
-  
-  .btn-custom-primary {
-    padding: 14px 0;
-    font-size: 1.1rem;
   }
 }
 
@@ -298,7 +294,7 @@ html, body {
 }
 
 .logo-voltar {
-  height: 60px;
+  height: 120px;
   width: auto;
 }
 
