@@ -1,126 +1,156 @@
 <main class="container my-5">
   <div class="section-header">
     <h2 class="section-title">Minhas Reservas</h2>
-    <p class="section-subtitle">Gerencie suas reservas de viagens e acompanhe o status dos pagamentos</p>
+    <p class="section-subtitle">
+      Gerencie suas reservas de viagens e acompanhe o status dos pagamentos
+    </p>
   </div>
   <div class="content-wrapper">
     <div class="filter-section">
       <h3>Filtrar por status:</h3>
       <div class="filter-buttons">
-        <button class="filter-btn" [class.active]="selectedStatus === 'todas'" (click)="onStatusFilterChange('todas')">
+        <button
+          class="filter-btn"
+          [class.active]="selectedStatus === 'todas'"
+          (click)="onStatusFilterChange('todas')"
+        >
           Todas
         </button>
-        <button class="filter-btn" [class.active]="selectedStatus === 'CONFIRMADA'"
-          (click)="onStatusFilterChange('CONFIRMADA')">
+        <button
+          class="filter-btn"
+          [class.active]="selectedStatus === 'CONFIRMADA'"
+          (click)="onStatusFilterChange('CONFIRMADA')"
+        >
           Confirmadas
         </button>
-        <button class="filter-btn" [class.active]="selectedStatus === 'PENDENTE'"
-          (click)="onStatusFilterChange('PENDENTE')">
+        <button
+          class="filter-btn"
+          [class.active]="selectedStatus === 'PENDENTE'"
+          (click)="onStatusFilterChange('PENDENTE')"
+        >
           Pendentes
         </button>
-        <button class="filter-btn" [class.active]="selectedStatus === 'CANCELADA'"
-          (click)="onStatusFilterChange('CANCELADA')">
+        <button
+          class="filter-btn"
+          [class.active]="selectedStatus === 'CANCELADA'"
+          (click)="onStatusFilterChange('CANCELADA')"
+        >
           Canceladas
         </button>
       </div>
     </div>
     <div class="reservations-grid">
-      <div class="reservation-card">
-        <div class="card-image-wrapper">
-          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-            class="card-image" alt="Pacote Família em Gramado" />
-          <div class="duration-badge">
-            <span>5 dias</span>
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="reservation-info">
-            <div class="reservation-tag">4 pessoas</div>
-            <div class="reservation-date">Reservado em: 15/07/2025</div>
-            <div class="status-tag status-approved">APROVADO</div>
-          </div>
-          <h3 class="package-title">Pacote Família em Gramado - Inverno 2025</h3>
-          <div class="travel-dates">
-            <strong>Data da viagem:</strong> 10/08/2025 - 15/08/2025
-          </div>
-          <div class="price-section">
-            <div class="price-wrapper">
-              <span class="currency">R$</span>
-              <span class="price">3.200</span>
-              <span class="price-period">total</span>
-            </div>
-          </div>
-          <div class="card-actions">
-            <button class="action-btn btn-secondary">
-              Cancelar
-            </button>
-          </div>
-        </div>
+      <div *ngIf="reservations.length === 0" class="no-reservations">
+        <p>Nenhuma reserva encontrada para o filtro selecionado.</p>
       </div>
-      <div class="reservation-card">
+
+      <div
+        *ngFor="let reservation of reservations"
+        class="reservation-card"
+        [class.card-cancelled]="reservation.situation === 'CANCELADA'"
+      >
         <div class="card-image-wrapper">
-          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-            class="card-image" alt="Rio de Janeiro - Cristo Redentor" />
+          <img
+            src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+            class="card-image"
+            [alt]="getPackageTitle(reservation)"
+          />
           <div class="duration-badge">
-            <span>7 dias</span>
+            <span>{{ getPackageDuration(reservation) }}</span>
           </div>
         </div>
+
         <div class="card-content">
           <div class="reservation-info">
-            <div class="reservation-tag">2 pessoas</div>
-            <div class="reservation-date">Reservado em: 20/07/2025</div>
-            <div class="status-tag status-pending">PENDENTE</div>
+            <div class="reservation-tag">
+              {{ reservation.travelers?.length || 0 }} pessoas
+            </div>
+            <div class="reservation-date">
+              Reservado em:
+              {{ reservation.reservationDate | date : "dd/MM/yyyy" }}
+            </div>
+            <div
+              class="status-tag"
+              [class.status-approved]="reservation.situation === 'CONFIRMADA'"
+              [class.status-pending]="reservation.situation === 'PENDENTE'"
+              [class.status-cancelled]="reservation.situation === 'CANCELADA'"
+            >
+              {{ getStatusLabel(reservation.situation) }}
+            </div>
           </div>
-          <h3 class="package-title">Rio de Janeiro - Cristo Redentor e Pão de Açúcar</h3>
+
+          <h3 class="package-title">{{ getPackageTitle(reservation) }}</h3>
+
           <div class="travel-dates">
-            <strong>Data da viagem:</strong> 25/08/2025 - 01/09/2025
+            <strong>Data da viagem:</strong>
+            {{ reservation.packageDate?.startDate | date : "dd/MM/yyyy" }} -
+            {{ reservation.packageDate?.endDate | date : "dd/MM/yyyy" }}
           </div>
+
+          <!-- Data de cancelamento (apenas para reservas canceladas) -->
+          <div
+            *ngIf="
+              reservation.situation === 'CANCELADA' && reservation.cancelledDate
+            "
+            class="cancelled-date"
+          >
+            <strong>Cancelado em:</strong>
+            {{ reservation.cancelledDate | date : "dd/MM/yyyy" }}
+          </div>
+
+          <!-- Informações de pagamento -->
+          <div *ngIf="reservation.payment" class="payment-info">
+            <strong>Método:</strong>
+            {{ getPaymentMethodLabel(reservation.payment.paymentMethod) }} |
+            <strong>Status:</strong>
+            {{ getPaymentStatusLabel(reservation.payment.status) }}
+          </div>
+
           <div class="price-section">
             <div class="price-wrapper">
               <span class="currency">R$</span>
-              <span class="price">2.800</span>
+              <span class="price">{{
+                reservation.payment?.valuePaid | number : "1.2-2" : "pt-BR"
+              }}</span>
               <span class="price-period">total</span>
             </div>
           </div>
+
           <div class="card-actions">
-            <button class="action-btn btn-primary">
-              Pagar agora
-            </button>
-            <button class="action-btn btn-secondary">
-              Cancelar
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="reservation-card card-cancelled">
-        <div class="card-image-wrapper">
-          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-            class="card-image" alt="Florianópolis - Praia da Joaquina" />
-          <div class="duration-badge">
-            <span>4 dias</span>
-          </div>
-        </div>
-        <div class="card-content">
-          <div class="reservation-info">
-            <div class="reservation-tag">3 pessoas</div>
-            <div class="reservation-date">Reservado em: 10/07/2025</div>
-            <div class="status-tag status-cancelled">CANCELADO</div>
-          </div>
-          <h3 class="package-title">Florianópolis - Praia da Joaquina</h3>
-          <div class="travel-dates">
-            <strong>Data da viagem:</strong> 05/08/2025 - 09/08/2025
-          </div>
-          <div class="cancelled-date">
-            <strong>Cancelado em:</strong> 12/07/2025
-          </div>
-          <div class="price-section">
-            <div class="price-wrapper">
-              <span class="currency">R$</span>
-              <span class="price">1.950</span>
-              <span class="price-period">total</span>
-            </div>
-          </div>
-          <div class="card-actions">
+            <!-- Botões baseados no status -->
+            <ng-container [ngSwitch]="reservation.situation">
+              <!-- Reserva Confirmada -->
+              <ng-container *ngSwitchCase="'CONFIRMADA'">
+                <button
+                  class="action-btn btn-secondary"
+                  (click)="cancelReservation(reservation.id)"
+                >
+                  Cancelar
+                </button>
+              </ng-container>
+
+              <!-- Reserva Pendente -->
+              <ng-container *ngSwitchCase="'PENDENTE'">
+                <button
+                  *ngIf="reservation.payment?.status === 'PENDENTE'"
+                  class="action-btn btn-primary"
+                  (click)="payReservation(reservation.id)"
+                >
+                  Pagar agora
+                </button>
+                <button
+                  class="action-btn btn-secondary"
+                  (click)="cancelReservation(reservation.id)"
+                >
+                  Cancelar
+                </button>
+              </ng-container>
+
+              <!-- Reserva Cancelada - sem botões -->
+              <ng-container *ngSwitchCase="'CANCELADA'">
+                <!-- Nenhum botão para reservas canceladas -->
+              </ng-container>
+            </ng-container>
           </div>
         </div>
       </div>

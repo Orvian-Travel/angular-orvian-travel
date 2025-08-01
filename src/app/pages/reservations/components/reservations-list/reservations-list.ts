@@ -92,4 +92,57 @@ export class ReservationsList implements OnInit {
       this.loadReservations();
     }
   }
+
+  getStatusLabel(situation: string): string {
+    switch (situation) {
+      case 'CONFIRMADA': return 'CONFIRMADO';
+      case 'PENDENTE': return 'PENDENTE';
+      case 'CANCELADA': return 'CANCELADO';
+      default: return situation;
+    }
+  }
+
+  getPaymentMethodLabel(method: string): string {
+    switch (method) {
+      case 'PIX': return 'PIX';
+      case 'CREDITO': return 'Cartão de Crédito';
+      case 'BOLETO': return 'Boleto';
+      default: return method;
+    }
+  }
+
+  getPaymentStatusLabel(status: string): string {
+    switch (status) {
+      case 'APROVADO': return 'Aprovado';
+      case 'PENDENTE': return 'Pendente';
+      case 'CANCELADO': return 'Cancelado';
+      default: return status;
+    }
+  }
+
+  getPackageTitle(reservation: any): string {
+    // Você pode ajustar isso baseado na estrutura real do seu pacote
+    return `Pacote para ${reservation.packageDate?.packageTitle || 'Destino'}`;
+  }
+
+  getPackageDuration(reservation: any): string {
+    if (reservation.packageDate?.startDate && reservation.packageDate?.endDate) {
+      const start = new Date(reservation.packageDate.startDate);
+      const end = new Date(reservation.packageDate.endDate);
+      const diffTime = Math.abs(end.getTime() - start.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return `${diffDays} dias`;
+    }
+    return '0 dias';
+  }
+
+  cancelReservation(reservationId: string): void {
+    // Implementar lógica de cancelamento
+    console.log('Cancelar reserva:', reservationId);
+  }
+
+  payReservation(reservationId: string): void {
+    // Implementar redirecionamento para pagamento
+    console.log('Pagar reserva:', reservationId);
+  }
 }

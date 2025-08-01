@@ -1,5 +1,5 @@
 body {
-    background-color: var(--orvian-background-gray);
+    background-color: #f0fbff;
     min-height: 100vh;
     display: flex;
     flex-direction: column;

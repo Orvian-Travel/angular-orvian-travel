@@ -4,6 +4,9 @@ export interface PackageDateDetail {
   endDate: Date;
   qtd_available: number;
   travelPackageId: string;
+  packageTitle: string;
+  packageDestination: string;
+  packageDuration: number;
 }
 
 export interface SavePackageDateRequest {
