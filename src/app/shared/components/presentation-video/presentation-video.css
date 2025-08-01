@@ -1,0 +1,118 @@
+/* ===== SEÇÃO DO VÍDEO DE APRESENTAÇÃO ===== */
+.presentation-video-section {
+  background-color: #f8f9fa;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.video-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.video-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--orvian-primary-variant, #2c3e50);
+  margin-bottom: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+.video-wrapper {
+  position: relative;
+  width: 100%;
+  margin: 2rem 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  background-color: #000;
+  /* Remove menu de contexto do vídeo */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Impede menu de contexto no vídeo */
+.video-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.presentation-video {
+  width: 100%;
+  height: auto;
+  min-height: 400px;
+  max-height: 600px;
+  object-fit: cover;
+  display: block;
+  pointer-events: none; /* Remove interação do usuário */
+  user-select: none; /* Impede seleção */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.video-description {
+  font-size: 1.2rem;
+  color: var(--orvian-gray-003, #666);
+  margin-top: 2rem;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .presentation-video-section {
+    padding: 3rem 1rem;
+  }
+
+  .video-title {
+    font-size: 2rem;
+  }
+
+  .presentation-video {
+    min-height: 250px;
+    max-height: 400px;
+  }
+
+  .video-wrapper {
+    border-radius: 15px;
+  }
+
+  .video-description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .presentation-video-section {
+    padding: 2rem 0.5rem;
+  }
+
+  .video-title {
+    font-size: 1.75rem;
+  }
+
+  .presentation-video {
+    min-height: 200px;
+    max-height: 300px;
+  }
+
+  .video-wrapper {
+    border-radius: 12px;
+  }
+
+  .video-description {
+    font-size: 0.9rem;
+    margin-top: 1.5rem;
+  }
+}
