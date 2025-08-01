@@ -60,6 +60,7 @@
                 [(ngModel)]="password"
                 name="password"
                 required
+                (keydown.enter)="login(email, password)"
               />
             </div>
             <div class="text-end mb-3">

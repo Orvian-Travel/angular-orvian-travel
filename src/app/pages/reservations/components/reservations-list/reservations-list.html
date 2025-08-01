@@ -1,127 +1,129 @@
 <main class="container my-5">
   <div class="section-header">
     <h2 class="section-title">Minhas Reservas</h2>
-    <p class="section-subtitle">Gerencie suas reservas de viagens</p>
+    <p class="section-subtitle">Gerencie suas reservas de viagens e acompanhe o status dos pagamentos</p>
   </div>
   <div class="content-wrapper">
     <div class="filter-section">
       <h3>Filtrar por status:</h3>
       <div class="filter-buttons">
-        <button class="filter-btn active">Todas</button>
-        <button class="filter-btn">Aprovadas</button>
-        <button class="filter-btn">Pendentes</button>
-        <button class="filter-btn">Canceladas</button>
+        <button class="filter-btn" [class.active]="selectedStatus === ''" (click)="onStatusFilterChange('')">
+          Todas
+        </button>
+        <button class="filter-btn" [class.active]="selectedStatus === 'CONFIRMADA'"
+          (click)="onStatusFilterChange('CONFIRMADA')">
+          Confirmadas
+        </button>
+        <button class="filter-btn" [class.active]="selectedStatus === 'PENDENTE'"
+          (click)="onStatusFilterChange('PENDENTE')">
+          Pendentes
+        </button>
+        <button class="filter-btn" [class.active]="selectedStatus === 'CANCELADA'"
+          (click)="onStatusFilterChange('CANCELADA')">
+          Canceladas
+        </button>
       </div>
     </div>
     <div class="reservations-grid">
-    <div class="reservation-card">
-      <div class="card-image-wrapper">
-        <img
-          src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-          class="card-image"
-          alt="Pacote Família em Gramado"
-        />
-        <div class="duration-badge">
-          <span>5 dias</span>
-        </div>
-      </div>
-      <div class="card-content">
-        <div class="reservation-info">
-          <div class="reservation-tag">4 pessoas</div>
-          <div class="reservation-date">Reservado em: 15/07/2025</div>
-          <div class="status-tag status-approved">APROVADO</div>
-        </div>
-        <h3 class="package-title">Pacote Família em Gramado - Inverno 2025</h3>
-        <div class="travel-dates">
-          <strong>Data da viagem:</strong> 10/08/2025 - 15/08/2025
-        </div>
-        <div class="price-section">
-          <div class="price-wrapper">
-            <span class="currency">R$</span>
-            <span class="price">3.200</span>
-            <span class="price-period">total</span>
+      <div class="reservation-card">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+            class="card-image" alt="Pacote Família em Gramado" />
+          <div class="duration-badge">
+            <span>5 dias</span>
           </div>
         </div>
-        <div class="card-actions">
-          <button class="action-btn btn-secondary">
-            Cancelar
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="reservation-card">
-      <div class="card-image-wrapper">
-        <img
-          src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-          class="card-image"
-          alt="Rio de Janeiro - Cristo Redentor"
-        />
-        <div class="duration-badge">
-          <span>7 dias</span>
-        </div>
-      </div>
-      <div class="card-content">
-        <div class="reservation-info">
-          <div class="reservation-tag">2 pessoas</div>
-          <div class="reservation-date">Reservado em: 20/07/2025</div>
-          <div class="status-tag status-pending">PENDENTE</div>
-        </div>
-        <h3 class="package-title">Rio de Janeiro - Cristo Redentor e Pão de Açúcar</h3>
-        <div class="travel-dates">
-          <strong>Data da viagem:</strong> 25/08/2025 - 01/09/2025
-        </div>
-        <div class="price-section">
-          <div class="price-wrapper">
-            <span class="currency">R$</span>
-            <span class="price">2.800</span>
-            <span class="price-period">total</span>
+        <div class="card-content">
+          <div class="reservation-info">
+            <div class="reservation-tag">4 pessoas</div>
+            <div class="reservation-date">Reservado em: 15/07/2025</div>
+            <div class="status-tag status-approved">APROVADO</div>
+          </div>
+          <h3 class="package-title">Pacote Família em Gramado - Inverno 2025</h3>
+          <div class="travel-dates">
+            <strong>Data da viagem:</strong> 10/08/2025 - 15/08/2025
+          </div>
+          <div class="price-section">
+            <div class="price-wrapper">
+              <span class="currency">R$</span>
+              <span class="price">3.200</span>
+              <span class="price-period">total</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-secondary">
+              Cancelar
+            </button>
           </div>
         </div>
-        <div class="card-actions">
-          <button class="action-btn btn-primary">
-            Pagar agora
-          </button>
-          <button class="action-btn btn-secondary">
-            Cancelar
-          </button>
-        </div>
       </div>
-    </div>
-    <div class="reservation-card card-cancelled">
-      <div class="card-image-wrapper">
-        <img
-          src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-          class="card-image"
-          alt="Florianópolis - Praia da Joaquina"
-        />
-        <div class="duration-badge">
-          <span>4 dias</span>
-        </div>
-      </div>
-      <div class="card-content">
-        <div class="reservation-info">
-          <div class="reservation-tag">3 pessoas</div>
-          <div class="reservation-date">Reservado em: 10/07/2025</div>
-          <div class="status-tag status-cancelled">CANCELADO</div>
-        </div>
-        <h3 class="package-title">Florianópolis - Praia da Joaquina</h3>
-        <div class="travel-dates">
-          <strong>Data da viagem:</strong> 05/08/2025 - 09/08/2025
-        </div>
-        <div class="cancelled-date">
-          <strong>Cancelado em:</strong> 12/07/2025
-        </div>
-        <div class="price-section">
-          <div class="price-wrapper">
-            <span class="currency">R$</span>
-            <span class="price">1.950</span>
-            <span class="price-period">total</span>
+      <div class="reservation-card">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+            class="card-image" alt="Rio de Janeiro - Cristo Redentor" />
+          <div class="duration-badge">
+            <span>7 dias</span>
           </div>
         </div>
-        <div class="card-actions">
+        <div class="card-content">
+          <div class="reservation-info">
+            <div class="reservation-tag">2 pessoas</div>
+            <div class="reservation-date">Reservado em: 20/07/2025</div>
+            <div class="status-tag status-pending">PENDENTE</div>
+          </div>
+          <h3 class="package-title">Rio de Janeiro - Cristo Redentor e Pão de Açúcar</h3>
+          <div class="travel-dates">
+            <strong>Data da viagem:</strong> 25/08/2025 - 01/09/2025
+          </div>
+          <div class="price-section">
+            <div class="price-wrapper">
+              <span class="currency">R$</span>
+              <span class="price">2.800</span>
+              <span class="price-period">total</span>
+            </div>
+          </div>
+          <div class="card-actions">
+            <button class="action-btn btn-primary">
+              Pagar agora
+            </button>
+            <button class="action-btn btn-secondary">
+              Cancelar
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+      <div class="reservation-card card-cancelled">
+        <div class="card-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
+            class="card-image" alt="Florianópolis - Praia da Joaquina" />
+          <div class="duration-badge">
+            <span>4 dias</span>
+          </div>
+        </div>
+        <div class="card-content">
+          <div class="reservation-info">
+            <div class="reservation-tag">3 pessoas</div>
+            <div class="reservation-date">Reservado em: 10/07/2025</div>
+            <div class="status-tag status-cancelled">CANCELADO</div>
+          </div>
+          <h3 class="package-title">Florianópolis - Praia da Joaquina</h3>
+          <div class="travel-dates">
+            <strong>Data da viagem:</strong> 05/08/2025 - 09/08/2025
+          </div>
+          <div class="cancelled-date">
+            <strong>Cancelado em:</strong> 12/07/2025
+          </div>
+          <div class="price-section">
+            <div class="price-wrapper">
+              <span class="currency">R$</span>
+              <span class="price">1.950</span>
+              <span class="price-period">total</span>
+            </div>
+          </div>
+          <div class="card-actions">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </main>

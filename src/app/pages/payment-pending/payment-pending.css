@@ -1,18 +1,15 @@
-/* Payment Rejected Page Styles */
-
 .payment-rejected-container {
-  background: linear-gradient(135deg, var(--orvian-background-gray) 0%, #fdf2f2 100%);
+  background: linear-gradient(135deg, var(--orvian-background-gray) 0%, #f0f8ff 100%);
   min-height: 100vh;
   padding: 40px 0;
 }
 
-/* Error Card */
 .error-card {
   background: white;
   border-radius: 20px;
   padding: 60px 40px 40px;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(220, 53, 69, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 70, 87, 0.1);
   margin-bottom: 30px;
   position: relative;
   overflow: hidden;
@@ -25,7 +22,7 @@
   left: 0;
   right: 0;
   height: 6px;
-  background: linear-gradient(90deg, #dc3545 0%, #c82333 100%);
+  background: linear-gradient(90deg, var(--orvian-primary-variant) 0%, var(--orvian-primary-color) 100%);
 }
 
 .error-icon {
@@ -38,14 +35,14 @@
   animation: bounceIn 0.8s ease-out;
 }
 
-.error-x {
-  animation: drawError 1.2s ease-in-out 0.3s both;
+.error-x, .pending-clock {
+  animation: drawPending 1.2s ease-in-out 0.3s both;
 }
 
 .error-title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #dc3545;
+  color: var(--orvian-primary-color);
   margin-bottom: 10px;
   animation: slideInUp 0.6s ease-out 0.2s both;
 }
@@ -89,8 +86,8 @@
 }
 
 .status-value.pending {
-  color: #ffc107;
-  background: rgba(255, 193, 7, 0.1);
+  color: var(--orvian-primary-variant);
+  background: rgba(27, 157, 189, 0.1);
   padding: 4px 12px;
   border-radius: 20px;
   font-size: 0.9rem;
@@ -107,14 +104,14 @@
   border-radius: 16px;
   padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 5px 20px rgba(220, 53, 69, 0.08);
+  box-shadow: 0 5px 20px rgba(0, 70, 87, 0.08);
   animation: slideInUp 0.6s ease-out 0.8s both;
 }
 
 .problem-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #dc3545;
+  color: var(--orvian-primary-color);
   margin-bottom: 25px;
 }
 
@@ -124,7 +121,7 @@
   gap: 15px;
   margin-bottom: 25px;
   padding: 20px;
-  background: #fff5f5;
+  background: rgba(27, 157, 189, 0.05);
   border-radius: 12px;
 }
 
@@ -132,7 +129,7 @@
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  background: #dc3545;
+  background: var(--orvian-primary-variant);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -142,7 +139,7 @@
 .problem-text h4 {
   font-size: 1.3rem;
   font-weight: 600;
-  color: #dc3545;
+  color: var(--orvian-primary-color);
   margin-bottom: 8px;
 }
 
@@ -363,7 +360,7 @@
 }
 
 .btn-primary-custom {
-  background: #dc3545;
+  background: var(--orvian-primary-variant);
   border: none;
   color: white;
   padding: 15px 30px;
@@ -379,7 +376,7 @@
 }
 
 .btn-primary-custom:hover {
-  background: #c82333;
+  background: var(--orvian-primary-color);
 }
 
 .btn-secondary-custom {
@@ -517,6 +514,15 @@
 }
 
 @keyframes drawError {
+  0% {
+    stroke-dasharray: 0 100;
+  }
+  100% {
+    stroke-dasharray: 100 0;
+  }
+}
+
+@keyframes drawPending {
   0% {
     stroke-dasharray: 0 100;
   }

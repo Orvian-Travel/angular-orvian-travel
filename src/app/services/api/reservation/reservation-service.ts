@@ -8,7 +8,7 @@ import {
   SaveReservationResponse,
   UpdateReservationRequest
 } from '../../entities/reservation.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
 
@@ -38,7 +38,20 @@ export class ReservationService implements IReservationService {
   }
 
   createReservation(saveReservationRequest: SaveReservationRequest): Observable<SaveReservationResponse> {
-    return this.http.post<SaveReservationResponse>(this.baseUrl, saveReservationRequest);
+    const token = localStorage.getItem('orvian_token');
+
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+      console.log('Token enviado na requisição de reserva:', token);
+    } else {
+      console.warn('Nenhum token encontrado para criar reserva');
+    }
+
+    return this.http.post<SaveReservationResponse>(this.baseUrl, saveReservationRequest, { headers });
   }
 
   updateReservation(id: string, updateReservationRequest: UpdateReservationRequest): Observable<void> {

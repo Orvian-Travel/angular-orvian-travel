@@ -118,8 +118,9 @@ app-reservations-list {
 }
 
 .status-pending {
-  background: var(--orvian-secondary-variant);
-  color: white;
+  background: rgba(27, 157, 189, 0.15);
+  color: var(--orvian-primary-variant);
+  border: 1px solid rgba(27, 157, 189, 0.3);
 }
 
 .status-cancelled {
@@ -207,6 +208,19 @@ app-reservations-list {
 
 .travel-dates strong {
   color: var(--orvian-primary-color);
+  font-weight: 600;
+}
+
+.payment-info {
+  color: var(--orvian-gray-003);
+  font-size: 0.85rem;
+  padding: 0.6rem;
+  background: rgba(27, 157, 189, 0.05);
+  border-radius: 6px;
+}
+
+.payment-info strong {
+  color: var(--orvian-primary-variant);
   font-weight: 600;
 }
 

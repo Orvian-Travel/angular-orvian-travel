@@ -1,6 +1,6 @@
 <body>
-<app-header></app-header>
-<app-hero></app-hero>
-<app-card-list></app-card-list>
-<app-footer></app-footer>
+    <app-header></app-header>
+    <app-hero (searchRequest)="onSearchRequest($event)"></app-hero>
+    <app-card-list [searchData]="searchData"></app-card-list>
+    <app-footer></app-footer>
 </body>

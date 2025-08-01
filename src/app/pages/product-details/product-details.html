@@ -31,7 +31,8 @@
                 [(ngModel)]="selectedDate"
                 (dateChange)="onDateSelected($event.value)"
                 readonly 
-                placeholder="Selecione uma data disponível" />
+                placeholder="Selecione uma data disponível" 
+                required/>
               <mat-datepicker-toggle
                 matIconSuffix
                 [for]="startPicker"
@@ -60,7 +61,7 @@
         </h2>
       </div>
       <p>{{ package?.description }}</p>
-      <button
+      <button type="submit"
         class="botao-reserva btn btn-primary btn-lg w-100 mb-3"
         (click)="isLoggedIn ? paymentRedirect() : loginRedirectWithReturn()"
       >
