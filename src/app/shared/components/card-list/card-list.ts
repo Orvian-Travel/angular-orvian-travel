@@ -232,4 +232,20 @@ export class CardList implements OnInit, OnChanges {
   navigateToDetails(id: string) {
     this.router.navigate(['/product-details', id]);
   }
+
+  getPackageImageUrl(packageItem: PackageDetail): string {
+    if (packageItem.medias && packageItem.medias.length > 0) {
+      const firstMedia = packageItem.medias[0];
+      
+      if (firstMedia.contentType) {
+        return `data:${firstMedia.type};base64,${firstMedia.contentType}`;
+      }
+    }
+    
+    return 'assets/images/default-package-image.png';
+  }
+
+  onImageError(event: any, packageItem: PackageDetail): void {
+    event.target.src = 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80';
+  }
 }

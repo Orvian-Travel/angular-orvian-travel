@@ -10,8 +10,15 @@ export interface PackageDetail {
   price: number;
   maxPeople: number;
   packageDates: PackageDateDetail[];
+  medias: PackageMediaDetail[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface PackageMediaDetail {
+  id: string;
+  type: string;
+  contentType?: string;
 }
 
 export interface SavePackageRequest {
