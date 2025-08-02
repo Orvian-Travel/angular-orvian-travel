@@ -20,11 +20,239 @@ html, body {
   padding: 0;
   background-color: #f0fbff;
   font-family: 'Segoe UI', Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ===== LINHAS SUAVES ANIMADAS GLOBAIS ===== */
+/* Aplicado em todas as páginas */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 200px,
+      rgba(148, 163, 184, 0.241) 201px,
+      rgba(148, 163, 184, 0.241) 203px,
+      transparent 204px,
+      transparent 600px
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 0px,
+      transparent 300px,
+      rgba(59, 130, 246, 0.150) 301px,
+      rgba(59, 130, 246, 0.160) 303px,
+      transparent 304px,
+      transparent 700px
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0px,
+      transparent 400px,
+      rgba(251, 191, 36, 0.150) 401px,
+      rgba(251, 191, 36, 0.150) 403px,
+      transparent 404px,
+      transparent 800px
+    );
+  background-size: 800px 800px, 900px 900px, 1000px 1000px;
+  animation: floatLines 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 150;
+}
+
+@keyframes floatLines {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(10px, -15px) rotate(1deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-5px, 10px) rotate(-0.5deg);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(15px, 5px) rotate(0.5deg);
+    opacity: 0.6;
+  }
 }
 
 app-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f0fbff;
+  background-color: #f0fbff00; /* Permite ver os padrões globais */
+  padding-top: 5.5rem; /* Compensação para header fixo */
+  position: relative;
+  z-index: 200; /* Fica acima dos padrões de fundo */
+}
+
+/* ===== PÁGINAS SEM HEADER ===== */
+/* Remove o padding-top para páginas que não têm header */
+app-login,
+app-register {
+  margin-top: -5.5rem; /* Compensa o padding-top do app-root */
+  min-height: 100vh;
+  display: block;
+}
+
+/* ===== HIERARQUIA Z-INDEX PARA COMPONENTES ===== */
+/* Garante que header e hero fiquem acima das linhas de fundo */
+app-header,
+.header,
+header {
+  position: relative;
+  z-index: 1000 !important;
+  background: inherit; /* Mantém o background próprio do header */
+}
+
+app-hero,
+.hero,
+.search-container,
+.hero-section {
+  position: relative;
+  z-index: 900 !important;
+  background: transparent; /* Permite ver a imagem de fundo do hero */
+}
+
+/* Outros componentes ficam acima das linhas mas abaixo do header/hero */
+app-card-list,
+.card-list,
+.content,
+.main-content,
+section,
+.section,
+app-presentation-video,
+app-footer {
+  position: relative;
+  z-index: 500;
+  background: transparent !important; /* Força transparência para mostrar as linhas animadas */
+}
+
+/* Container para input de senha com botão */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 50px !important; /* Aumentado para dar mais espaço */
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 15px; /* Ajustado para ficar mais centralizado */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 8px; /* Aumentado o padding para melhor área de clique */
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.2s ease;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  width: 32px; /* Largura fixa */
+  height: 32px; /* Altura fixa */
+  min-width: 32px; /* Garantir largura mínima */
+  min-height: 32px; /* Garantir altura mínima */
+}
+
+.password-toggle-btn:hover {
+  color: var(--orvian-primary-variant, #1486b4);
+  background-color: rgba(20, 134, 180, 0.1);
+}
+
+.password-toggle-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(20, 134, 180, 0.25);
+}
+
+.password-toggle-btn i {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  line-height: 1; /* Garantir que o ícone fique centralizado */
+}
+
+/* Ajustes para responsividade */
+@media (max-width: 768px) {
+  .password-input {
+    padding-right: 48px !important;
+  }
+  
+  .password-toggle-btn {
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 6px;
+  }
+  
+  .password-toggle-btn i {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .password-input {
+    padding-right: 45px !important;
+  }
+  
+  .password-toggle-btn {
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 5px;
+  }
+  
+  .password-toggle-btn i {
+    font-size: 14px;
+  }
+}
+
+/* Para telas muito pequenas */
+@media (max-width: 375px) {
+  .password-input {
+    padding-right: 42px !important;
+  }
+  
+  .password-toggle-btn {
+    right: 8px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    min-height: 26px;
+    padding: 4px;
+  }
+  
+  .password-toggle-btn i {
+    font-size: 12px;
+  }
+}
+
+/* Garantir que o botão não seja cortado em inputs com altura específica */
+.form-control-custom {
+  min-height: 48px; /* Altura mínima para garantir espaço */
+}
+
+/* Ajuste específico para campos de senha */
+.password-input-container .form-control {
+  box-sizing: border-box;
 }

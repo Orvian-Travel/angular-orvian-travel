@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TokenModel } from '../entities/token-model';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -10,12 +11,16 @@ export class AuthStateService {
   private readonly USER_KEY = 'orvian_user';
   private readonly REDIRECT_KEY = 'orvian_redirect_after_login';
 
+
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(
     this.hasValidToken()
   );
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
-  constructor() {
+  constructor(
+    private router: Router
+  ) {
+
     this.checkAuthState();
   }
 
@@ -31,6 +36,10 @@ export class AuthStateService {
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem(this.REDIRECT_KEY);
+
+    this.router.navigate(['/']);
+
     this.isAuthenticatedSubject.next(false);
   }
 

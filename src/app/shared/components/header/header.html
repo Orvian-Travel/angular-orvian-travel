@@ -5,35 +5,41 @@
             <a class="brand navbar-brand d-flex align-items-center" (click)="goHome()" style="cursor: pointer;">
                 <img src="assets/logo-branca.svg" alt="Logo Orvian">
             </a>
-            
+
             <!-- Botão do menu hambúrguer (visível apenas em mobile) -->
-            <button class="navbar-toggler" type="button" (click)="toggleMenu()" 
-                    [attr.aria-expanded]="isMenuOpen" aria-controls="navbarNav" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen"
+                aria-controls="navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <!-- Menu de navegação -->
             <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="navbarNav">
                 <div class="buttons navbar-nav ms-auto">
-                    <button class="btn font-weight-bold" *ngIf="!isLoggedIn" (click)="registerRedirect()">Registre-se</button>
+                    <button class="btn font-weight-bold" *ngIf="!isLoggedIn"
+                        (click)="registerRedirect()">Registre-se</button>
                     <button class="btn font-weight-bold" *ngIf="!isLoggedIn" (click)="loginRedirect()">Login</button>
-                    
+
                     <!-- Dropdown quando logado -->
                     <div class="dropdown" *ngIf="isLoggedIn">
                         <!-- Overlay para fechar dropdown ao clicar fora -->
                         <div class="dropdown-overlay" *ngIf="isDropdownOpen" (click)="closeDropdown()"></div>
-                        
+
                         <!-- Botão do dropdown -->
                         <button class="btn dropdown-toggle-custom" (click)="toggleDropdown()">
                             <span class="user-name">Olá, {{ getUserName() }}</span>
-                            <i class="fas" [ngClass]="isDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'" style="margin-left: 8px;"></i>
+                            <i class="fas" [ngClass]="isDropdownOpen ? 'fa-chevron-up' : 'fa-chevron-down'"
+                                style="margin-left: 8px;"></i>
                         </button>
-                        
+
                         <!-- Menu dropdown -->
                         <div class="dropdown-menu-custom" [class.show]="isDropdownOpen">
                             <a class="dropdown-item-custom" (click)="navigateToReservations()">
                                 <i class="fas fa-calendar-alt"></i>
                                 Minhas Reservas
+                            </a>
+                            <a class="dropdown-item-custom" routerLink="/admin" *ngIf="hasAccessToDashboard()">
+                                <i class="fas fa-solid fa-gauge"></i>
+                                Acesso a Dashboard
                             </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item-custom logout-item" (click)="logout()">

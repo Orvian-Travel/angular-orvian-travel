@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthStateService } from '../../../services/auth/auth-state-service';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -15,7 +15,7 @@ export class Header implements OnInit {
   isMenuOpen: boolean = false;
   isDropdownOpen: boolean = false;
 
-  constructor(private router: Router, private authStateService: AuthStateService) {}
+  constructor(private router: Router, private authStateService: AuthStateService) { }
 
   ngOnInit(): void {
     this.authStateService.isAuthenticated$.subscribe(isLoggedIn => {
@@ -32,12 +32,12 @@ export class Header implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  loginRedirect() : void{
+  loginRedirect(): void {
     this.router.navigate(['/login']);
     this.isMenuOpen = false; // Fecha o menu após navegar
   }
 
-  registerRedirect(): void{
+  registerRedirect(): void {
     this.router.navigate(['/register']);
     this.isMenuOpen = false; // Fecha o menu após navegar
   }
@@ -63,6 +63,11 @@ export class Header implements OnInit {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
+  hasAccessToDashboard(): boolean {
+    const userRole = this.authStateService.getUserRole();
+    return userRole === 'ADMIN' || userRole === 'ATENDENTE';
+  }
+
   closeDropdown(): void {
     this.isDropdownOpen = false;
   }
@@ -72,5 +77,5 @@ export class Header implements OnInit {
     this.closeDropdown();
     this.isMenuOpen = false;
   }
-  
+
 }
