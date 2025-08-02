@@ -1,6 +1,6 @@
 /* ===== SEÇÃO DO VÍDEO DE APRESENTAÇÃO ===== */
 .presentation-video-section {
-  background-color: #f8f9fa;
+  background: transparent;
   padding: 4rem 2rem;
   text-align: center;
 }
@@ -95,7 +95,7 @@
 
 @media (max-width: 480px) {
   .presentation-video-section {
-    padding: 2rem 0.5rem;
+    padding: 1rem 0.5rem;
   }
 
   .video-title {
@@ -103,8 +103,8 @@
   }
 
   .presentation-video {
-    min-height: 200px;
-    max-height: 300px;
+    min-height: 100px;
+    max-height: 150px;
   }
 
   .video-wrapper {

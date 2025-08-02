@@ -20,11 +20,58 @@ html, body {
   padding: 0;
   background-color: #f0fbff;
   font-family: 'Segoe UI', Arial, sans-serif;
+  position: relative;
+  overflow-x: hidden;
 }
 
 app-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f0fbff;
+  background-color: #f0fbff; /* Permite ver os padrões globais */
+  padding-top: 5.5rem; /* Compensação para header fixo */
+  position: relative;
+  z-index: 10; /* Fica acima dos padrões de fundo */
+}
+
+/* ===== PÁGINAS SEM HEADER ===== */
+/* Remove o padding-top para páginas que não têm header */
+app-login,
+app-register {
+  margin-top: -5.5rem; /* Compensa o padding-top do app-root */
+  min-height: 100vh;
+  display: block;
+}
+
+/* ===== HIERARQUIA Z-INDEX PARA COMPONENTES ===== */
+/* Garante que header e hero fiquem acima das linhas de fundo */
+app-header,
+.header,
+header {
+  position: relative;
+  z-index: 1000 !important;
+  background: inherit; /* Mantém o background próprio do header */
+}
+
+app-hero,
+.hero,
+.hero-section {
+  position: relative;
+  z-index: 900 !important;
+  background: transparent; /* Permite ver a imagem de fundo do hero */
+}
+
+/* Outros componentes ficam acima das linhas mas abaixo do header/hero */
+app-card-list,
+.card-list,
+.card,
+.content,
+.main-content,
+section,
+.section,
+app-presentation-video,
+app-footer {
+  position: relative;
+  z-index: 100;
+  background: transparent !important; /* Força transparência para mostrar as linhas animadas */
 }
