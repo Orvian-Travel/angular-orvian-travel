@@ -11,7 +11,7 @@ export const adminGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  if (!authStateService.isAdmin()) {
+  if (!(authStateService.isAdmin() || authStateService.isAttendant())) {
     router.parseUrl('/login');
     return false;
   }
