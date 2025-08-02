@@ -41,6 +41,7 @@ jobs:
             web.config
             .deployment
             startup.sh
+            public/assets/env.js
 
   deploy:
     runs-on: ubuntu-latest
