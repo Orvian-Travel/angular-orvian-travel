@@ -1,30 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AdminDashboard } from '../admin-dashboard/admin-dashboard';
-import { AdminUsers } from '../admin-users/admin-users';
-import { AdminPackages } from '../admin-packages/admin-packages';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { AuthStateService } from '@services/auth/auth-state-service';
+
 
 @Component({
   selector: 'app-admin-tela',
-  imports: [CommonModule, AdminDashboard, AdminUsers, AdminPackages],
+  imports: [CommonModule, RouterOutlet, RouterLink, RouterLinkActive],
   templateUrl: './admin-tela.html',
   styleUrl: './admin-tela-new.css'
 })
-export class AdminTela implements OnInit {
-  activeSection = 'dashboard';
+export class AdminTela {
 
-  ngOnInit() {
-    this.activeSection = 'dashboard';
-  }
+  constructor(
+    private authStateService: AuthStateService
+  ) { }
 
-  setActiveSection(section: string, event: Event) {
-    event.preventDefault();
-    this.activeSection = section;
-    
-    // Update navigation active states
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.classList.remove('active');
-    });
-    (event.target as HTMLElement).classList.add('active');
+  logout(): void {
+    this.authStateService.logout();
   }
 }

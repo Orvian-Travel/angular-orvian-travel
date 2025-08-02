@@ -2,47 +2,40 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="logo text-center py-3">
-            <img src="assets/logo-branca.svg" alt="Ôrvian" class="img-fluid">
+            <img src="assets/logo-branca.svg" alt="Ôrvian" class="img-fluid" />
         </div>
         <nav class="sidebar-nav">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#" data-section="dashboard" (click)="setActiveSection('dashboard', $event)">
+                    <a class="nav-link active" routerLink="/admin/dashboard" routerLinkActive="active">
                         <i class="fas fa-chart-pie me-2"></i>
                         Visão Geral
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-section="users" (click)="setActiveSection('users', $event)">
+                    <a class="nav-link" routerLink="/admin/users" routerLinkActive="active">
                         <i class="fas fa-users me-2"></i>
                         Gerenciar usuários
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" data-section="packages" (click)="setActiveSection('packages', $event)">
+                    <a class="nav-link" routerLink="/admin/packages" routerLinkActive="active">
                         <i class="fas fa-map-marked-alt me-2"></i>
                         Gerenciar pacotes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="logout()" style="cursor: pointer;">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Sair
                     </a>
                 </li>
             </ul>
         </nav>
     </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Dashboard Section -->
-            <div *ngIf="activeSection === 'dashboard'">
-                <app-admin-dashboard></app-admin-dashboard>
-            </div>
-
-            <!-- Users Section -->
-            <div *ngIf="activeSection === 'users'">
-                <app-admin-users></app-admin-users>
-            </div>
-
-            <!-- Packages Section -->
-            <div *ngIf="activeSection === 'packages'">
-                <app-admin-packages></app-admin-packages>
-            </div>
-        </main>
-    </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

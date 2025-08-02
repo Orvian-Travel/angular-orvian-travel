@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { SaveUserRequest } from '../../services/entities/user.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -14,15 +15,22 @@ import { CommonModule } from '@angular/common';
 export class Register implements OnInit {
   @ViewChild('birthdateInput') birthdateInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private router : Router, private userService: UserService){}
+  constructor(private router: Router, private userService: UserService) { }
 
   user: SaveUserRequest = {} as SaveUserRequest;
+  confirmPassword: string = '';
+  passwordsMatch: boolean = false;
   showConflictPopup: boolean = false;
+  showPassword: boolean = false;
 
   ngOnInit(): void {
     setTimeout(() => {
       this.initializeEventListeners();
     }, 100);
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   private initializeEventListeners(): void {
@@ -48,14 +56,14 @@ export class Register implements OnInit {
   onDocumentTypeChange(event: Event): void {
     const select = event.target as HTMLSelectElement;
     const documentInput = document.querySelector('.document-number-input') as HTMLInputElement;
-    
+
     if (documentInput) {
       // Limpa o valor do modelo
       this.user.document = '';
-      
+
       if (select.value) {
         documentInput.disabled = false;
-        
+
         if (select.value === 'cpf') {
           documentInput.placeholder = '000.000.000-00';
           documentInput.maxLength = 14;
@@ -77,7 +85,7 @@ export class Register implements OnInit {
             this.user.document = (e.target as HTMLInputElement).value;
           });
         }
-        
+
         documentInput.value = '';
       } else {
         documentInput.disabled = true;
@@ -87,17 +95,17 @@ export class Register implements OnInit {
     }
   }
 
-  formatPhone(event: Event): void{
+  formatPhone(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
-    
+
     value = value.substring(0, 11);
-    
+
     if (value.length <= 11) {
       value = value.replace(/(\d{2})(\d)/, '($1) $2');
       value = value.replace(/(\d{5})(\d)/, '$1-$2');
     }
-    
+
     input.value = value;
     this.user.phone = value;
   }
@@ -105,20 +113,20 @@ export class Register implements OnInit {
   formatPassport(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/[^a-zA-Z0-9]/g, '');
-    
+
     let formattedValue = '';
     let letterCount = 0;
     let numberCount = 0;
-    
+
     for (let i = 0; i < value.length && formattedValue.length < 8; i++) {
       const char = value[i];
-      
+
       if (letterCount < 2) {
         if (/[a-zA-Z]/.test(char)) {
           formattedValue += char.toUpperCase();
           letterCount++;
         }
-      } 
+      }
       else if (numberCount < 6) {
         if (/[0-9]/.test(char)) {
           formattedValue += char;
@@ -126,7 +134,7 @@ export class Register implements OnInit {
         }
       }
     }
-    
+
     input.value = formattedValue;
     this.user.document = formattedValue;
   }
@@ -134,15 +142,15 @@ export class Register implements OnInit {
   formatCPF(event: Event): void {
     const input = event.target as HTMLInputElement;
     let value = input.value.replace(/\D/g, '');
-    
+
     value = value.substring(0, 11);
-    
+
     if (value.length <= 11) {
       value = value.replace(/(\d{3})(\d)/, '$1.$2');
       value = value.replace(/(\d{3})(\d)/, '$1.$2');
       value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     }
-    
+
     input.value = value;
     this.user.document = value;
   }
@@ -167,19 +175,19 @@ export class Register implements OnInit {
     const input = event.target as HTMLInputElement;
     const email = input.value;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    
+
     // Remove classes de validação anteriores
     input.classList.remove('is-valid', 'is-invalid');
-    
+
     // Remove mensagem de erro anterior
     const existingError = input.parentElement?.querySelector('.invalid-feedback');
     if (existingError) {
       existingError.remove();
     }
-    
+
     if (email && !emailRegex.test(email)) {
       input.classList.add('is-invalid');
-      
+
       // Adiciona mensagem de erro
       const errorMessage = document.createElement('div');
       errorMessage.className = 'invalid-feedback';
@@ -193,10 +201,10 @@ export class Register implements OnInit {
   validatePassword(event: Event): void {
     const input = event.target as HTMLInputElement;
     const password = input.value;
-    
+
     // Remove classes de validação anteriores
     input.classList.remove('is-valid', 'is-invalid');
-    
+
     // Verifica cada requisito
     const requirements = {
       length: password.length >= 8 && password.length <= 20,
@@ -207,96 +215,179 @@ export class Register implements OnInit {
       noSpaces: !/\s/.test(password)
     };
 
-    // Atualiza a lista de requisitos
+    // Atualiza a lista de requisitos com ícones dinâmicos
     this.updatePasswordRequirements(requirements);
 
     // Verifica se todos os requisitos foram atendidos
-    const allValid = Object.values(requirements).every(req => req);
-    
-    if (password && allValid) {
-      input.classList.add('is-valid');
-    } else if (password) {
-      input.classList.add('is-invalid');
+    const allRequirementsMet = Object.values(requirements).every(req => req);
+
+    if (password.length > 0) {
+      if (allRequirementsMet) {
+        input.classList.add('is-valid');
+      } else {
+        input.classList.add('is-invalid');
+      }
     }
+
+    // Revalida a confirmação de senha se ela já foi preenchida
+    if (this.confirmPassword) {
+      this.validatePasswordMatch();
+    }
+  }
+
+  validatePasswordMatch(event?: Event): void {
+    if (event) {
+      const input = event.target as HTMLInputElement;
+      // Remove classes de validação anteriores
+      input.classList.remove('is-valid', 'is-invalid');
+    }
+
+    this.passwordsMatch = !!(this.user.password &&
+      this.confirmPassword &&
+      this.user.password === this.confirmPassword);
+
+    // Aplica classes de validação visual no campo de confirmação
+    if (event) {
+      const input = event.target as HTMLInputElement;
+      if (this.confirmPassword) {
+        if (this.passwordsMatch) {
+          input.classList.add('is-valid');
+        } else {
+          input.classList.add('is-invalid');
+        }
+      }
+    }
+  }
+
+  // Nova função para verificar se o formulário é válido
+  isFormValid(): boolean {
+    return !!(
+      this.user.name &&
+      this.user.document &&
+      this.user.birthDate &&
+      this.user.phone &&
+      this.user.email &&
+      this.user.password &&
+      this.confirmPassword &&
+      this.passwordsMatch &&
+      this.isPasswordValid()
+    );
+  }
+
+  private isPasswordValid(): boolean {
+    const password = this.user.password;
+    if (!password) return false;
+
+    const requirements = {
+      length: password.length >= 8 && password.length <= 20,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[@#$%^&+=!]/.test(password),
+      noSpaces: !/\s/.test(password)
+    };
+
+    return Object.values(requirements).every(req => req);
   }
 
   showPasswordRequirements(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    let requirementsDiv = input.parentElement?.querySelector('.password-requirements') as HTMLElement;
-    
-    if (!requirementsDiv) {
-      requirementsDiv = document.createElement('div') as HTMLElement;
-      requirementsDiv.className = 'password-requirements';
-      requirementsDiv.innerHTML = `
-        <div class="requirement" data-req="length">
-          <span class="req-icon">•</span> Entre 8 e 20 caracteres
-        </div>
-        <div class="requirement" data-req="lowercase">
-          <span class="req-icon">•</span> Pelo menos uma letra minúscula
-        </div>
-        <div class="requirement" data-req="uppercase">
-          <span class="req-icon">•</span> Pelo menos uma letra maiúscula
-        </div>
-        <div class="requirement" data-req="number">
-          <span class="req-icon">•</span> Pelo menos um número
-        </div>
-        <div class="requirement" data-req="special">
-          <span class="req-icon">•</span> Pelo menos um caractere especial (@#$%^&+=!)
-        </div>
-        <div class="requirement" data-req="noSpaces">
-          <span class="req-icon">•</span> Sem espaços em branco
-        </div>
-      `;
-      input.parentElement?.appendChild(requirementsDiv);
+    const requirementsDiv = document.getElementById('password-requirements');
+    if (requirementsDiv) {
+      requirementsDiv.style.display = 'block';
     }
-    
-    requirementsDiv.style.display = 'block';
   }
 
   hidePasswordRequirements(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const requirementsDiv = input.parentElement?.querySelector('.password-requirements') as HTMLElement;
-    
+    const requirementsDiv = document.getElementById('password-requirements');
     if (requirementsDiv) {
-      setTimeout(() => {
-        requirementsDiv.style.display = 'none';
-      }, 200);
+      requirementsDiv.style.display = 'none';
     }
   }
 
-  updatePasswordRequirements(requirements: {[key: string]: boolean}): void {
-    const requirementsDiv = document.querySelector('.password-requirements');
-    
-    if (requirementsDiv) {
-      Object.keys(requirements).forEach(req => {
-        const reqElement = requirementsDiv.querySelector(`[data-req="${req}"]`);
-        if (reqElement) {
-          if (requirements[req]) {
-            reqElement.classList.add('requirement-met');
-            reqElement.classList.remove('requirement-unmet');
-          } else {
-            reqElement.classList.add('requirement-unmet');
-            reqElement.classList.remove('requirement-met');
-          }
+  updatePasswordRequirements(requirements: any): void {
+    // Atualiza cada requisito individualmente
+    Object.keys(requirements).forEach(requirement => {
+      const element = document.querySelector(`[data-requirement="${requirement}"]`);
+      const icon = element?.querySelector('.req-icon');
+
+      if (element && icon) {
+        if (requirements[requirement]) {
+          // Requisito atendido
+          element.classList.remove('requirement-unmet');
+          element.classList.add('requirement-met');
+          icon.textContent = '✓';
+        } else {
+          // Requisito não atendido
+          element.classList.remove('requirement-met');
+          element.classList.add('requirement-unmet');
+          icon.textContent = '✗';
         }
-      });
-    }
+      }
+    });
   }
 
   register(user: SaveUserRequest): void {
+    if (!this.isFormValid()) {
+      // Correção do SweetAlert:
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulário incompleto',
+        text: 'Por favor, preencha todos os campos corretamente antes de continuar.',
+        confirmButtonText: 'Entendi',
+        confirmButtonColor: '#1486b4',
+        background: '#ffffff',
+        customClass: {
+          popup: 'custom-swal-popup',
+          title: 'custom-swal-title',
+          htmlContainer: 'custom-swal-content', // ← Mudança: 'content' para 'htmlContainer'
+          confirmButton: 'custom-swal-button'
+        }
+      });
+      return;
+    }
+
     this.userService.createUser(user).subscribe({
       next: (response) => {
         console.log('User created successfully:', response);
-        this.router.navigate(['/']);
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Conta criada com sucesso!',
+          text: 'Você será redirecionado para a página de login.',
+          timer: 2000,
+          timerProgressBar: true,
+          showConfirmButton: false,
+          confirmButtonColor: '#1486b4'
+        }).then(() => {
+          this.router.navigate(['/login']);
+        });
       },
       error: (error) => {
         console.error('Error creating user:', error);
-        
+
         if (error.status === 409) {
-          this.showConflictPopup = true;
-          setTimeout(() => {
-            this.showConflictPopup = false;
-          }, 3000);
+          Swal.fire({
+            icon: 'error',
+            title: 'Email já cadastrado',
+            text: 'Este email já está sendo usado por outra conta. Tente fazer login ou use outro email.',
+            confirmButtonText: 'Tentar novamente',
+            confirmButtonColor: '#1486b4',
+            showCancelButton: true,
+            cancelButtonText: 'Ir para Login',
+            cancelButtonColor: '#6c757d'
+          }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.cancel) {
+              this.router.navigate(['/login']);
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Erro no cadastro',
+            text: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            confirmButtonText: 'Tentar novamente',
+            confirmButtonColor: '#1486b4'
+          });
         }
       }
     });

@@ -17,12 +17,13 @@ export class ResetPassword {
   isLoading: boolean = false;
   message: string = '';
   isSuccess: boolean = false;
+  showPassword: boolean = false;
 
   constructor(
     private passwordResetService: PasswordResetService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.token = this.route.snapshot.paramMap.get('token') || '';
@@ -31,6 +32,10 @@ export class ResetPassword {
       this.message = 'Token de redefinição inválido.';
       this.isSuccess = false;
     }
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit(): void {
