@@ -22,6 +22,10 @@ export interface ReservationDetail {
   updatedAt: Date;
 }
 
+export interface ReservationDateDTO {
+  reservationDate: string;
+}
+
 export interface SaveReservationRequest {
   situation: ReservationSituation;
   reservationDate: Date;
