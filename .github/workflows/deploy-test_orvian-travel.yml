@@ -37,6 +37,9 @@ jobs:
             dist/
             package.json
             package-lock.json
+            web.config
+            .deployment
+            startup.sh
 
   deploy:
     runs-on: ubuntu-latest
