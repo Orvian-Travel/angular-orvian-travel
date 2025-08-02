@@ -1,5 +1,6 @@
-*{
-  overflow-x: hidden;
+/* Remover overflow-x hidden global para evitar problemas com Bootstrap */
+body {
+  overflow-x: hidden; /* Aplicar apenas ao body em vez de todos os elementos */
 }
 
 h3{
@@ -121,6 +122,7 @@ select{
   position: relative;
   display: flex;
   align-items: center;
+  overflow: visible; /* Garantir que elementos não sejam cortados */
 }
 
 /* Ícone do calendário */
@@ -175,6 +177,43 @@ select{
 html, body {
   height: 100%;
   font-family: 'Segoe UI', Arial, sans-serif;
+  /* Permitir scroll vertical quando necessário */
+  overflow-y: auto;
+  /* Evitar scroll horizontal desnecessário */
+  overflow-x: hidden;
+}
+
+/* Classes utilitárias para scroll (compatível com Bootstrap) */
+.overflow-auto {
+  overflow: auto !important;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}
+
+.overflow-visible {
+  overflow: visible !important;
+}
+
+.overflow-scroll {
+  overflow: scroll !important;
+}
+
+.overflow-x-auto {
+  overflow-x: auto !important;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+.overflow-y-auto {
+  overflow-y: auto !important;
+}
+
+.overflow-y-hidden {
+  overflow-y: hidden !important;
 }
 
 /* Botão voltar mobile */
@@ -514,4 +553,355 @@ html, body {
 .logo-voltar-mobile {
   height: 50px;
   width: auto;
+}
+
+/* ...existing styles... */
+
+/* CSS específico para validação de senha no register */
+.form-group.mb-4 {
+  position: relative;
+  margin-bottom: 1.5rem !important; /* Espaço extra para requisitos */
+}
+
+/* Container de senha específico do register */
+.password-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0; /* Remove margem para evitar conflito */
+  overflow: visible; /* Garantir que botões não sejam cortados */
+}
+
+/* Input de senha no register */
+.password-input-container .password-input {
+  padding-right: 60px !important; /* Altere de 50px para 60px */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Botão de toggle no register */
+.password-input-container .password-toggle-btn {
+  position: absolute;
+  right: 20px; /* Altere de 15px para 20px */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.2s ease;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
+}
+
+.password-input-container .password-toggle-btn:hover {
+  color: var(--orvian-primary-variant, #1486b4);
+  background-color: rgba(20, 134, 180, 0.1);
+}
+
+.password-input-container .password-toggle-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(20, 134, 180, 0.25);
+}
+
+.password-input-container .password-toggle-btn i {
+  font-size: 13px;
+  width: 14px;
+  height: 14px;
+  line-height: 1;
+}
+
+/* Requisitos de senha - estilos aprimorados */
+.password-requirements {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  padding: 12px;
+  margin-top: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.password-requirements small {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.requirements-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  transition: all 0.3s ease;
+}
+
+.requirement:last-child {
+  margin-bottom: 0;
+}
+
+.req-icon {
+  margin-right: 8px;
+  font-weight: bold;
+  min-width: 12px;
+  display: inline-block;
+}
+
+.requirement-unmet {
+  color: #dc3545;
+}
+
+.requirement-unmet .req-icon {
+  color: #dc3545;
+}
+
+.requirement-met {
+  color: #198754;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.requirement-met .req-icon {
+  color: #198754;
+}
+
+@media (max-width: 768px) {
+  .password-input-container .password-toggle-btn {
+    right: 16px; /* Altere de 12px para 16px */
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 6px;
+  }
+}
+
+.requirement-met .req-icon::before {
+  content: "✓";
+}
+
+@media (max-width: 576px) {
+  .password-input-container .password-input {
+    padding-right: 52px !important; /* Altere de 45px para 52px */
+  }
+  
+  .password-input-container .password-toggle-btn {
+    right: 14px; /* Altere de 10px para 14px */
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 5px;
+  }
+}
+.requirement-unmet .req-icon::before {
+  content: "✗";
+}
+
+/* Evitar que o botão saia da tela */
+.btn-custom-primary {
+  width: 100%;
+  margin-top: 1rem; /* Espaço extra acima do botão */
+}
+
+/* Responsividade para o register */
+@media (max-width: 768px) {
+  .password-input-container .password-toggle-btn {
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    min-height: 30px;
+    padding: 6px;
+  }
+  
+  .password-input-container .password-toggle-btn i {
+    font-size: 13px;
+  }
+  
+  .requirements-list {
+    font-size: 0.75rem;
+  }
+  
+  .form-group.mb-4 {
+    margin-bottom: 2rem !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .password-input-container .password-input {
+    padding-right: 45px !important;
+  }
+  
+  .password-input-container .password-toggle-btn {
+    right: 10px;
+    width: 28px;
+    height: 28px;
+    min-width: 28px;
+    min-height: 28px;
+    padding: 5px;
+  }
+  
+  .password-input-container .password-toggle-btn i {
+    font-size: 12px;
+  }
+  
+  .password-requirements {
+    padding: 10px;
+    margin-top: 6px;
+  }
+  
+  .requirements-list {
+    gap: 2px;
+  }
+  
+  .requirement {
+    font-size: 0.75rem;
+  }
+}
+
+/* ...existing styles... */
+
+/* Estilos para validação de confirmação de senha */
+.valid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #198754;
+  display: none;
+}
+
+.valid-feedback.d-block {
+  display: block !important;
+}
+
+.invalid-feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #dc3545;
+  display: none;
+}
+
+.invalid-feedback.d-block {
+  display: block !important;
+}
+
+/* Estilos para campos válidos e inválidos */
+.form-control.is-valid {
+  border-color: #198754;
+  border-width: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+  border-width: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botão desabilitado */
+.btn-custom-primary:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-custom-primary:disabled:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  transform: none;
+}
+
+/* Customização do SweetAlert */
+.custom-swal-popup {
+  border-radius: 15px !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+}
+
+.custom-swal-title {
+  color: #2c3e50 !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+.custom-swal-content { /* ← Mantém o nome da classe */
+  color: #5a6c7d !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+.custom-swal-button {
+  border-radius: 8px !important;
+  padding: 12px 24px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s ease !important;
+}
+
+.custom-swal-button:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(20, 134, 180, 0.3) !important;
+}
+
+/* Container principal com scroll controlado (compatível com Bootstrap) */
+.main-container {
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Prevenção de scroll horizontal em containers específicos */
+.container,
+.container-fluid {
+  overflow-x: hidden;
+}
+
+/* Garantir que modais e tooltips do Bootstrap funcionem corretamente */
+.modal,
+.tooltip,
+.popover,
+.dropdown-menu {
+  overflow: visible !important;
+}
+
+/* Fix para campos de formulário que podem causar overflow */
+.form-control,
+.form-select {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsividade melhorada para scroll */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .container,
+  .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
 }

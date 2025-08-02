@@ -8,10 +8,11 @@ import { AuthService } from '../../services/api/auth/auth-service';
 import { AuthStateService } from '../../services/auth/auth-state-service';
 import { DialogManager } from '@services/dialog/dialog-manager';
 import { IDialogManager } from '@services/dialog/dialog-manager.interface';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
   providers: [
@@ -22,6 +23,7 @@ import { IDialogManager } from '@services/dialog/dialog-manager.interface';
 export class Login implements OnInit {
   password: string = '';
   email: string = '';
+  showPassword: boolean = false;
 
   constructor(
     private router: Router,
@@ -82,5 +84,9 @@ export class Login implements OnInit {
 
   forgotPasswordRedirect(): void {
     this.router.navigate(['/forgot-password']);
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }
