@@ -6,67 +6,6 @@ body {
     position: relative;
 }
 
-/* Linhas suaves animadas de fundo para a página home */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: 
-        linear-gradient(
-            45deg,
-            transparent 0px,
-            transparent 200px,
-            rgba(148, 163, 184, 0.308) 201px,
-            rgba(119, 155, 206, 0.08) 203px,
-            transparent 204px,
-            transparent 600px
-        ),
-        linear-gradient(
-            -45deg,
-            transparent 0px,
-            transparent 300px,
-            rgba(47, 117, 230, 0.253) 301px,
-            rgba(59, 130, 246, 0.06) 303px,
-            transparent 304px,
-            transparent 700px
-        ),
-        linear-gradient(
-            135deg,
-            transparent 0px,
-            transparent 400px,
-            rgba(251, 190, 36, 0.322) 401px,
-            rgba(251, 190, 36, 0.411) 403px,
-            transparent 404px,
-            transparent 800px
-        );
-    background-size: 800px 800px, 900px 900px, 1000px 1000px;
-    animation: floatLines 20s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 50;
-}
-
-@keyframes floatLines {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-        opacity: 0.3;
-    }
-    25% {
-        transform: translate(10px, -15px) rotate(1deg);
-        opacity: 0.5;
-    }
-    50% {
-        transform: translate(-5px, 10px) rotate(-0.5deg);
-        opacity: 0.4;
-    }
-    75% {
-        transform: translate(15px, 5px) rotate(0.5deg);
-        opacity: 0.6;
-    }
-}
-
 /* Garante que o conteúdo principal ocupe o espaço disponível */
 app-hero,
 app-card-list {

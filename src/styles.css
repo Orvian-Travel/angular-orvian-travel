@@ -24,14 +24,76 @@ html, body {
   overflow-x: hidden;
 }
 
+/* ===== LINHAS SUAVES ANIMADAS GLOBAIS ===== */
+/* Aplicado em todas as páginas */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    linear-gradient(
+      45deg,
+      transparent 0px,
+      transparent 200px,
+      rgba(148, 163, 184, 0.241) 201px,
+      rgba(148, 163, 184, 0.241) 203px,
+      transparent 204px,
+      transparent 600px
+    ),
+    linear-gradient(
+      -45deg,
+      transparent 0px,
+      transparent 300px,
+      rgba(59, 130, 246, 0.150) 301px,
+      rgba(59, 130, 246, 0.160) 303px,
+      transparent 304px,
+      transparent 700px
+    ),
+    linear-gradient(
+      135deg,
+      transparent 0px,
+      transparent 400px,
+      rgba(251, 191, 36, 0.150) 401px,
+      rgba(251, 191, 36, 0.150) 403px,
+      transparent 404px,
+      transparent 800px
+    );
+  background-size: 800px 800px, 900px 900px, 1000px 1000px;
+  animation: floatLines 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 150;
+}
+
+@keyframes floatLines {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translate(10px, -15px) rotate(1deg);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-5px, 10px) rotate(-0.5deg);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(15px, 5px) rotate(0.5deg);
+    opacity: 0.6;
+  }
+}
+
 app-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f0fbff; /* Permite ver os padrões globais */
+  background-color: #f0fbff00; /* Permite ver os padrões globais */
   padding-top: 5.5rem; /* Compensação para header fixo */
   position: relative;
-  z-index: 10; /* Fica acima dos padrões de fundo */
+  z-index: 200; /* Fica acima dos padrões de fundo */
 }
 
 /* ===== PÁGINAS SEM HEADER ===== */
@@ -55,6 +117,7 @@ header {
 
 app-hero,
 .hero,
+.search-container,
 .hero-section {
   position: relative;
   z-index: 900 !important;
@@ -64,7 +127,6 @@ app-hero,
 /* Outros componentes ficam acima das linhas mas abaixo do header/hero */
 app-card-list,
 .card-list,
-.card,
 .content,
 .main-content,
 section,
@@ -72,7 +134,7 @@ section,
 app-presentation-video,
 app-footer {
   position: relative;
-  z-index: 100;
+  z-index: 500;
   background: transparent !important; /* Força transparência para mostrar as linhas animadas */
 }
 
