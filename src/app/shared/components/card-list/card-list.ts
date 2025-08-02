@@ -244,8 +244,4 @@ export class CardList implements OnInit, OnChanges {
     
     return 'assets/images/default-package-image.png';
   }
-
-  onImageError(event: any, packageItem: PackageDetail): void {
-    event.target.src = 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80';
-  }
 }
