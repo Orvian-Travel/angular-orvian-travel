@@ -8,4 +8,4 @@ fi
 
 # Start the application
 echo "Starting the application..."
-npx serve dist/angular-orvian-travel/browser -s -p ${PORT:-8080}
+node server.js
