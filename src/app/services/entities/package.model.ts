@@ -53,6 +53,15 @@ export interface UpdatePackageRequest {
   maxPeople: number;
 }
 
+export interface SumTotalByPackage {
+  destination: string;
+  name: string;                        // mudança aqui
+  reservationYear: number;
+  reservationWeek: number;
+  confirmedReservationsCount: number;  // mudança aqui
+  approvedPaymentsSum: number;         // mudança aqui
+}
+
 // export interface UpdatePackageResponse {
 //   id: string;
 //   title: string;
