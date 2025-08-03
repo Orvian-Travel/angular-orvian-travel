@@ -3,6 +3,7 @@ import {
   PackageDetail,
   SavePackageRequest,
   SavePackageResponse,
+  SumTotalByPackage,
   UpdatePackageRequest,
 } from "../../entities/package.model";
 import { PagedResponse } from "../../entities/paged-response.model";
@@ -16,6 +17,8 @@ export interface IPackageService {
   getAllPackagesBySearchPagination(pageNumber: number, pageSize: number, title: string, startDate: string, maxPeople: number): Observable<PagedResponse<PackageDetail>>;
 
   getPackageById(id: string): Observable<PackageDetail>;
+
+  getSumTotalByPackage(): Observable<SumTotalByPackage[]>;
 
   createPackage(savePackageRequest: SavePackageRequest): Observable<SavePackageResponse>;
 

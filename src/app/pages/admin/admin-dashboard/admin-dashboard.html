@@ -17,9 +17,9 @@
               <span class="stat-label d-block small text-muted"
                 >Faturamento</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0"
-                >R$ 11.970,00</span
-              >
+              <span class="stat-value h4 fw-bold text-dark mb-0">{{
+                faturamentoSemanal
+              }}</span>
             </div>
           </div>
         </div>
@@ -74,11 +74,8 @@
 
   <div class="chart-section card border-0 shadow-sm">
     <div class="card-body">
-      <h2 class="h4 fw-bold text-dark mb-4">Vendas por destino</h2>
+      <h2 class="h4 fw-bold text-dark mb-4">Vendas por destino nesse ano</h2>
       <div class="row align-items-center">
-        <button (click)="addData()">
-          Adicionar dado para teste de gráfico
-        </button>
         <div class="col-lg-6 text-center">
           <div
             style="

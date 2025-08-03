@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { CommonModule } from '@angular/common';
+import { SERVICES_TOKEN } from '@services/services-token';
+import { PackageService } from '@services/api/package/package-service';
+import { IPackageService } from '@services/api/package/package-service.interface';
+import { SumTotalByPackage } from '@services/entities/package.model';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -10,28 +14,39 @@ import { CommonModule } from '@angular/common';
     CommonModule
   ],
   templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css'
+  styleUrl: './admin-dashboard.css',
+  providers: [
+    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService }
+  ]
 })
 export class AdminDashboard implements OnInit {
-  addData() {
-    this.destinationData.push({
-      name: Math.random().toString(36).substring(7),
-      value: Math.floor(Math.random() * 100) + 1
-    });
-  }
-
   chartType: 'doughnut' = 'doughnut';
 
-  destinationData = [
-    { name: 'Paraty, RJ', value: 35 },
-    { name: 'Bonito, MS', value: 25 },
-    { name: 'Gramado, RS', value: 20 },
-    { name: 'Fernando de Noronha, PE', value: 10 },
-    { name: 'Jericoacoara, CE', value: 5 },
-    { name: 'Lençóis, BA', value: 3 },
-    { name: 'Ouro Preto, MG', value: 2 },
-    { name: 'Alter do Chão, PA', value: 1 }
-  ];
+  destinationData: { name: string; value: number }[] = [];
+
+  Packages: SumTotalByPackage[] = [];
+
+  constructor(@Inject(SERVICES_TOKEN.HTTP.PACKAGE) private packageService: IPackageService) { }
+
+  faturamentoSemanal: string = this.formatCurrency(
+    this.Packages.filter(item => item.reservationWeek === this.getCurrentISOWeek())
+      .reduce((total, item) => total + item.approvedPaymentsSum, 0)
+  );
+
+  ngOnInit() {
+    this.packageService.getSumTotalByPackage().subscribe(data => {
+
+      this.Packages = data;
+
+      const currentYear = new Date().getFullYear();
+      this.destinationData.push(...data
+        .filter(item => item.reservationYear === currentYear)
+        .map(item => ({
+          name: item.destination,
+          value: item.approvedPaymentsSum
+        })));
+    });
+  }
 
   get autoColors(): string[] {
     return this.destinationData.map((_, index) => {
@@ -42,7 +57,6 @@ export class AdminDashboard implements OnInit {
       return `hsl(${Math.round(hue)}, ${saturation}%, ${lightness}%)`;
     });
   }
-
 
   get chartData(): ChartConfiguration<'doughnut'>['data'] {
     const colors = this.autoColors;
@@ -74,10 +88,30 @@ export class AdminDashboard implements OnInit {
     plugins: {
       legend: {
         display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return this.formatCurrency(context.parsed);
+          }
+        }
       }
     },
     cutout: '70%'
   };
 
-  ngOnInit() { }
+  getCurrentISOWeek(): number {
+    const date = new Date();
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const days = Math.floor((date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
+    return Math.ceil((days + startOfYear.getDay() + 1) / 7);
+  }
+
+  formatCurrency(value: number): string {
+    return `R$ ${value.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
+  }
+
 }
