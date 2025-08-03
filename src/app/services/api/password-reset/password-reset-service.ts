@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IPasswordResetService } from './password-reset-service.interface';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PasswordResetService implements IPasswordResetService {
-  private baseUrl = 'http://localhost:8080/api/v1/auth';
+  constructor(private http: HttpClient, private configService: ConfigService) {}
 
-  constructor(private http: HttpClient) {}
+  private get baseUrl() { return `${this.configService.getApiUrl()}/auth`; }
 
   requestPasswordReset(email: string): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/request-password-reset`, null, {

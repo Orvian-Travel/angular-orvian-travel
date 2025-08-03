@@ -8,15 +8,15 @@ import {
   UpdatePaymentRequest
 } from '../../entities/payment.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService implements IPaymentService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/payments`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/payments`; }
 
   authorizePayment(paymentMethod: string): Observable<any>{
     const isApproved = paymentMethod === 'CREDITO' || paymentMethod === 'PIX';

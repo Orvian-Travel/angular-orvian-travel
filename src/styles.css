@@ -1,6 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./app/styleTokens/orvian-tokens.css";
 
+/* CORREÇÃO GLOBAL DO DATEPICKER - APLICADO EM TODO O APP */
+.cdk-overlay-container .mat-datepicker-popup .mat-calendar-header,
+.mat-datepicker-content .mat-calendar-header,
+.mat-calendar-header {
+  background-color: var(--orvian-primary-variant) !important;
+  background: var(--orvian-primary-variant) !important;
+}
+
+.mat-calendar-header,
+.mat-calendar-header *,
+.mat-calendar-header span,
+.mat-calendar-header button,
+.mat-calendar-header .mat-button-wrapper,
+.mat-calendar-header .mat-calendar-period-button,
+.mat-calendar-header .mat-calendar-previous-button,
+.mat-calendar-header .mat-calendar-next-button,
+.cdk-overlay-container .mat-calendar-header *,
+.cdk-overlay-container .mat-calendar-header span,
+.cdk-overlay-container .mat-calendar-header button {
+  color: #ffffff !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.mat-calendar-header .mat-icon,
+.mat-calendar-header .mat-calendar-previous-button .mat-icon,
+.mat-calendar-header .mat-calendar-next-button .mat-icon,
+.cdk-overlay-container .mat-calendar-header .mat-icon {
+  color: #ffffff !important;
+}
+
 html,
 body {
   height: 100%;

@@ -22,20 +22,64 @@ app-reservations-list {
   font-weight: 400;
 }
 
+/* Layout principal */
 .content-wrapper {
+  display: block;
+  width: 100%;
+}
+
+/* Layout principal: Filtros à esquerda, Reservas à direita */
+.main-layout {
   display: flex;
   gap: 2rem;
   align-items: flex-start;
 }
 
+/* Sidebar dos filtros à esquerda */
+.filters-sidebar {
+  flex: 0 0 350px; /* Largura fixa para a sidebar */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Conteúdo das reservas à direita */
+.reservations-content {
+  flex: 1; /* Ocupa o restante do espaço */
+}
+
+/* Seções de filtro */
+.filter-section,
+.date-filter-section {
+  background: var(--orvian-gray-002);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Responsivo - em telas pequenas, empilhar verticalmente */
+@media (max-width: 1024px) {
+  .main-layout {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .filters-sidebar {
+    flex: none;
+    width: 100%;
+  }
+  
+  .filter-section,
+  .date-filter-section {
+    margin-bottom: 0;
+  }
+}
+
 .filter-section {
   flex-shrink: 0;
-  width: 250px;
   padding: 1.5rem;
   background: var(--orvian-gray-002);
   border-radius: 12px;
-  position: sticky;
-  top: 2rem;
 }
 
 .filter-section h3 {
@@ -43,6 +87,63 @@ app-reservations-list {
   font-size: 1.1rem;
   margin-bottom: 1rem;
   font-weight: 600;
+}
+
+/* Nova seção: Estilos para filtro de data */
+.date-filter-section {
+  flex-shrink: 0;
+  padding: 1.5rem;
+  background: var(--orvian-gray-002);
+  border-radius: 12px;
+  margin-bottom: 1rem;
+}
+
+.date-filter-section h3 {
+  color: var(--orvian-primary-color);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.date-filter-container {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.date-picker-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+.clear-date-btn {
+  height: 56px; /* Alinha com o height do mat-form-field */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  white-space: nowrap;
+}
+
+.clear-date-btn mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.date-info, .no-dates-info {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--orvian-primary-color);
 }
 
 .filter-buttons {
@@ -300,6 +401,26 @@ app-reservations-list {
   font-weight: 500;
 }
 
+/* Mensagem de status pendente */
+.pending-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--orvian-warning-light, #fff3cd);
+  border: 1px solid var(--orvian-warning, #ffc107);
+  border-radius: 8px;
+  color: var(--orvian-warning-dark, #856404);
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.pending-icon {
+  font-size: 1.1rem;
+}
+
 .btn-outline {
   background: transparent;
   color: var(--orvian-primary-variant);
@@ -406,7 +527,6 @@ app-reservations-list {
   .filter-btn {
     min-width: 200px;
   }
-}
   
   .reservation-card {
     margin: 0;
@@ -427,6 +547,55 @@ app-reservations-list {
   .price {
     font-size: 1.6rem;
   }
+}
+
+/* Estilos customizados para o Angular Material Datepicker */
+::ng-deep .mat-calendar-body-cell.available-date .mat-calendar-body-cell-content {
+  background-color: var(--orvian-primary-color) !important;
+  color: white !important;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+::ng-deep .mat-calendar-body-cell.available-date .mat-calendar-body-cell-content:hover {
+  background-color: var(--orvian-primary-variant) !important;
+}
+
+::ng-deep .mat-calendar-body-cell.available-date.mat-calendar-body-selected .mat-calendar-body-cell-content {
+  background-color: var(--orvian-accent-color) !important;
+}
+
+/* Customização do tema do Material para o datepicker */
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline-thick {
+  color: var(--orvian-primary-color);
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: var(--orvian-primary-color);
+}
+
+::ng-deep .mat-datepicker-toggle {
+  color: var(--orvian-primary-color);
+}
+
+::ng-deep .mat-calendar-header {
+  background-color: var(--orvian-primary-color);
+  color: white;
+}
+
+::ng-deep .mat-calendar-header-date-year {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+::ng-deep .mat-calendar-previous-button,
+::ng-deep .mat-calendar-next-button {
+  color: white;
+}
+
+::ng-deep .mat-calendar-table-header th {
+  color: var(--orvian-primary-color);
+  font-weight: 600;
+}
   
 @media (max-width: 480px) {
   .section-header {
@@ -439,6 +608,21 @@ app-reservations-list {
   
   .section-subtitle {
     font-size: 1rem;
+  }
+
+  /* Responsividade para filtros de data */
+  .date-filter-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .date-picker-field {
+    min-width: 100%;
+  }
+
+  .clear-date-btn {
+    width: 100%;
+    justify-content: center;
   }
   
   .reservations-grid {
@@ -496,4 +680,448 @@ app-reservations-list {
   .action-btn {
     min-width: auto;
   }
+}
+
+/* ...existing styles... */
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: stretch;
+}
+
+/* Container que agrupa os dois filtros lado a lado */
+.filters-container {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+/* Seção de filtros por status - lado esquerdo */
+.filter-section {
+  flex: 1;
+  min-width: 300px;
+  padding: 1.5rem;
+  background: var(--orvian-gray-002);
+  border-radius: 12px;
+}
+
+.filter-section h3 {
+  color: var(--orvian-primary-color);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.filter-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+/* Seção de filtro por data - lado direito */
+.date-filter-section {
+  flex: 1;
+  min-width: 300px;
+  padding: 1.5rem;
+  background: var(--orvian-gray-002);
+  border-radius: 12px;
+}
+
+.date-filter-section h3 {
+  color: var(--orvian-primary-color);
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.date-filter-container {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.date-picker-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+.clear-date-btn {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* Seção das reservas */
+.reservations-section {
+  width: 100%;
+}
+
+/* Mensagem quando não há reservas */
+.no-reservations {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.no-reservations p {
+  font-family: 'Roboto', "Helvetica Neue", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--orvian-gray-003);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Correções para o Angular Material Datepicker - CORES VISÍVEIS */
+::ng-deep .mat-form-field-label {
+  color: var(--orvian-primary-color) !important;
+}
+
+::ng-deep .mat-form-field-label.mat-focused {
+  color: var(--orvian-primary-color) !important;
+}
+
+::ng-deep .mat-input-element {
+  color: #333 !important; /* Cor escura para o texto do input */
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #ccc !important;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: var(--orvian-primary-color) !important;
+}
+
+::ng-deep .mat-datepicker-toggle {
+  color: var(--orvian-primary-color) !important;
+}
+
+/* Estilos do calendário - cores visíveis */
+::ng-deep .mat-calendar-header {
+  background-color: var(--orvian-primary-color) !important;
+  color: white !important;
+}
+
+::ng-deep .mat-calendar-header-date-year {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+::ng-deep .mat-calendar-previous-button,
+::ng-deep .mat-calendar-next-button {
+  color: white !important;
+}
+
+::ng-deep .mat-calendar-arrow {
+  border-top-color: white !important;
+}
+
+/* Dias do calendário */
+::ng-deep .mat-calendar-body-cell-content {
+  color: #333 !important; /* Texto escuro para os dias */
+  background-color: transparent !important;
+}
+
+::ng-deep .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover .mat-calendar-body-cell-content {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  color: #333 !important;
+}
+
+/* Datas disponíveis - destaque especial */
+::ng-deep .mat-calendar-body-cell.available-date .mat-calendar-body-cell-content {
+  background-color: var(--orvian-primary-color) !important;
+  color: white !important;
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+::ng-deep .mat-calendar-body-cell.available-date .mat-calendar-body-cell-content:hover {
+  background-color: var(--orvian-primary-variant) !important;
+  color: white !important;
+}
+
+/* Data selecionada */
+::ng-deep .mat-calendar-body-cell.available-date.mat-calendar-body-selected .mat-calendar-body-cell-content {
+  background-color: var(--orvian-accent-color) !important;
+  color: white !important;
+}
+
+/* Cabeçalho da tabela do calendário */
+::ng-deep .mat-calendar-table-header th {
+  color: var(--orvian-primary-color) !important;
+  font-weight: 600;
+}
+
+/* Dias da semana */
+::ng-deep .mat-calendar-body-label {
+  color: #666 !important;
+  font-weight: 500;
+}
+
+/* Data atual */
+::ng-deep .mat-calendar-body-today:not(.mat-calendar-body-selected) .mat-calendar-body-cell-content {
+  border: 2px solid var(--orvian-primary-color) !important;
+  color: var(--orvian-primary-color) !important;
+}
+
+/* Fix para z-index dos datepickers */
+::ng-deep .mat-datepicker-content {
+  z-index: 1050 !important;
+}
+
+::ng-deep .cdk-overlay-container {
+  z-index: 1050 !important;
+}
+
+::ng-deep .cdk-overlay-pane {
+  z-index: 1050 !important;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .filters-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .filter-section,
+  .date-filter-section {
+    min-width: 100%;
+  }
+  
+  .filter-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .filter-btn {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+@media (max-width: 768px) {
+  .date-filter-container {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .date-picker-field {
+    min-width: 100%;
+  }
+
+  .clear-date-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .filter-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .filter-btn {
+    min-width: 100%;
+  }
+}
+
+/* ...existing styles para reservations-grid... */
+
+/* SOLUÇÃO DEFINITIVA - CORES DO DATEPICKER HEADER */
+/* Força o fundo do cabeçalho */
+::ng-deep .cdk-overlay-container .mat-datepicker-popup .mat-calendar-header,
+::ng-deep .mat-datepicker-content .mat-calendar-header,
+::ng-deep .mat-calendar-header {
+  background-color: var(--orvian-primary-variant) !important;
+  background: var(--orvian-primary-variant) !important;
+}
+
+/* Força TODOS os textos do cabeçalho para branco */
+::ng-deep .mat-calendar-header,
+::ng-deep .mat-calendar-header *,
+::ng-deep .mat-calendar-header span,
+::ng-deep .mat-calendar-header button,
+::ng-deep .mat-calendar-header .mat-button-wrapper,
+::ng-deep .mat-calendar-header .mat-calendar-period-button,
+::ng-deep .mat-calendar-header .mat-calendar-previous-button,
+::ng-deep .mat-calendar-header .mat-calendar-next-button,
+::ng-deep .cdk-overlay-container .mat-calendar-header *,
+::ng-deep .cdk-overlay-container .mat-calendar-header span,
+::ng-deep .cdk-overlay-container .mat-calendar-header button {
+  color: #ffffff !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Força as setas de navegação */
+::ng-deep .mat-calendar-header .mat-icon,
+::ng-deep .mat-calendar-header .mat-calendar-previous-button .mat-icon,
+::ng-deep .mat-calendar-header .mat-calendar-next-button .mat-icon,
+::ng-deep .cdk-overlay-container .mat-calendar-header .mat-icon {
+  color: #ffffff !important;
+}
+
+/* Estados de hover */
+::ng-deep .mat-calendar-header button:hover,
+::ng-deep .mat-calendar-header .mat-calendar-period-button:hover,
+::ng-deep .mat-calendar-header .mat-calendar-previous-button:hover,
+::ng-deep .mat-calendar-header .mat-calendar-next-button:hover {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+/* Força cor para texto específico do período (mês/ano) */
+::ng-deep .mat-calendar-header .mat-calendar-period-button .mat-button-wrapper span,
+::ng-deep .cdk-overlay-container .mat-calendar-header .mat-calendar-period-button span {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+/* Remove qualquer cor de tema padrão */
+::ng-deep .mat-calendar-header .mat-calendar-period-button.mat-button,
+::ng-deep .mat-calendar-header .mat-calendar-previous-button.mat-icon-button,
+::ng-deep .mat-calendar-header .mat-calendar-next-button.mat-icon-button {
+    color: #ffffff !important;
+}
+
+/* Paginação */
+.pagination-container {
+  text-align: center;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Paginação no topo - alinhada à direita */
+.pagination-container.pagination-top {
+  text-align: right;
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.pagination-container.pagination-top .pagination-nav {
+  justify-content: flex-end;
+}
+
+.pagination-container.pagination-top .pagination-info {
+  text-align: right;
+}
+
+.pagination-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pagination-btn {
+  background: white;
+  border: 2px solid var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--orvian-primary-variant);
+  color: white;
+}
+
+.pagination-btn:disabled {
+  border-color: var(--orvian-gray-001);
+  color: var(--orvian-gray-003);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pagination-number {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--orvian-gray-001);
+  background: white;
+  color: var(--orvian-gray-003);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.pagination-number:hover {
+  border-color: var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+}
+
+.pagination-number.active {
+  background-color: var(--orvian-primary-variant);
+  border-color: var(--orvian-primary-variant);
+  color: white;
+}
+
+.pagination-info {
+  color: var(--orvian-gray-003);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .pagination-nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .pagination-numbers {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-numbers {
+    display: none;
+  }
+  
+  .pagination-number {
+    font-size: 0.8rem;
+  }
+  
+  .pagination-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+}/* SOLUÇÃO EXTREMA - SEM :host PARA MÁXIMA ESPECIFICIDADE */
+.cdk-overlay-container .mat-datepicker-popup .mat-calendar-header {
+  background-color: var(--orvian-primary-variant) !important;
+}
+
+.cdk-overlay-container .mat-datepicker-popup .mat-calendar-header,
+.cdk-overlay-container .mat-datepicker-popup .mat-calendar-header *,
+.cdk-overlay-container .mat-datepicker-popup .mat-calendar-header span,
+.cdk-overlay-container .mat-datepicker-popup .mat-calendar-header button {
+  color: #ffffff !important;
+}
+
+/* Força específica para o texto do período */
+.mat-calendar-header .mat-calendar-period-button span,
+.cdk-overlay-container .mat-calendar-header .mat-calendar-period-button span {
+  color: #ffffff !important;
+  font-weight: bold !important;
 }
