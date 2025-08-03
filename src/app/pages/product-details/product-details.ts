@@ -149,4 +149,16 @@ export class ProductDetails implements OnInit, OnDestroy {
        queryParams: { from: '/payment' } 
     });
   }
+
+  getPackageImageUrl(packageItem: PackageDetail): string {
+    if (packageItem.medias && packageItem.medias.length > 0) {
+      const firstMedia = packageItem.medias[0];
+      
+      if (firstMedia.contentType) {
+        return `data:${firstMedia.type};base64,${firstMedia.contentType}`;
+      }
+    }
+    
+    return 'assets/images/default-package-image.png';
+  }
 }

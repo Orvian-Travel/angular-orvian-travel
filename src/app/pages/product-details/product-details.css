@@ -34,6 +34,18 @@
   gap: 2rem;
 }
 
+.imagem-principal {
+  flex: 1;
+  max-width: 90%;
+}
+
+.imagem-principal img {
+  width: 1250px;
+  height: 500px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 .sidebar-pacote {
   display: inline;
   width: 30%;
