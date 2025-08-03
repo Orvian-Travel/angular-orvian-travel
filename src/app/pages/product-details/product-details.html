@@ -3,11 +3,11 @@
   <h1 class="mb-4">{{ package?.title }}</h1>
   <section class="pacote-layout">
     <div class="imagem-principal">
-      <img
-        [src]="getPackageImageUrl(package!)"
-        alt="Imagem Destino"
-        class="img-fluid rounded"
-      />
+      <!-- Galeria Swiper com as mídias do pacote -->
+      <app-swiper-gallery
+        [medias]="package?.medias || []"
+        [packageTitle]="package?.title || ''"
+      ></app-swiper-gallery>
     </div>
     <aside class="sidebar-pacote">
       <div class="mapa-interativo mb-3">
@@ -24,31 +24,36 @@
           <div>
             <mat-form-field class="w-100" appearance="outline">
               <mat-label>Data de partida</mat-label>
-              <input 
-                matInput 
-                [matDatepicker]="startPicker" 
+              <input
+                matInput
+                [matDatepicker]="startPicker"
                 [matDatepickerFilter]="dateFilter"
                 [(ngModel)]="selectedDate"
                 (dateChange)="onDateSelected($event.value)"
-                readonly 
-                placeholder="Selecione uma data disponível" 
-                required/>
+                readonly
+                placeholder="Selecione uma data disponível"
+                required
+              />
               <mat-datepicker-toggle
                 matIconSuffix
                 [for]="startPicker"
               ></mat-datepicker-toggle>
-              <mat-datepicker [dateClass]="dateClass" #startPicker></mat-datepicker>
+              <mat-datepicker
+                [dateClass]="dateClass"
+                #startPicker
+              ></mat-datepicker>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field class="w-100" appearance="outline">
               <mat-label>Data de retorno</mat-label>
-              <input 
-                matInput 
-                [value]="endDate | date:'dd/MM/yyyy'"
-                readonly 
-                disabled 
-                placeholder="Será preenchido automaticamente" />
+              <input
+                matInput
+                [value]="endDate | date : 'dd/MM/yyyy'"
+                readonly
+                disabled
+                placeholder="Será preenchido automaticamente"
+              />
               <mat-icon matIconSuffix>calendar_today</mat-icon>
             </mat-form-field>
           </div>
@@ -61,11 +66,12 @@
         </h2>
       </div>
       <p>{{ package?.description }}</p>
-      <button type="submit"
+      <button
+        type="submit"
         class="botao-reserva btn btn-primary btn-lg w-100 mb-3"
         (click)="isLoggedIn ? paymentRedirect() : loginRedirectWithReturn()"
       >
-        {{ isLoggedIn ? 'Reservar' : 'Faça login para reservar' }}
+        {{ isLoggedIn ? "Reservar" : "Faça login para reservar" }}
       </button>
     </aside>
   </section>

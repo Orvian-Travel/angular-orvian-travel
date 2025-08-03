@@ -6,6 +6,7 @@ import { from, Subscription } from 'rxjs';
 import { Header } from '../../shared/components/header/header';
 import { CardList } from '../../shared/components/card-list/card-list';
 import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { SwiperGallery } from './swiper-gallery/swiper-gallery';
 import { PackageService } from '../../services/api/package/package-service';
 import { PackageDetail } from '../../services/entities/package.model';
 import { SERVICES_TOKEN } from '../../services/services-token';
@@ -19,7 +20,7 @@ import { AuthStateService } from '../../services/auth/auth-state-service';
 
 @Component({
   selector: 'app-product-details',
-  imports: [Header, CardList, FooterComponent, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule],
+  imports: [Header, CardList, FooterComponent, SwiperGallery, CommonModule, FormsModule, MatFormFieldModule, MatInputModule, MatIconModule, MatDatepickerModule, MatNativeDateModule],
   templateUrl: './product-details.html',
   styleUrl: './product-details.css',
   providers: [
@@ -59,14 +60,14 @@ export class ProductDetails implements OnInit, OnDestroy {
   dateClass: MatCalendarCellClassFunction<Date> = (cellDate, view) => {
     if (view === 'month' && this.package?.packageDates) {
       const cellDateString = cellDate.toISOString().split('T')[0];
-      
+
       const isAvailableDate = this.package.packageDates.some(
         packageDate => {
           const packageStartDate = new Date(packageDate.startDate).toISOString().split('T')[0];
           return packageStartDate === cellDateString;
         }
       );
-      
+
       return isAvailableDate ? 'example-custom-date-class' : '';
     }
     return '';
@@ -76,7 +77,7 @@ export class ProductDetails implements OnInit, OnDestroy {
     if (!date || !this.package?.packageDates) {
       return false;
     }
-    
+
     const dateString = date.toISOString().split('T')[0];
     return this.package.packageDates.some(
       packageDate => {
@@ -90,13 +91,13 @@ export class ProductDetails implements OnInit, OnDestroy {
     if (selectedDate && this.dateFilter(selectedDate)) {
       this.selectedDate = selectedDate;
       const selectedPackageDate = this.getSelectedPackageDate();
-      
+
       if (selectedPackageDate?.endDate) {
         this.endDate = new Date(selectedPackageDate.endDate);
       } else {
         this.endDate = null;
       }
-      
+
       console.log('Data selecionada:', selectedDate);
       console.log('Data de fim:', this.endDate);
       console.log('Informações do pacote:', selectedPackageDate);
@@ -109,7 +110,7 @@ export class ProductDetails implements OnInit, OnDestroy {
     if (!this.selectedDate || !this.package?.packageDates) {
       return null;
     }
-    
+
     const selectedDateString = this.selectedDate.toISOString().split('T')[0];
     return this.package.packageDates.find(
       packageDate => {
@@ -131,34 +132,34 @@ export class ProductDetails implements OnInit, OnDestroy {
   }
 
   paymentRedirect(): void {
-    if(this.selectedDate){
-          this.router.navigate(['/payment'], {
-      queryParams: {
-        packageId: this.package?.id,
-        packageDestination: this.package?.destination,
-        checkin: this.selectedDate.toISOString()
-      }
-    });
-    }else{
+    if (this.selectedDate) {
+      this.router.navigate(['/payment'], {
+        queryParams: {
+          packageId: this.package?.id,
+          packageDestination: this.package?.destination,
+          checkin: this.selectedDate.toISOString()
+        }
+      });
+    } else {
       alert('Preencha uma data para continuar.');
     }
   }
 
   loginRedirectWithReturn(): void {
     this.router.navigate(['/login'], {
-       queryParams: { from: '/payment' } 
+      queryParams: { from: '/payment' }
     });
   }
 
   getPackageImageUrl(packageItem: PackageDetail): string {
     if (packageItem.medias && packageItem.medias.length > 0) {
       const firstMedia = packageItem.medias[0];
-      
+
       if (firstMedia.contentType) {
         return `data:${firstMedia.type};base64,${firstMedia.contentType}`;
       }
     }
-    
+
     return 'assets/images/default-package-image.png';
   }
 }

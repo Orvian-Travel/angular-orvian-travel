@@ -24,7 +24,7 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'reset-password/:token', component: ResetPassword },
 
-  { path: 'reservations', component: Reservations },
+  { path: 'reservations', component: Reservations, canActivate: [authGuard] },
 
   // { path: 'admin-tela', component: AdminTela, canActivate: [authGuard, adminGuard] },
   { path: 'payment', component: Payment, canActivate: [authGuard] },

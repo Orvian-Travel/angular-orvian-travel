@@ -278,11 +278,11 @@ export class ReservationsList implements OnInit {
     if (!cancelledDate) {
       return '';
     }
-    
+
     try {
       // Se for string, converte para Date
       const date = typeof cancelledDate === 'string' ? new Date(cancelledDate) : cancelledDate;
-      
+
       // Verifica se é uma data válida
       if (date instanceof Date && !isNaN(date.getTime())) {
         return date.toLocaleDateString('pt-BR', {
@@ -291,7 +291,7 @@ export class ReservationsList implements OnInit {
           year: 'numeric'
         });
       }
-      
+
       return '';
     } catch (error) {
       console.error('Erro ao formatar data de cancelamento:', error);
