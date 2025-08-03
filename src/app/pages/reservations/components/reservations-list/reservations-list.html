@@ -158,9 +158,11 @@
             >
               <div class="card-image-wrapper">
                 <img
-                  src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"
-                  class="card-image"
+                  [src]="getImageUrl(reservation)"
                   [alt]="getPackageTitle(reservation)"
+                  class="card-image"
+                  loading="lazy"
+                  (error)="onImageError($event)"
                 />
                 <div class="duration-badge">
                   <span>{{ getPackageDuration(reservation) }}</span>
@@ -170,7 +172,7 @@
               <div class="card-content">
                 <div class="reservation-info">
                   <div class="reservation-tag">
-                    {{ reservation.travelers?.length || 0 }} pessoas
+                    {{ reservation.travelers.length || 0 }} pessoas
                   </div>
                   <div class="reservation-date">
                     Reservado em:
@@ -198,21 +200,9 @@
 
                 <div class="travel-dates">
                   <strong>Data da viagem:</strong>
-                  {{ reservation.packageDate?.startDate | date : "dd/MM/yyyy" }}
+                  {{ reservation.packageDate.startDate | date : "dd/MM/yyyy" }}
                   -
-                  {{ reservation.packageDate?.endDate | date : "dd/MM/yyyy" }}
-                </div>
-
-                <!-- Data de cancelamento (apenas para reservas canceladas) -->
-                <div
-                  *ngIf="
-                    reservation.situation === 'CANCELADA' &&
-                    reservation.cancelledDate
-                  "
-                  class="cancelled-date"
-                >
-                  <strong>Cancelado em:</strong>
-                  {{ reservation.cancelledDate | date : "dd/MM/yyyy" }}
+                  {{ reservation.packageDate.endDate | date : "dd/MM/yyyy" }}
                 </div>
 
                 <!-- Informações de pagamento -->
@@ -224,15 +214,41 @@
                   {{ getPaymentStatusLabel(reservation.payment.status) }}
                 </div>
 
-                <div class="price-section">
+                <div class="price-section" *ngIf="reservation.payment">
                   <div class="price-wrapper">
                     <span class="currency">R$</span>
                     <span class="price">{{
-                      reservation.payment?.valuePaid
-                        | number : "1.2-2" : "pt-BR"
+                      reservation.payment.valuePaid | number : "1.2-2" : "pt-BR"
                     }}</span>
                     <span class="price-period">total</span>
                   </div>
+                </div>
+
+                <!-- Seção para reservas sem pagamento (canceladas) -->
+                <div
+                  class="price-section"
+                  *ngIf="
+                    !reservation.payment &&
+                    reservation.situation === 'CANCELADA'
+                  "
+                >
+                  <div class="price-wrapper">
+                    <span class="price-text">Reserva cancelada</span>
+                  </div>
+                </div>
+
+                <!-- Data de cancelamento (apenas para reservas canceladas) -->
+                <div
+                  *ngIf="reservation.situation === 'CANCELADA'"
+                  class="cancelled-date"
+                >
+                  <strong>Cancelado em:</strong>
+                  <span *ngIf="reservation.cancelledDate; else noDate">
+                    {{ formatCancelledDate(reservation.cancelledDate) }}
+                  </span>
+                  <ng-template #noDate>
+                    <span style="color: red">Sem data de cancelamento</span>
+                  </ng-template>
                 </div>
 
                 <div class="card-actions">
@@ -251,7 +267,7 @@
                     <!-- Reserva Pendente -->
                     <ng-container *ngSwitchCase="'PENDENTE'">
                       <div
-                        *ngIf="reservation.payment?.status === 'PENDENTE'"
+                        *ngIf="reservation.payment.status === 'PENDENTE'"
                         class="pending-message"
                       >
                         <mat-icon class="pending-icon">schedule</mat-icon>

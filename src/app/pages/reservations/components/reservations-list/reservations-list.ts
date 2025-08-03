@@ -12,7 +12,13 @@ import { SERVICES_TOKEN } from '../../../../services/services-token';
 import { IReservationService } from '../../../../services/api/reservation/reservation-service.interface';
 import { AuthStateService } from '../../../../services/auth/auth-state-service';
 import { ReservationService } from '../../../../services/api/reservation/reservation-service';
-import { ReservationDateDTO } from '../../../../services/entities/reservation.model';
+import {
+  ReservationDetail,
+  ReservationDateDTO,
+  PaginatedReservationResponse,
+  ReservationSituation
+} from '../../../../services/entities/reservation.model';
+import { PaymentMethod, PaymentStatus } from '../../../../services/entities/payment.model';
 
 @Component({
   selector: 'app-reservations-list',
@@ -34,7 +40,7 @@ import { ReservationDateDTO } from '../../../../services/entities/reservation.mo
 export class ReservationsList implements OnInit {
   // Propriedades existentes para filtros
   selectedStatus: string = 'todas';
-  reservations: any[] = [];
+  reservations: ReservationDetail[] = [];
   currentPage: number = 0;
   pageSize: number = 6; // 6 reservas por página
   totalElements: number = 0;
@@ -95,7 +101,7 @@ export class ReservationsList implements OnInit {
         });
 
       },
-      error: (error: any) => {
+      error: (error: Error) => {
         console.error('Erro ao carregar datas disponíveis:', error);
         // Em caso de erro, permite qualquer data (fallback)
         this.availableDateObjects = [];
@@ -106,8 +112,10 @@ export class ReservationsList implements OnInit {
 
   // Método atualizado para incluir filtro por data
   private loadReservations(): void {
-    const statusParam = this.selectedStatus === 'todas' ? undefined : this.selectedStatus;
-    const userId = this.authStateService.getUserId() || undefined;
+    const statusParam: ReservationSituation | undefined = this.selectedStatus === 'todas'
+      ? undefined
+      : this.selectedStatus as ReservationSituation;
+    const userId: string | undefined = this.authStateService.getUserId() || undefined;
 
     // Usa o novo método que inclui filtro de data
     this.reservationService.getAllReservationsWithPaginationWithStatusAndReservationDate(
@@ -117,14 +125,14 @@ export class ReservationsList implements OnInit {
       statusParam,
       this.selectedDate || undefined // Converte null para undefined
     ).subscribe({
-      next: (response: any) => {
+      next: (response: PaginatedReservationResponse) => {
 
         this.reservations = response._embedded?.DTOList || [];
         this.totalElements = response.page?.totalElements || 0;
         this.totalPages = response.page?.totalPages || 0;
 
       },
-      error: (error: any) => {
+      error: (error: Error) => {
         console.error('Erro ao carregar reservas:', error);
         this.reservations = [];
         this.totalElements = 0;
@@ -132,6 +140,25 @@ export class ReservationsList implements OnInit {
       }
     });
 
+  }
+
+  onImageError(event: Event): void {
+    console.warn('Erro ao carregar imagem da reserva, usando imagem padrão');
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.src = 'assets/images/default-package.jpg'; // Fallback para imagem padrão
+    }
+  }
+
+  getImageUrl(reservation: ReservationDetail): string {
+    // Verifica se existe firstMedia e contentType
+    if (reservation.firstMedia && reservation.firstMedia.contentType) {
+      // Converte o base64 para data URL
+      return `data:image/${reservation.firstMedia.type || 'jpeg'};base64,${reservation.firstMedia.contentType}`;
+    }
+
+    // Retorna imagem padrão quando firstMedia não está disponível
+    return "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80"; // ou qualquer imagem padrão que você esteja usando
   }
 
   onPageChange(page: number): void {
@@ -153,39 +180,40 @@ export class ReservationsList implements OnInit {
     }
   }
 
-  getStatusLabel(situation: string): string {
+  getStatusLabel(situation: ReservationSituation): string {
     switch (situation) {
-      case 'CONFIRMADA': return 'CONFIRMADO';
-      case 'PENDENTE': return 'PENDENTE';
-      case 'CANCELADA': return 'CANCELADO';
+      case ReservationSituation.CONFIRMADA: return 'CONFIRMADO';
+      case ReservationSituation.PENDENTE: return 'PENDENTE';
+      case ReservationSituation.CANCELADA: return 'CANCELADO';
       default: return situation;
     }
   }
 
-  getPaymentMethodLabel(method: string): string {
+  getPaymentMethodLabel(method: PaymentMethod): string {
     switch (method) {
-      case 'PIX': return 'PIX';
-      case 'CREDITO': return 'Cartão de Crédito';
-      case 'BOLETO': return 'Boleto';
+      case PaymentMethod.PIX: return 'PIX';
+      case PaymentMethod.CREDITO: return 'Cartão de Crédito';
+      case PaymentMethod.DEBITO: return 'Cartão de Débito';
+      case PaymentMethod.BOLETO: return 'Boleto';
       default: return method;
     }
   }
 
-  getPaymentStatusLabel(status: string): string {
+  getPaymentStatusLabel(status: PaymentStatus): string {
     switch (status) {
-      case 'APROVADO': return 'Aprovado';
-      case 'PENDENTE': return 'Pendente';
-      case 'CANCELADO': return 'Cancelado';
+      case PaymentStatus.APROVADO: return 'Aprovado';
+      case PaymentStatus.PENDENTE: return 'Pendente';
+      case PaymentStatus.CANCELADO: return 'Cancelado';
       default: return status;
     }
   }
 
-  getPackageTitle(reservation: any): string {
+  getPackageTitle(reservation: ReservationDetail): string {
     // Você pode ajustar isso baseado na estrutura real do seu pacote
     return `Pacote para ${reservation.packageDate?.packageTitle || 'Destino'}`;
   }
 
-  getPackageDuration(reservation: any): string {
+  getPackageDuration(reservation: ReservationDetail): string {
     if (reservation.packageDate?.startDate && reservation.packageDate?.endDate) {
       const start = new Date(reservation.packageDate.startDate);
       const end = new Date(reservation.packageDate.endDate);
@@ -202,7 +230,7 @@ export class ReservationsList implements OnInit {
         console.log('Reserva cancelada com sucesso:', reservationId);
         this.loadReservations();
       },
-      error: (error) => {
+      error: (error: Error) => {
         console.error('Erro ao cancelar reserva:', error);
       }
     });
@@ -244,4 +272,30 @@ export class ReservationsList implements OnInit {
 
     return hasReservation ? 'available-date' : '';
   };
+
+  // Método para formatar data de cancelamento
+  formatCancelledDate(cancelledDate: Date | string | null | undefined): string {
+    if (!cancelledDate) {
+      return '';
+    }
+    
+    try {
+      // Se for string, converte para Date
+      const date = typeof cancelledDate === 'string' ? new Date(cancelledDate) : cancelledDate;
+      
+      // Verifica se é uma data válida
+      if (date instanceof Date && !isNaN(date.getTime())) {
+        return date.toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+      }
+      
+      return '';
+    } catch (error) {
+      console.error('Erro ao formatar data de cancelamento:', error);
+      return '';
+    }
+  }
 }
