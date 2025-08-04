@@ -25,8 +25,8 @@ export interface SavePackageDateResponse {
 
 export interface UpdatePackageDateRequest {
   id: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   qtd_available: number;
 }
 

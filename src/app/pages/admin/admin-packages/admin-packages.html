@@ -38,6 +38,7 @@
                                 <button class="btn btn-sm btn-edit me-2" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#editPackageModal"
+                                        (click)="openEditModal(package)"
                                         title="Editar pacote">
                                     <i class="fas fa-edit"></i>
                                 </button>
@@ -278,4 +279,82 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
+    <div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel" aria-hidden="true" data-bs-backdrop="false">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        <form #editPackageForm="ngForm" (ngSubmit)="onEditPackageSubmit()">
+            <div class="modal-header">
+            <h5 class="modal-title" id="editPackageModalLabel">Editar Pacote</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="editTitle" class="form-label">Título</label>
+                    <input type="text" class="form-control" id="editTitle" name="title" [(ngModel)]="editPackageData.title" required>
+                </div>
+                <div class="mb-3">
+                    <label for="editDescription" class="form-label">Descrição</label>
+                    <textarea class="form-control" id="editDescription" name="description" [(ngModel)]="editPackageData.description" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="editDestination" class="form-label">Destino</label>
+                    <input type="text" class="form-control" id="editDestination" name="destination" [(ngModel)]="editPackageData.destination" required>
+                </div>
+                <div class="mb-3">
+                    <label for="editDuration" class="form-label">Duração (dias)</label>
+                    <input type="number" class="form-control" id="editDuration" name="duration" [(ngModel)]="editPackageData.duration" required>
+                </div>
+                <div class="mb-3">
+                    <label for="editPrice" class="form-label">Preço</label>
+                    <input type="number" class="form-control" id="editPrice" name="price" [(ngModel)]="editPackageData.price" required>
+                </div>
+                <div class="mb-3">
+                    <label for="editMaxPeople" class="form-label">Máximo de Pessoas</label>
+                    <input type="number" class="form-control" id="editMaxPeople" name="maxPeople" [(ngModel)]="editPackageData.maxPeople" required>
+                </div>
+            </div>
+            <div class="mb-3" *ngFor="let date of editPackageData.packageDates; let i = index">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                <label class="form-label">Check-in</label>
+                <input type="date" class="form-control"
+                        [ngModel]="date.startDate ? (date.startDate | date:'yyyy-MM-dd') : ''"
+                        (ngModelChange)="onEditDateChange(i, 'startDate', $event)"
+                        name="editStartDate{{i}}" required>
+                </div>
+                <div class="col-md-4">
+                <label class="form-label">Check-out</label>
+                <input type="date" class="form-control"
+                        [ngModel]="date.endDate ? (date.endDate | date:'yyyy-MM-dd') : ''"
+                        (ngModelChange)="onEditDateChange(i, 'endDate', $event)"
+                        name="editEndDate{{i}}" required>
+                </div>
+                <div class="col-md-3">
+                <label class="form-label">Reservas Disponíveis</label>
+                <input type="number" class="form-control"
+                        [(ngModel)]="date.qtd_available"
+                        name="editQtdAvailable{{i}}" min="1" required>
+                </div>
+                <div class="col-md-1">
+                <button type="button" class="btn btn-outline-danger"
+                        (click)="removeEditDateEntry(i)" 
+                        [disabled]="editPackageData.packageDates?.length === 1">
+                    <i class="fas fa-trash"></i>
+                </button>
+                </div>
+            </div>
+            </div>
+            <div class="text-center mb-3">
+            <button type="button" class="btn btn-outline-primary btn-sm" (click)="addEditDateEntry()">
+                <i class="fas fa-plus me-2"></i>Adicionar Data
+            </button>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
