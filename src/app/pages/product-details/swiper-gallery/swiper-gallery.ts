@@ -36,60 +36,13 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
   }
 
   private processMedias() {
-
-    const originalMedias = this.medias ? [...this.medias.filter(m => !m.id.startsWith('test-'))] : [];
-
-
-    const testMedias = this.createTestMedias();
-
-    const allMedias = [];
-
-
-
-    for (const media of originalMedias) {
-      allMedias.push(media);
+    if (this.medias && this.medias.length > 0) {
+      this.medias = this.medias.filter(m => !m.id.startsWith('test-'));
+    } else {
+      this.medias = [];
     }
-
-
-    for (const media of testMedias) {
-      allMedias.push(media);
-
-    }
-
-    this.medias = allMedias;
+    
     this.mediasProcessed = true;
-    ;
-  }
-
-  // Método para criar mídias de teste
-  private createTestMedias(): PackageMediaDetail[] {
-    return [
-      {
-        id: 'test-default-1',
-        type: 'png',
-        contentType: 'assets/images/default-package-image.png'
-      },
-      {
-        id: 'test-default-2',
-        type: 'png',
-        contentType: 'assets/images/generic-package-image.jpg'
-      },
-      {
-        id: 'test-default-3',
-        type: 'png',
-        contentType: 'assets/images/hero-image.png'
-      },
-      {
-        id: 'test-default-4',
-        type: 'png',
-        contentType: 'assets/images/background-form.png'
-      },
-      {
-        id: 'test-default-5',
-        type: 'svg',
-        contentType: 'assets/logo.svg'
-      }
-    ];
   }
 
   getMediaUrl(media: PackageMediaDetail): string {
