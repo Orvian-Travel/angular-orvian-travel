@@ -17,6 +17,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCalendarCellClassFunction, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AuthStateService } from '../../services/auth/auth-state-service';
+import { Geocoding } from '@services/api/externals/geocoding';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-product-details',
@@ -31,6 +33,8 @@ export class ProductDetails implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private authStateService: AuthStateService,
+    private geocodingService: Geocoding,
+    private sanitizer: DomSanitizer,
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
     private route: ActivatedRoute
   ) { }
@@ -40,6 +44,7 @@ export class ProductDetails implements OnInit, OnDestroy {
   private routeSubscription: Subscription = new Subscription();
   selectedDate: Date | null = null;
   endDate: Date | null = null;
+  mapEmbedUrl: SafeResourceUrl | null = null;
 
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
@@ -124,7 +129,36 @@ export class ProductDetails implements OnInit, OnDestroy {
     this.package = null;
     this.service.getPackageById(id).subscribe((response: PackageDetail) => {
       this.package = response;
+      this.updateMapLocation();
     });
+  }
+
+  private setDefaultMap(): void {
+    const defaultUrl = "https://maps.google.com/maps?q=-23.625599,-46.704040&hl=pt&z=14&output=embed";
+    this.mapEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(defaultUrl);
+  }
+
+  private updateMapLocation(): void {
+    if (this.package?.destination) {
+      this.geocodingService.getCoordinates(this.package.destination).subscribe(result => {
+        if (result) {
+          const { lat, lon } = result;
+          const offset = 0.01;
+          const bbox = `${lon - offset},${lat - offset},${lon + offset},${lat + offset}`;
+          
+          const mapUrl = `https://maps.google.com/maps?q=${lat},${lon}&hl=pt&z=14&output=embed`;
+          
+          this.mapEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(mapUrl);
+          
+          console.log(`Mapa atualizado para: ${this.package?.destination} (${lat}, ${lon})`);
+        } else {
+          console.warn(`Não foi possível encontrar coordenadas para: ${this.package?.destination}`);
+          this.setDefaultMap();
+        }
+      });
+    } else {
+      this.setDefaultMap();
+    }
   }
 
   navigateToDetails() {
