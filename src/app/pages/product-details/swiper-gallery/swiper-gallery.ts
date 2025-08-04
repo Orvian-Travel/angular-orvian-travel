@@ -36,13 +36,17 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
   }
 
   private processMedias() {
-    if (this.medias && this.medias.length > 0) {
-      this.medias = this.medias.filter(m => !m.id.startsWith('test-'));
-    } else {
-      this.medias = [];
+    const originalMedias = this.medias ? [...this.medias.filter(m => !m.id.startsWith('test-'))] : [];
+
+    const allMedias = [];
+
+    for (const media of originalMedias) {
+      allMedias.push(media);
     }
-    
+
+    this.medias = allMedias;
     this.mediasProcessed = true;
+    ;
   }
 
   getMediaUrl(media: PackageMediaDetail): string {

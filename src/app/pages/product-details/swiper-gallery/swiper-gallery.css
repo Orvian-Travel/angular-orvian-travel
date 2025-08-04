@@ -161,18 +161,7 @@ swiper-slide {
   z-index: 10;
 }
 
-.media-type-badge {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(0, 123, 255, 0.8);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: bold;
-  z-index: 10;
-}
+
 
 /* Thumbnails aprimoradas */
 .thumbnails-container {
@@ -358,13 +347,6 @@ swiper-slide {
     left: 8px;
     padding: 4px 8px;
     font-size: 11px;
-  }
-  
-  .media-type-badge {
-    bottom: 8px;
-    right: 8px;
-    padding: 3px 6px;
-    font-size: 9px;
   }
   
   .thumbnails-container {
