@@ -1,54 +1,354 @@
+/* ===== CONTAINER PRINCIPAL ===== */
 .packages-container {
-    padding: 2rem;
+    padding: 1rem;
 }
 
+@media (min-width: 768px) {
+    .packages-container {
+        padding: 2rem;
+    }
+}
+
+/* ===== SECTION HEADER ===== */
 .section-header h1 {
     color: #2D3748;
     margin-bottom: 0.5rem;
+    font-size: 1.75rem;
+}
+
+@media (min-width: 768px) {
+    .section-header h1 {
+        font-size: 2rem;
+    }
 }
 
 .section-header p {
     color: #718096;
+    font-size: 0.95rem;
 }
 
+/* ===== BOTÕES ===== */
+.btn-orvian-primary {
+    background-color: var(--orvian-primary-variant);
+    border: solid 2px var(--orvian-primary-variant);
+    color: white;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-orvian-primary:hover {
+    background-color: var(--orvian-primary);
+    border-color: var(--orvian-primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== CARDS ===== */
 .packages-management {
     border-radius: 12px;
+    overflow: hidden;
 }
 
-.packages-management h2 {
-    color: #2D3748;
-}
-
+/* ===== TABELA DESKTOP ===== */
 .table th {
-    color: #4A5568;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #e9ecef;
     font-weight: 600;
-    border-bottom: 2px solid #E2E8F0;
+    color: #2D3748;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .table td {
-    color: #2D3748;
     vertical-align: middle;
+    border-bottom: 1px solid #f1f3f4;
+    font-size: 0.9rem;
 }
 
-.table-hover tbody tr:hover {
-    background-color: #F7FAFC;
+.table tr:hover {
+    background-color: #f8fffe;
 }
 
-.package-thumbnail {
-    width: 60px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 6px;
+.package-icon {
+    color: var(--orvian-primary-variant);
 }
 
+/* ===== BADGES ===== */
 .badge {
+    background-color: var(--orvian-secondary-variant);
+    color: white !important;
+    font-weight: 500;
     font-size: 0.75rem;
-    padding: 0.375rem 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
 }
 
-.btn-outline-primary {
-    border-color: #3182CE;
-    color: #3182CE;
+.badge-destination {
+    background-color: var(--orvian-secondary-variant);
+    color: white;
+    font-weight: 500;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ===== BOTÕES DE AÇÃO ===== */
+.btn-edit {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    color: white !important;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.btn-edit:hover {
+    background-color: #138496;
+    border-color: #117a8b;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.btn-edit i {
+    color: white !important;
+    font-size: 0.9rem;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white !important;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+    color: white !important;
+    transform: translateY(-1px);
+}
+
+.btn-delete i {
+    color: white !important;
+    font-size: 0.9rem;
+}
+
+/* ===== CARDS MOBILE ===== */
+.package-card .card {
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.package-card .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1) !important;
+}
+
+.package-details {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 0.75rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.detail-item i {
+    width: 16px;
+    font-size: 0.9rem;
+    color: #6c757d !important;
+    font-weight: 600;
+}
+
+/* ===== RESPONSIVIDADE ESPECÍFICA ===== */
+@media (max-width: 576px) {
+    .packages-container {
+        padding: 0.5rem;
+    }
+    
+    .section-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .btn-orvian-primary {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .package-details {
+        padding: 0.5rem;
+    }
+    
+    .detail-item {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-header .d-flex {
+        gap: 1rem;
+    }
+}
+
+/* ===== MELHORIAS VISUAIS ===== */
+.card-body {
+    padding: 0;
+}
+
+.table-responsive {
+    border-radius: 12px;
+}
+
+.package-icon i {
+    color: var(--orvian-primary-variant);
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.package-card {
+    animation: fadeInUp 0.3s ease;
+}
+
+/* ===== PAGINAÇÃO RESPONSIVA ===== */
+.pagination-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.pagination-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.pagination-btn {
+    background: white;
+    border: 2px solid var(--orvian-primary-variant);
+    color: var(--orvian-primary-variant);
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background-color: var(--orvian-primary-variant);
+    color: white;
+}
+
+.pagination-btn:disabled {
+    border-color: var(--orvian-gray-001);
+    color: var(--orvian-gray-003);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination-numbers {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.pagination-number {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--orvian-gray-001);
+    background: white;
+    color: var(--orvian-gray-003);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.pagination-number:hover {
+    border-color: var(--orvian-primary-variant);
+    color: var(--orvian-primary-variant);
+}
+
+.pagination-number.active {
+    background-color: var(--orvian-primary-variant);
+    border-color: var(--orvian-primary-variant);
+    color: white;
+}
+
+.pagination-info {
+    color: var(--orvian-gray-003);
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .pagination-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .pagination-numbers {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination-container {
+        padding: 0.75rem;
+    }
+    
+    .pagination-numbers {
+        gap: 0.3rem;
+    }
+    
+    .pagination-number {
+        width: 35px;
+        height: 35px;
+        font-size: 0.9rem;
+    }
+    
+    .pagination-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .pagination-info {
+        font-size: 0.8rem;
+    }
 }
 
 .btn-outline-primary:hover {
@@ -315,22 +615,45 @@
 }
 
 .btn-edit{
-  color: var(--orvian-primary-variant);
+  background-color: #17a2b8;
+  border: 1px solid #17a2b8;
+  color: white !important;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .btn-edit:hover{
-  color: var(--orvian-primary);
+  background-color: #138496;
+  border-color: #117a8b;
+  color: white !important;
+  transform: translateY(-1px);
+}
+
+.btn-edit i {
+  color: white !important;
 }
 
 .btn-delete{
-  color: #E53E3E;
+  background-color: #dc3545;
+  border: 1px solid #dc3545;
+  color: white !important;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .btn-delete:hover{
-  color: #851d1d;
-  transition: all 0.3s ease;
+  background-color: #c82333;
+  border-color: #bd2130;
+  color: white !important;
+  transform: translateY(-1px);
+}
+
+.btn-delete i {
+  color: white !important;
 }
 
 .btn-orvian-primary{
