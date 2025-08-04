@@ -37,10 +37,13 @@
                             <td>
                                 <button class="btn btn-sm btn-edit me-2" 
                                         data-bs-toggle="modal" 
-                                        data-bs-target="#editPackageModal">
+                                        data-bs-target="#editPackageModal"
+                                        title="Editar pacote">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-delete" >
+                                <button class="btn btn-sm btn-delete" 
+                                        (click)="deletePackage(package)"
+                                        title="Excluir pacote">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>

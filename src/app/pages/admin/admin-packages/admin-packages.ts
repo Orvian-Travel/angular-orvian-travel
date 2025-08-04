@@ -7,6 +7,7 @@ import { IPackageService } from '@services/api/package/package-service.interface
 import { PagedResponse } from '@services/entities/paged-response.model';
 import { PackageService } from '@services/api/package/package-service';
 import { SavePackageDateRequest } from '@services/entities/package-date.model';
+import Swal from 'sweetalert2';
 
 interface Package {
   id: number;
@@ -503,16 +504,18 @@ private getAcceptedFileTypes(): string[] {
 
       console.log('Enviando pacote:', createPackageRequest);
 
-      // Chamar o serviço para criar o pacote
       this.packageService.createPackage(createPackageRequest).subscribe({
         next: (response: SavePackageResponse) => {
           console.log('Pacote criado com sucesso:', response);
-          alert('Pacote criado com sucesso!');
+          Swal.fire({
+            icon: 'success',
+            title: 'Sucesso!',
+            text: `O pacote para ${response.destination} foi criado com sucesso!`,
+            confirmButtonText: 'OK'
+          });
           
-          // Recarregar a lista de pacotes
           this.loadPackages();
           
-          // Fechar modal e resetar
           this.resetPackageForm();
           const modal = document.getElementById('addPackageModal');
           if (modal) {
@@ -541,5 +544,89 @@ private getAcceptedFileTypes(): string[] {
     const end2 = new Date(date2.endDate);
 
     return start1 <= end2 && start2 <= end1;
+  }
+
+  deletePackage(packageToDelete: PackageDetail): void {
+    // Usar SweetAlert2 para confirmação
+    Swal.fire({
+      title: 'Confirmar Exclusão',
+      html: `
+        <div class="text-start">
+          <p><strong>Tem certeza que deseja excluir este pacote?</strong></p>
+          <div class="alert alert-warning">
+            <strong>Pacote:</strong> ${packageToDelete.title}<br>
+            <strong>Destino:</strong> ${packageToDelete.destination}<br>
+            <strong>ID:</strong> ${packageToDelete.id}
+          </div>
+          <p class="text-danger"><small><i class="fas fa-exclamation-triangle me-1"></i>Esta ação não pode ser desfeita!</small></p>
+        </div>
+      `,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: '<i class="fas fa-trash me-2"></i>Sim, Excluir',
+      cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
+      focusCancel: true,
+      customClass: {
+        popup: 'swal-delete-popup'
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.executePackageDelection(packageToDelete);
+      }
+    });
+  }
+
+  private executePackageDelection(packageToDelete: PackageDetail): void {
+    Swal.fire({
+      title: 'Excluindo...',
+      text: 'Por favor, aguarde...',
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.packageService.deletePackage(packageToDelete.id).subscribe({
+      next: () => {
+        console.log(`Pacote ${packageToDelete.id} excluído com sucesso`);
+        
+        Swal.fire({
+          icon: 'success',
+          title: 'Excluído!',
+          text: `O pacote "${packageToDelete.title}" foi excluído com sucesso.`,
+          confirmButtonText: 'OK',
+          timer: 3000,
+          timerProgressBar: true
+        });
+
+        this.loadPackages();
+      },
+      error: (error) => {
+        console.error('Erro ao excluir pacote:', error);
+        
+        let errorMessage = 'Erro desconhecido ao excluir o pacote.';
+        
+        if (error.status === 404) {
+          errorMessage = 'Pacote não encontrado. Pode ter sido excluído anteriormente.';
+        } else if (error.status === 409) {
+          errorMessage = 'Não é possível excluir este pacote pois possui reservas associadas.';
+        } else if (error.status === 403) {
+          errorMessage = 'Você não tem permissão para excluir este pacote.';
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+
+        Swal.fire({
+          icon: 'error',
+          title: 'Erro ao Excluir',
+          text: errorMessage,
+          confirmButtonText: 'OK'
+        });
+      }
+    });
   }
 }
