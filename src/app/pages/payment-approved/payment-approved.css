@@ -1,9 +1,36 @@
 /* Payment Approved Page Styles */
 
+/* RESET GLOBAL COMPLETO - FORÇA FUNDO BRANCO EM TUDO */
+body.payment-approved-active {
+  background: white !important;
+  background-color: white !important;
+}
+
+body.payment-approved-active::before {
+  display: none !important;
+}
+
+app-root.payment-approved-active {
+  background: white !important;
+  background-color: white !important;
+  padding-top: 0 !important;
+}
+
+/* Força reset em todas as páginas quando payment-approved está ativa */
+.payment-approved-active html,
+.payment-approved-active body,
+.payment-approved-active app-root {
+  background: white !important;
+  background-color: white !important;
+}
+
 .payment-approved-container {
-  background: var(--orvian-background-gray);
+  background: white !important;
+  background-color: white !important;
   min-height: 100vh;
   padding: 40px 0;
+  position: relative;
+  z-index: 10000;
 }
 
 /* Success Card */

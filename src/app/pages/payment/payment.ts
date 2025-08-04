@@ -1,5 +1,5 @@
 import { AuthStateService } from './../../services/auth/auth-state-service';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -19,13 +19,14 @@ import { FormsModule } from '@angular/forms';
   imports: [Header, DatePipe, CurrencyPipe, FormsModule],
   templateUrl: './payment.html',
   styleUrl: './payment.css',
+  encapsulation: ViewEncapsulation.None,
   providers: [
     { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService },
     { provide: SERVICES_TOKEN.HTTP.RESERVATION, useClass: ReservationService },
     { provide: SERVICES_TOKEN.HTTP.PAYMENT, useClass: PaymentService },
   ],
 })
-export class Payment implements OnInit {
+export class Payment implements OnInit, OnDestroy {
   isLoggedIn: boolean = false;
   packageDetail: PackageDetail | null = null;
 
@@ -39,13 +40,20 @@ export class Payment implements OnInit {
     private readonly reservationService: IReservationService,
     @Inject(SERVICES_TOKEN.HTTP.PAYMENT)
     private readonly paymentService: IPaymentService
-  ) {}
+  ) { }
 
   packageId: string | null = null;
   packageDestination: string | null = null;
   packageCheckin: string | null = null;
 
   ngOnInit(): void {
+    // Adicionar classe ao body e app-root para forçar fundo branco
+    document.body.classList.add('payment-active');
+    const appRoot = document.querySelector('app-root');
+    if (appRoot) {
+      appRoot.classList.add('payment-active');
+    }
+
     this.route.queryParams.subscribe((params) => {
       this.packageId = params['packageId'];
       this.packageDestination = params['packageDestination'];
@@ -63,13 +71,22 @@ export class Payment implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    // Remover classe do body e app-root quando sair da página
+    document.body.classList.remove('payment-active');
+    const appRoot = document.querySelector('app-root');
+    if (appRoot) {
+      appRoot.classList.remove('payment-active');
+    }
+  }
+
   getTotalPrice(): number {
     return this.packageDetail?.price! * this.travelerCount;
   }
 
   getFinalPrice(): number {
     const basePrice = this.getTotalPrice();
-    
+
     if (this.selectedPaymentMethod === 'PIX') {
       return basePrice * (1 - this.PIX_DISCOUNT / 100);
     }
@@ -237,7 +254,7 @@ export class Payment implements OnInit {
     });
 
     let formId = '';
-    switch(method) {
+    switch (method) {
       case 'CREDITO':
         formId = 'cartao-form';
         break;
@@ -280,14 +297,14 @@ export class Payment implements OnInit {
   private readonly TAX_RATE = 10.00;
   private readonly PIX_DISCOUNT = 5.00;
 
-  buildReservationData(): any{
+  buildReservationData(): any {
     const travelers = this.collectTravelersData();
     const user = this.getUser();
     const baseValue = this.getTotalPrice();
 
     let finalValue = baseValue;
 
-    if(this.selectedPaymentMethod === 'PIX'){
+    if (this.selectedPaymentMethod === 'PIX') {
       finalValue = baseValue * (1 - this.PIX_DISCOUNT / 100);
     }
 
@@ -312,22 +329,22 @@ export class Payment implements OnInit {
   }
 
   private getSelectedPackageDateId(): string {
-      if (!this.packageDetail?.packageDates || !this.packageCheckin) {
-        return '';
-      }
+    if (!this.packageDetail?.packageDates || !this.packageCheckin) {
+      return '';
+    }
 
-      const selectedDate = new Date(this.packageCheckin);
-      const selectedDateString = selectedDate.toISOString().split('T')[0];
+    const selectedDate = new Date(this.packageCheckin);
+    const selectedDateString = selectedDate.toISOString().split('T')[0];
 
-      const packageDate = this.packageDetail.packageDates.find(pd => {
-        const pdStartDate = new Date(pd.startDate);
-        const pdStartDateString = pdStartDate.toISOString().split('T')[0];
-        return pdStartDateString === selectedDateString;
-      });
-      return packageDate?.id || '';
+    const packageDate = this.packageDetail.packageDates.find(pd => {
+      const pdStartDate = new Date(pd.startDate);
+      const pdStartDateString = pdStartDate.toISOString().split('T')[0];
+      return pdStartDateString === selectedDateString;
+    });
+    return packageDate?.id || '';
   }
 
-  processPayment(): void{
+  processPayment(): void {
     const token = localStorage.getItem('orvian_token');
 
     if (!token) {
@@ -346,11 +363,11 @@ export class Payment implements OnInit {
       return;
     }
 
-    this.paymentService.authorizePayment(this.selectedPaymentMethod).subscribe({  
+    this.paymentService.authorizePayment(this.selectedPaymentMethod).subscribe({
       next: (response) => {
-        if (response.authorize === true){
+        if (response.authorize === true) {
           this.createConfirmedReservation();
-        }else{
+        } else {
           this.createPendingReservation();
         }
       },
@@ -386,7 +403,7 @@ export class Payment implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao criar reserva confirmada:', err);
-        
+
         const message = err.error?.message || 'Erro ao criar reserva';
         alert('Erro: ' + message);
       }
@@ -415,7 +432,7 @@ export class Payment implements OnInit {
       },
       error: (err) => {
         console.error('Erro ao criar reserva pendente:', err);
-        
+
         const message = err.error?.message || 'Erro ao criar reserva';
         alert('Erro: ' + message);
       }
@@ -581,8 +598,8 @@ export class Payment implements OnInit {
         user.id = payload.sub;
       } catch (error) {
         console.error('Erro ao decodificar JWT:', error);
+      }
+      return user;
     }
-    return user;
-  }
   }
 }

@@ -6,6 +6,7 @@ import { IReservationService } from "./api/reservation/reservation-service.inter
 import { IPaymentService } from "./api/payment/payment-service.interface";
 import { IAuthService } from "./api/auth/auth-service.interface";
 import { IDialogManager } from "./dialog/dialog-manager.interface";
+import { IAdminService } from "./api/admin/admin-service.interface";
 
 export const SERVICES_TOKEN = {
   HTTP: {
@@ -14,7 +15,8 @@ export const SERVICES_TOKEN = {
     TRAVELER: new InjectionToken<ITravelerService>('SERVICES_TOKEN.HTTP.TRAVELER'),
     RESERVATION: new InjectionToken<IReservationService>('SERVICES_TOKEN.HTTP.RESERVATION'),
     PAYMENT: new InjectionToken<IPaymentService>('SERVICES_TOKEN.HTTP.PAYMENT'),
-    AUTH: new InjectionToken<IAuthService>('SERVICES_TOKEN.HTTP.AUTH')
+    AUTH: new InjectionToken<IAuthService>('SERVICES_TOKEN.HTTP.AUTH'),
+    ADMIN: new InjectionToken<IAdminService>('SERVICES_TOKEN.HTTP.ADMIN')
   },
   DIALOG: new InjectionToken<IDialogManager>('SERVICES_TOKEN.DIALOG')
 }

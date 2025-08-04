@@ -1,4 +1,5 @@
 import { PackageDateDetail } from "./package-date.model";
+import { PackageMediaDetail } from "./package.model";
 import { PaymentDetail } from "./payment.model";
 import { SaveTravelerRequest, TravelerDetail } from "./traveler.model";
 import { SaveUserRequest, UserDetail, } from "./user.model";
@@ -13,11 +14,12 @@ export interface ReservationDetail {
   id: string;
   reservationDate: Date;
   situation: ReservationSituation;
-  cancelDate?: Date;
+  cancelledDate?: Date;
   user: UserDetail;
   packageDate: PackageDateDetail;
   travelers: TravelerDetail[];
   payment: PaymentDetail;
+  firstMedia: PackageMediaDetail;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,7 +41,7 @@ export interface SaveReservationResponse {
   id: string;
   situation: ReservationSituation;
   reservationDate: Date;
-  cancelDate?: Date;
+  cancelledDate?: Date;
   user: UserDetail;
   packageDate: PackageDateDetail;
   travelers: TravelerDetail[];
@@ -51,7 +53,7 @@ export interface SaveReservationResponse {
 export interface UpdateReservationRequest {
   situation: ReservationSituation;
   reservationDate: Date;
-  cancelDate?: Date;
+  cancelledDate?: Date;
   user: SaveUserRequest;
   travelers: SaveTravelerRequest[];
   payment: PaymentDetail;
@@ -61,4 +63,19 @@ export interface UpdateReservationRequest {
 export interface UpdateReservationCancelRequest {
   reservationSituation: ReservationSituation;
   reservationDate: Date;
+}
+
+// Interfaces para paginação
+export interface PageInfo {
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  number: number;
+}
+
+export interface PaginatedReservationResponse {
+  _embedded?: {
+    DTOList: ReservationDetail[];
+  };
+  page?: PageInfo;
 }

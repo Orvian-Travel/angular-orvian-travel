@@ -11,10 +11,19 @@ import { AuthStateService } from '@services/auth/auth-state-service';
   styleUrl: './admin-tela-new.css'
 })
 export class AdminTela {
+  isMenuOpen = false;
 
   constructor(
     private authStateService: AuthStateService
   ) { }
+
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
 
   logout(): void {
     this.authStateService.logout();

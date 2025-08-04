@@ -1,0 +1,121 @@
+<!-- Galeria Swiper funcional -->
+<div class="gallery-container">
+  <!-- Swiper Principal -->
+  <div *ngIf="medias && medias.length > 0">
+    <swiper-container
+      #mainSwiper
+      class="main-swiper"
+      pagination="true"
+      navigation="true"
+      space-between="30"
+      slides-per-view="1"
+      [loop]="medias.length > 1"
+      [autoplay]="getAutoplayConfig()"
+      (swiperslidechange)="onSlideChange($event)"
+      (swiperinit)="onSwiperInit($event)"
+      style="
+        display: block !important;
+        width: 100% !important;
+        height: 400px !important;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px;
+        background: #fff;
+      "
+    >
+      <swiper-slide
+        *ngFor="let media of medias; let i = index"
+        style="
+          display: flex !important;
+          align-items: stretch !important;
+          justify-content: stretch !important;
+          width: 100% !important;
+          height: 100% !important;
+          overflow: hidden;
+        "
+      >
+        <div
+          class="slide-content"
+          style="
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+          "
+        >
+          <!-- Indicador do slide no canto superior -->
+          <div class="slide-indicator">{{ i + 1 }}/{{ medias.length }}</div>
+
+          <!-- Imagem -->
+          <img
+            *ngIf="isImage(media)"
+            [src]="getMediaUrl(media)"
+            [alt]="packageTitle + ' - Imagem ' + (i + 1)"
+            class="slide-image"
+            (error)="onImageError($event)"
+          />
+
+          <!-- Vídeo -->
+          <video
+            *ngIf="isVideo(media)"
+            [src]="getMediaUrl(media)"
+            class="slide-video"
+            controls
+            preload="metadata"
+          >
+            Seu navegador não suporta o elemento de vídeo.
+          </video>
+        </div>
+      </swiper-slide>
+    </swiper-container>
+
+    <!-- Thumbnails Swiper (se houver mais de 1 mídia) -->
+    <div *ngIf="medias.length > 1" class="thumbnails-container">
+      <h5>Selecione uma imagem</h5>
+      <swiper-container
+        class="thumbnails-swiper"
+        space-between="10"
+        slides-per-view="4"
+        slides-per-view-mobile="3"
+        free-mode="true"
+        watch-slides-progress="true"
+      >
+        <swiper-slide
+          *ngFor="let media of medias; let i = index"
+          class="thumbnail-slide"
+        >
+          <div
+            class="thumbnail-item"
+            [class.active]="isActiveSlide(i)"
+            (click)="goToSlide(i)"
+          >
+            <img
+              *ngIf="isImage(media)"
+              [src]="getMediaUrl(media)"
+              [alt]="packageTitle + ' - Miniatura ' + (i + 1)"
+              class="thumbnail-image"
+            />
+            <div class="thumbnail-overlay">
+              <span class="thumbnail-number">{{ i + 1 }}</span>
+            </div>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+  </div>
+
+  <!-- Fallback quando não há mídias -->
+  <div *ngIf="!medias || medias.length === 0" class="no-media">
+    <img
+      [src]="getDefaultImage()"
+      [alt]="packageTitle + ' - Imagem padrão'"
+      class="default-image"
+    />
+    <p class="no-media-text">Nenhuma mídia disponível</p>
+  </div>
+</div>

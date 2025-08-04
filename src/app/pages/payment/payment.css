@@ -1,5 +1,29 @@
 /* Custom CSS para trabalhar com Bootstrap 5 */
 
+/* RESET GLOBAL COMPLETO - FORÇA FUNDO BRANCO EM TUDO */
+body.payment-active {
+  background: white !important;
+  background-color: white !important;
+}
+
+body.payment-active::before {
+  display: none !important;
+}
+
+app-root.payment-active {
+  background: white !important;
+  background-color: white !important;
+  padding-top: 0 !important;
+}
+
+/* Força reset em todas as páginas quando payment está ativa */
+.payment-active html,
+.payment-active body,
+.payment-active app-root {
+  background: white !important;
+  background-color: white !important;
+}
+
 /* Cores customizadas */
 :root {
     --primary-color: #2c5f6f;
@@ -185,7 +209,8 @@
 }
 
 body{
-    background-color: var(--orvian-background-gray);
+    background: white !important;
+    background-color: white !important;
 }
 
 /* Resume card specific styling */

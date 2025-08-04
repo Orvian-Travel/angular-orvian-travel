@@ -1,6 +1,4 @@
-<app-header-logged></app-header-logged>
-
-<div class="payment-approved-container">
+<div class="container-fluid payment-approved-container">
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-lg-8 col-md-10">
@@ -35,11 +33,15 @@
             <div class="booking-details">
               <div class="detail-item">
                 <span class="detail-label">Data da Compra:</span>
-                <span class="detail-value">{{ getFormattedPurshaseDate() }}</span>
+                <span class="detail-value">{{
+                  getFormattedPurshaseDate()
+                }}</span>
               </div>
               <div class="detail-item">
                 <span class="detail-label">Valor Total:</span>
-                <span class="detail-value price">{{ totalValue | currency:'BRL':'symbol':'1.2-2' }}</span>
+                <span class="detail-value price">{{
+                  totalValue | currency : "BRL" : "symbol" : "1.2-2"
+                }}</span>
               </div>
             </div>
           </div>
@@ -111,7 +113,9 @@
           </div>
         </div>
         <div class="action-buttons">
-          <button class="btn btn-secondary-custom">Minhas Reservas</button>
+          <button class="btn btn-secondary-custom" routerLink="/reservations">
+            Minhas Reservas
+          </button>
         </div>
         <app-contact-support></app-contact-support>
       </div>

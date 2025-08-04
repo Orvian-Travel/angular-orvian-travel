@@ -34,7 +34,9 @@
               <span class="stat-label d-block small text-muted"
                 >Novos usuários</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0">10</span>
+              <span class="stat-value h4 fw-bold text-dark mb-0">{{
+                newUserCount
+              }}</span>
             </div>
           </div>
         </div>
@@ -49,7 +51,16 @@
               <span class="stat-label d-block small text-muted"
                 >Avaliações</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0">38%</span>
+              <span
+                *ngIf="ratingAVG.percentage !== null"
+                class="stat-value h4 fw-bold text-dark mb-0"
+                >{{ ratingAVG.percentage }}%
+              </span>
+              <span
+                *ngIf="ratingAVG.percentage === null"
+                class="stat-value h4 fw-bold text-dark mb-0"
+                >N/A
+              </span>
             </div>
           </div>
         </div>
@@ -64,7 +75,9 @@
               <span class="stat-label d-block small text-muted"
                 >Número de Pacotes</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0">8</span>
+              <span class="stat-value h4 fw-bold text-dark mb-0">{{
+                newPackageCount
+              }}</span>
             </div>
           </div>
         </div>

@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { HeaderLogged } from '../../shared/components/header-logged/header-logged';
 import { ContactSupport } from "../../shared/components/contact-support/contact-support";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-payment-pending',
-  imports: [HeaderLogged, ContactSupport, CurrencyPipe],
+  imports: [ContactSupport, CurrencyPipe, RouterLink],
   templateUrl: './payment-pending.html',
-  styleUrl: './payment-pending.css'
+  styleUrl: './payment-pending.css',
+  encapsulation: ViewEncapsulation.None
 })
-export class PaymentPending implements OnInit {
+export class PaymentPending implements OnInit, OnDestroy {
   reservationId: string = '';
   totalValue: number = 0;
   packageName: string = '';
@@ -18,9 +19,16 @@ export class PaymentPending implements OnInit {
   checkinDate: string = '';
   checkoutDate: string = '';
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    // Adicionar classe ao body e app-root para forçar fundo branco
+    document.body.classList.add('payment-pending-active');
+    const appRoot = document.querySelector('app-root');
+    if (appRoot) {
+      appRoot.classList.add('payment-pending-active');
+    }
+
     this.route.queryParams.subscribe(params => {
       this.reservationId = params['reservationId'] || '';
       this.totalValue = parseFloat(params['totalValue']) || 0;
@@ -30,49 +38,58 @@ export class PaymentPending implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    // Remover classe do body e app-root quando sair da página
+    document.body.classList.remove('payment-pending-active');
+    const appRoot = document.querySelector('app-root');
+    if (appRoot) {
+      appRoot.classList.remove('payment-pending-active');
+    }
+  }
+
   getFormattedCheckinDate(): string {
     if (!this.checkinDate) return 'Data não disponível';
-    
+
     try {
       const date = new Date(this.checkinDate);
       if (isNaN(date.getTime())) {
         console.error('Data de check-in inválida:', this.checkinDate);
         return 'Data inválida';
       }
-      return date.toLocaleDateString('pt-BR', { 
-        day: 'numeric', 
+      return date.toLocaleDateString('pt-BR', {
+        day: 'numeric',
         month: 'long',
         year: 'numeric'
       });
     } catch (error) {
-        console.error('Erro ao formatar data de check-in:', error);
-        return 'Erro na data';
+      console.error('Erro ao formatar data de check-in:', error);
+      return 'Erro na data';
     }
   }
 
-getFormattedCheckoutDate(): string {
-  if (!this.checkinDate || !this.packageDuration) return 'Data não disponível';
-  
-  try {
-    const checkinDate = new Date(this.checkinDate);
-    
-    if (isNaN(checkinDate.getTime())) {
-      console.error('Data de check-in inválida:', this.checkinDate);
-      return 'Data inválida';
-    }
-    
-    const checkoutDate = new Date(checkinDate);
-    checkoutDate.setDate(checkoutDate.getDate() + this.packageDuration);
-    
-    return checkoutDate.toLocaleDateString('pt-BR', { 
-      day: 'numeric', 
-      month: 'long',
-      year: 'numeric'
-    });
-  } catch (error) {
+  getFormattedCheckoutDate(): string {
+    if (!this.checkinDate || !this.packageDuration) return 'Data não disponível';
+
+    try {
+      const checkinDate = new Date(this.checkinDate);
+
+      if (isNaN(checkinDate.getTime())) {
+        console.error('Data de check-in inválida:', this.checkinDate);
+        return 'Data inválida';
+      }
+
+      const checkoutDate = new Date(checkinDate);
+      checkoutDate.setDate(checkoutDate.getDate() + this.packageDuration);
+
+      return checkoutDate.toLocaleDateString('pt-BR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    } catch (error) {
       console.error('Erro ao calcular data de check-out:', error);
       return 'Erro na data';
+    }
   }
-}
 
 }

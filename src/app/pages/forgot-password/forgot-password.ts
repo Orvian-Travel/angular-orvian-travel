@@ -21,9 +21,28 @@ export class ForgotPassword {
     private router: Router
   ) {}
 
+  isValidEmail(email: string): boolean {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  get isEmailValid(): boolean {
+    return this.email.length > 0 && this.isValidEmail(this.email);
+  }
+
+  get canSubmit(): boolean {
+    return this.isEmailValid && !this.isLoading;
+  }
+
   onSubmit(): void {
     if (!this.email) {
       this.message = 'Por favor, digite seu email.';
+      this.isSuccess = false;
+      return;
+    }
+
+    if (!this.isValidEmail(this.email)) {
+      this.message = 'Por favor, digite um email válido.';
       this.isSuccess = false;
       return;
     }
