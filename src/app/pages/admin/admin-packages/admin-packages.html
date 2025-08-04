@@ -6,51 +6,107 @@
 
     <div class="packages-management card border-0 shadow-sm">
         <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
                 <h2 class="h4 fw-bold text-dark mb-0">Lista de Pacotes</h2>
                 <button class="btn btn-orvian-primary" data-bs-toggle="modal" data-bs-target="#addPackageModal">
                     <i class="fas fa-plus me-2"></i>Adicionar Pacote
                 </button>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Título</th>
-                            <th>Destino</th>
-                            <th>Preço</th>
-                            <th>Duração</th>
-                            <th>Quantidade Máxima</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let package of packages; index as i">
-                            <td>{{ package.id }}</td>
-                            <td>{{ package.title }}</td>
-                            <td>{{ package.destination }}</td>
-                            <td>{{ formatCurrencyBrazilian(package.price) }}</td>
-                            <td>{{ package.duration }} dias</td>
-                            <td>{{ package.maxPeople }} pessoa(s)</td>
-                            <td>
-                                <button class="btn btn-sm btn-edit me-2" 
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#editPackageModal"
-                                        (click)="openEditModal(package)"
-                                        title="Editar pacote">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button class="btn btn-sm btn-delete" 
-                                        (click)="deletePackage(package)"
-                                        title="Excluir pacote">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Desktop Table View -->
+            <div class="d-none d-lg-block">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID</th>
+                                <th>Título</th>
+                                <th>Destino</th>
+                                <th>Preço</th>
+                                <th>Duração</th>
+                                <th>Quantidade Máxima</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let package of packages; index as i">
+                                <td>{{ package.id }}</td>
+                                <td>{{ package.title }}</td>
+                                <td>{{ package.destination }}</td>
+                                <td>{{ formatCurrencyBrazilian(package.price) }}</td>
+                                <td>{{ package.duration }} dias</td>
+                                <td>{{ package.maxPeople }} pessoa(s)</td>
+                                <td>
+                                    <button class="btn btn-sm btn-edit me-2" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editPackageModal"
+                                            (click)="openEditModal(package)"
+                                            title="Editar pacote">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-delete" 
+                                            (click)="deletePackage(package)"
+                                            title="Excluir pacote">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mobile/Tablet Card View -->
+            <div class="d-lg-none">
+                <div class="row g-3">
+                    <div class="col-12" *ngFor="let package of packages; index as i">
+                        <div class="package-card card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="card-title fw-bold mb-1">{{ package.title }}</h5>
+                                        <span class="badge badge-destination">{{ package.destination }}</span>
+                                    </div>
+                                    <div class="package-icon">
+                                        <i class="fas fa-map-marked-alt fa-2x"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="package-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-dollar-sign text-muted me-2"></i>
+                                        <small>{{ formatCurrencyBrazilian(package.price) }}</small>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar text-muted me-2"></i>
+                                        <small>{{ package.duration }} dias</small>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-users text-muted me-2"></i>
+                                        <small>Máx. {{ package.maxPeople }} pessoa(s)</small>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-hashtag text-muted me-2"></i>
+                                        <small>ID: {{ package.id }}</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2 mt-3">
+                                    <button class="btn btn-edit flex-fill" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#editPackageModal"
+                                            (click)="openEditModal(package)">
+                                        <i class="fas fa-edit me-1"></i>Editar
+                                    </button>
+                                    <button class="btn btn-delete flex-fill" 
+                                            (click)="deletePackage(package)">
+                                        <i class="fas fa-trash me-1"></i>Excluir
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

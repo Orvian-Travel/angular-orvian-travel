@@ -63,7 +63,7 @@
 }
 
 .sidebar .nav-link {
-    color: rgba(255, 255, 255, 0.8) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
     padding: 15px 30px;
     border-radius: 0;
     transition: all 0.3s ease;
@@ -82,7 +82,7 @@
 
 .sidebar .nav-link.active {
     background-color: rgba(255, 255, 255, 0.2);
-    border-left-color: var(--accent-color);
+    border-left-color: #4DD0E1;
     color: white !important;
 }
 
@@ -90,14 +90,15 @@
     width: 20px;
     font-size: 16px;
     margin-right: 10px;
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
 /* Divisor no menu */
 .sidebar-divider {
     border: none;
     height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 10px 20px;
+    background: rgba(255, 255, 255, 0.3);
+    margin: 15px 20px;
 }
 
 /* Main Content */

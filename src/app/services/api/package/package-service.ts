@@ -7,7 +7,6 @@ import {
   PackageDetail,
   SavePackageRequest,
   SavePackageResponse,
-  SumTotalByPackage,
   UpdatePackageRequest
 } from '../../entities/package.model';
 import { IPackageService } from './package-service.interface';
@@ -54,10 +53,6 @@ export class PackageService implements IPackageService {
 
   public getPackageById(id: string): Observable<PackageDetail> {
     return this.http.get<PackageDetail>(`${this.baseUrl}/${id}`);
-  }
-
-  getSumTotalByPackage(): Observable<SumTotalByPackage[]> {
-    return this.http.get<SumTotalByPackage[]>(`${this.baseUrl}/sumbypackage`);
   }
 
   createPackage(savePackageRequest: SavePackageRequest): Observable<SavePackageResponse> {
