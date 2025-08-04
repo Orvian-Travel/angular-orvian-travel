@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChanges, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, OnChanges, SimpleChanges, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PackageMediaDetail } from '../../../services/entities/package.model';
 
@@ -18,6 +18,8 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
   swiperLoaded = false;
   private mediasProcessed = false;
 
+  constructor(private cdr: ChangeDetectorRef) {}
+
   ngOnInit() {
     this.processMedias();
   }
@@ -32,178 +34,43 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
 
   ngAfterViewInit() {
     console.log('🔄 SwiperGallery: ngAfterViewInit chamado');
-
-    // Usar múltiplas estratégias para garantir inicialização
-    this.initializeSwiperWithRetry();
-  }
-
-  private initializeSwiperWithRetry(): void {
-    // Estratégia 1: Aguardar o próximo frame
-    requestAnimationFrame(() => {
-      this.attemptSwiperInitialization();
-    });
-
-    // Estratégia 2: Usar MutationObserver para detectar quando o DOM muda
-    if (typeof window !== 'undefined' && window.MutationObserver) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'childList' &&
-            mutation.addedNodes.length > 0) {
-            // Verificar se o swiper foi adicionado
-            Array.from(mutation.addedNodes).forEach((node) => {
-              if (node.nodeType === Node.ELEMENT_NODE) {
-                const element = node as Element;
-                if (element.tagName === 'SWIPER-CONTAINER' ||
-                  element.querySelector('swiper-container')) {
-                  console.log('✅ SwiperGallery: Swiper detectado no DOM via observer');
-                  setTimeout(() => this.attemptSwiperInitialization(), 100);
-                  observer.disconnect();
-                }
-              }
-            });
-          }
-        });
-      });
-
-      // Observar mudanças no container da galeria
-      if (this.mainSwiper?.nativeElement?.parentElement) {
-        observer.observe(this.mainSwiper.nativeElement.parentElement, {
-          childList: true,
-          subtree: true
-        });
-      }
-
-      // Desconectar observer após 5 segundos para evitar vazamentos
-      setTimeout(() => observer.disconnect(), 5000);
-    }
-
-    // Estratégia 3: Retry com intervalos crescentes
-    this.retryInitialization(0);
-  }
-
-  private retryInitialization(attempt: number): void {
-    const maxAttempts = 10;
-    const delay = Math.min(100 * Math.pow(1.5, attempt), 2000); // Delay crescente até 2s
-
-    setTimeout(() => {
-      if (this.attemptSwiperInitialization()) {
-        console.log(`✅ SwiperGallery: Inicializado na tentativa ${attempt + 1}`);
-        return;
-      }
-
-      if (attempt < maxAttempts) {
-        console.log(`🔄 SwiperGallery: Tentativa ${attempt + 1}/${maxAttempts} - retry em ${delay}ms`);
-        this.retryInitialization(attempt + 1);
-      } else {
-        console.warn('⚠️ SwiperGallery: Falha após todas as tentativas');
-      }
-    }, delay);
-  }
-
-  private attemptSwiperInitialization(): boolean {
+    
     if (!this.mediasProcessed) {
       this.processMedias();
     }
-
-    if (this.mainSwiper?.nativeElement) {
-      const swiperEl = this.mainSwiper.nativeElement;
-
-      // Verificar se o elemento está visível e tem dimensões
-      const rect = swiperEl.getBoundingClientRect();
-      if (rect.width > 0 && rect.height > 0) {
-        console.log('✅ SwiperGallery: Elemento Swiper encontrado e visível');
-
-        // Usar Intersection Observer para aguardar que o elemento esteja realmente visível
-        if (typeof window !== 'undefined' && window.IntersectionObserver) {
-          this.observeElementVisibility(swiperEl);
-        } else {
-          // Fallback se IntersectionObserver não estiver disponível
-          this.configureSwiperEvents();
-        }
-        return true;
-      } else {
-        console.log('⏳ SwiperGallery: Elemento existe mas não tem dimensões ainda');
-        return false;
-      }
-    }
-
-    return false;
-  }
-
-  private observeElementVisibility(element: HTMLElement): void {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio > 0) {
-          console.log('👁️ SwiperGallery: Elemento está visível, inicializando...');
-
-          // Aguardar um pouco mais para garantir que está completamente visível
-          setTimeout(() => {
-            this.configureSwiperEvents();
-            observer.disconnect(); // Parar de observar
-          }, 200);
-        }
-      });
-    }, {
-      threshold: 0.1, // Detectar quando pelo menos 10% está visível
-      rootMargin: '50px' // Adicionar margem para detectar antes
-    });
-
-    observer.observe(element);
-
-    // Desconectar após 10 segundos para evitar vazamentos
+    
     setTimeout(() => {
-      observer.disconnect();
-    }, 10000);
+      this.initializeSwiper();
+    }, 200);
   }
 
-  private configureSwiperEvents(): void {
-    if (this.mainSwiper?.nativeElement) {
-      const swiperEl = this.mainSwiper.nativeElement;
-
-      // Verificar se já está inicializado
-      if (swiperEl.swiper) {
-        console.log('✅ SwiperGallery: Swiper já estava inicializado');
-        this.swiperLoaded = true;
-        return;
+  private initializeSwiper(): void {
+    if (this.mainSwiper?.nativeElement && this.medias.length > 0) {
+      const swiperElement = this.mainSwiper.nativeElement;
+      
+      console.log('Inicializando Swiper com', this.medias.length, 'mídias');
+      
+      if (!swiperElement.swiper && swiperElement.initialize) {
+        console.log('Forçando inicialização do Swiper');
+        swiperElement.initialize();
       }
-
-      // Aguardar inicialização com polling mais agressivo
-      const checkSwiper = (attempts = 0) => {
-        if (swiperEl.swiper) {
-          console.log('✅ SwiperGallery: Swiper instance encontrada');
-          this.swiperLoaded = true;
-          return;
+      
+      if (swiperElement.swiper && swiperElement.swiper.update) {
+        console.log('Atualizando Swiper existente');
+        swiperElement.swiper.update();
+      }
+      
+      this.swiperLoaded = true;
+      
+      this.cdr.detectChanges();
+    } else {
+      setTimeout(() => {
+        if (this.mainSwiper?.nativeElement && this.medias.length > 0) {
+          this.initializeSwiper();
         }
-
-        if (attempts < 50) { // 50 tentativas = 5 segundos
-          setTimeout(() => checkSwiper(attempts + 1), 100);
-        } else {
-          console.warn('⚠️ SwiperGallery: Timeout aguardando Swiper instance');
-          // Tentar forçar inicialização
-          this.forceSwiperInitialization(swiperEl);
-        }
-      };
-
-      checkSwiper();
+      }, 100);
     }
   }
-
-  private forceSwiperInitialization(swiperEl: any): void {
-    try {
-      // Tentar inicializar manualmente se o Swiper não inicializou
-      if (typeof swiperEl.initialize === 'function') {
-        console.log('🔄 SwiperGallery: Forçando inicialização manual');
-        swiperEl.initialize();
-        this.swiperLoaded = true;
-      } else {
-        console.log('⚠️ SwiperGallery: Não foi possível forçar inicialização');
-      }
-    } catch (error) {
-      console.error('❌ SwiperGallery: Erro ao forçar inicialização:', error);
-    }
-  }
-
-  private retryCount = 0;
 
   private processMedias() {
     const originalMedias = this.medias ? [...this.medias.filter(m => !m.id.startsWith('test-'))] : [];
@@ -216,7 +83,9 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
 
     this.medias = allMedias;
     this.mediasProcessed = true;
-    ;
+    
+    // Forçar detecção de mudanças
+    this.cdr.detectChanges();
   }
 
   getMediaUrl(media: PackageMediaDetail): string {
@@ -259,11 +128,27 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
           mimeType = mimeTypeMap[mimeType.toLowerCase()] || `image/${mimeType}`;
         }
 
-        return `data:${mimeType};base64,${media.contentType}`;
+        const url = `data:${mimeType};base64,${media.contentType}`;
+        
+        this.preloadImage(url);
+        
+        return url;
       }
     }
 
     return '/assets/images/default-package-image.png';
+  }
+
+  private preloadImage(url: string) {
+    const img = new Image();
+    img.onload = () => {
+      setTimeout(() => {
+        if (this.mainSwiper?.nativeElement?.swiper) {
+          this.mainSwiper.nativeElement.swiper.update();
+        }
+      }, 50);
+    };
+    img.src = url;
   }
 
   isImage(media: PackageMediaDetail): boolean {
@@ -288,7 +173,6 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
     return '/assets/images/default-package-image.png';
   }
 
-  // Método para configurar autoplay condicionalmente
   getAutoplayConfig(): string | boolean {
     if (this.medias && this.medias.length > 1) {
       return JSON.stringify({
@@ -351,7 +235,6 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
     this.swiperLoaded = true;
   }
 
-  // Métodos para fallback manual
   nextSlide(): void {
     if (this.medias && this.medias.length > 0) {
       this.currentSlideIndex = (this.currentSlideIndex + 1) % this.medias.length;
