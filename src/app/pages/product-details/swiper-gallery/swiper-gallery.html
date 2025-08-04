@@ -9,16 +9,45 @@
       navigation="true"
       space-between="30"
       slides-per-view="1"
-      loop="true"
-      autoplay="{
-        'delay': 4000,
-        'disableOnInteraction': false,
-        'pauseOnMouseEnter': true
-      }"
+      [loop]="medias.length > 1"
+      [autoplay]="getAutoplayConfig()"
       (swiperslidechange)="onSlideChange($event)"
+      (swiperinit)="onSwiperInit($event)"
+      style="
+        display: block !important;
+        width: 100% !important;
+        height: 400px !important;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px;
+        background: #fff;
+      "
     >
-      <swiper-slide *ngFor="let media of medias; let i = index">
-        <div class="slide-content">
+      <swiper-slide
+        *ngFor="let media of medias; let i = index"
+        style="
+          display: flex !important;
+          align-items: stretch !important;
+          justify-content: stretch !important;
+          width: 100% !important;
+          height: 100% !important;
+          overflow: hidden;
+        "
+      >
+        <div
+          class="slide-content"
+          style="
+            width: 100% !important;
+            height: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+          "
+        >
           <!-- Indicador do slide no canto superior -->
           <div class="slide-indicator">{{ i + 1 }}/{{ medias.length }}</div>
 

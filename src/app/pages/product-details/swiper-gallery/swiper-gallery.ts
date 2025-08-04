@@ -15,6 +15,7 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('mainSwiper', { static: false }) mainSwiper!: ElementRef;
 
   currentSlideIndex = 0;
+  swiperLoaded = false;
   private mediasProcessed = false;
 
   ngOnInit() {
@@ -30,10 +31,62 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngAfterViewInit() {
+    console.log('🔄 SwiperGallery: ngAfterViewInit chamado');
+
+    // Aguardar o próximo tick para garantir que a view foi renderizada
+    setTimeout(() => {
+      this.initializeSwiper();
+    }, 0);
+  }
+
+  private initializeSwiper(): void {
     if (!this.mediasProcessed) {
       this.processMedias();
     }
+
+    // Verificar se o elemento Swiper existe com retry mais robusto
+    if (this.mainSwiper?.nativeElement) {
+      const swiperEl = this.mainSwiper.nativeElement;
+      console.log('✅ SwiperGallery: Elemento Swiper encontrado');
+      this.configureSwiperEvents();
+    } else {
+      // Tentar novamente com delay maior se não encontrou
+      setTimeout(() => {
+        if (this.mainSwiper?.nativeElement) {
+          console.log('✅ SwiperGallery: Elemento Swiper encontrado após retry');
+          this.configureSwiperEvents();
+        }
+        // Remover log de warning desnecessário
+      }, 100);
+    }
   }
+
+  private configureSwiperEvents(): void {
+    if (this.mainSwiper?.nativeElement) {
+      const swiperEl = this.mainSwiper.nativeElement;
+
+      // Aguardar um pouco mais para garantir que tudo está inicializado
+      setTimeout(() => {
+        if (swiperEl.swiper) {
+          console.log('✅ SwiperGallery: Swiper instance encontrada');
+          this.swiperLoaded = true;
+          // Swiper já está inicializado
+        } else {
+          console.log('🔄 SwiperGallery: Aguardando inicialização do Swiper...');
+          // Tentar novamente em 100ms, máximo 10 tentativas
+          this.retryCount = (this.retryCount || 0) + 1;
+          if (this.retryCount < 10) {
+            setTimeout(() => this.configureSwiperEvents(), 100);
+          } else {
+            console.warn('⚠️ SwiperGallery: Swiper não carregou após 10 tentativas - usando fallback');
+            // Manter fallback ativo
+          }
+        }
+      }, 50);
+    }
+  }
+
+  private retryCount = 0;
 
   private processMedias() {
     const originalMedias = this.medias ? [...this.medias.filter(m => !m.id.startsWith('test-'))] : [];
@@ -118,6 +171,18 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
     return '/assets/images/default-package-image.png';
   }
 
+  // Método para configurar autoplay condicionalmente
+  getAutoplayConfig(): string | boolean {
+    if (this.medias && this.medias.length > 1) {
+      return JSON.stringify({
+        delay: 4000,
+        disableOnInteraction: false,
+        pauseOnMouseEnter: true
+      });
+    }
+    return false;
+  }
+
   goToSlide(slideIndex: number): void {
     this.currentSlideIndex = slideIndex;
 
@@ -162,6 +227,26 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
 
     this.currentSlideIndex = newIndex;
 
+  }
+
+  onSwiperInit(event: any): void {
+    console.log('✅ Swiper inicializado com sucesso!', event);
+    this.swiperLoaded = true;
+  }
+
+  // Métodos para fallback manual
+  nextSlide(): void {
+    if (this.medias && this.medias.length > 0) {
+      this.currentSlideIndex = (this.currentSlideIndex + 1) % this.medias.length;
+    }
+  }
+
+  previousSlide(): void {
+    if (this.medias && this.medias.length > 0) {
+      this.currentSlideIndex = this.currentSlideIndex === 0
+        ? this.medias.length - 1
+        : this.currentSlideIndex - 1;
+    }
   }
 
   onImageError(event: Event): void {
