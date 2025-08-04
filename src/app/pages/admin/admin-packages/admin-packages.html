@@ -221,7 +221,7 @@
                                     <div class="input-group">
                                         <span class="input-group-text">Imagem {{ i + 1 }}</span>
                                         <input type="file" class="form-control" [id]="'additionalImage' + i" 
-                                               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp" 
+                                               accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,video/mp4" 
                                                (change)="onAdditionalImageChange($event, i)">
                                         <button class="btn btn-outline-danger" type="button" (click)="removeAdditionalImage(i)">
                                             <i class="fas fa-trash"></i>

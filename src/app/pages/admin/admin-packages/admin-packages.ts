@@ -332,7 +332,7 @@ export class AdminPackages implements OnInit {
         return;
       }
 
-      if (file.size > 5 * 1024 * 1024) {
+      if (file.size > 15 * 1024 * 1024) {
         alert('Arquivo muito grande. O tamanho máximo é 5MB.');
         event.target.value = '';
         return;
@@ -439,6 +439,7 @@ export class AdminPackages implements OnInit {
       'image/webp',
       'image/bmp',
       'image/x-ms-bmp',
+      'video/mp4'
     ];
 
     const isValid = validMimeTypes.includes(file.type.toLowerCase());
@@ -451,7 +452,7 @@ export class AdminPackages implements OnInit {
   }
 
   private getAcceptedFileTypes(): string[] {
-    return ['jpg', 'png', 'gif'];
+    return ['jpg', 'png', 'gif', 'mp4'];
   }
 
   resetPackageForm(): void {
