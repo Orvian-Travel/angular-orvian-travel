@@ -176,7 +176,7 @@ swiper-slide {
   background: rgba(248, 249, 250, 0.5);
   border-radius: 8px;
   border: 1px solid rgba(0, 123, 255, 0.1);
-  max-height: 120px;
+  max-height: 135px;
 }
 
 .thumbnails-container h5 {
@@ -201,55 +201,55 @@ swiper-slide {
 }
 
 .thumbnails-swiper {
-  height: 60px;
+  height: 75px;
   border-radius: 8px;
   overflow: hidden;
   padding: 3px;
 }
 
 .thumbnail-slide {
-  height: 54px;
+  height: 69px;
 }
 
 .thumbnail-item {
   position: relative;
   width: 100%;
-  height: 80px;
-  border-radius: 12px;
+  height: 69px;
+  border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   transition: all 0.3s ease;
   background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 .thumbnail-item:hover {
   border-color: #007bff;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(0,123,255,0.3);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 6px 20px rgba(0,123,255,0.3);
 }
 
 .thumbnail-item.active {
   border-color: #28a745;
-  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+  transform: translateY(-1px);
 }
 
 .thumbnail-item.active::after {
   content: '✓';
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 3px;
+  right: 3px;
   background: #28a745;
   color: white;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
   z-index: 15;
 }

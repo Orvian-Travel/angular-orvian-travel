@@ -1,7 +1,34 @@
+/* RESET GLOBAL COMPLETO - FORÇA FUNDO BRANCO EM TUDO */
+body.payment-pending-active {
+  background: white !important;
+  background-color: white !important;
+}
+
+body.payment-pending-active::before {
+  display: none !important;
+}
+
+app-root.payment-pending-active {
+  background: white !important;
+  background-color: white !important;
+  padding-top: 0 !important;
+}
+
+/* Força reset em todas as páginas quando payment-pending está ativa */
+.payment-pending-active html,
+.payment-pending-active body,
+.payment-pending-active app-root {
+  background: white !important;
+  background-color: white !important;
+}
+
 .payment-rejected-container {
-  background: linear-gradient(135deg, var(--orvian-background-gray) 0%, #f0f8ff 100%);
+  background: white !important;
+  background-color: white !important;
   min-height: 100vh;
   padding: 40px 0;
+  position: relative;
+  z-index: 10000;
 }
 
 .error-card {
