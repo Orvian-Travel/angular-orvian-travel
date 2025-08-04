@@ -21,11 +21,17 @@ swiper-container {
   display: block;
   width: 100%;
   height: 100%;
+  /* Forçar render mesmo se JavaScript ainda não carregou */
+  min-height: 400px;
+  position: relative;
 }
 
 swiper-container.main-swiper {
   /* Forçar altura fixa para consistência */
   height: 400px !important;
+  /* Garantir que seja visível mesmo antes da inicialização */
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 swiper-slide {

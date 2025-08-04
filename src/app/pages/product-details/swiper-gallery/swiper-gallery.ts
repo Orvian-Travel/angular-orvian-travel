@@ -33,56 +33,173 @@ export class SwiperGallery implements OnInit, AfterViewInit, OnChanges {
   ngAfterViewInit() {
     console.log('🔄 SwiperGallery: ngAfterViewInit chamado');
 
-    // Aguardar o próximo tick para garantir que a view foi renderizada
-    setTimeout(() => {
-      this.initializeSwiper();
-    }, 0);
+    // Usar múltiplas estratégias para garantir inicialização
+    this.initializeSwiperWithRetry();
   }
 
-  private initializeSwiper(): void {
+  private initializeSwiperWithRetry(): void {
+    // Estratégia 1: Aguardar o próximo frame
+    requestAnimationFrame(() => {
+      this.attemptSwiperInitialization();
+    });
+
+    // Estratégia 2: Usar MutationObserver para detectar quando o DOM muda
+    if (typeof window !== 'undefined' && window.MutationObserver) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.type === 'childList' &&
+            mutation.addedNodes.length > 0) {
+            // Verificar se o swiper foi adicionado
+            Array.from(mutation.addedNodes).forEach((node) => {
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                const element = node as Element;
+                if (element.tagName === 'SWIPER-CONTAINER' ||
+                  element.querySelector('swiper-container')) {
+                  console.log('✅ SwiperGallery: Swiper detectado no DOM via observer');
+                  setTimeout(() => this.attemptSwiperInitialization(), 100);
+                  observer.disconnect();
+                }
+              }
+            });
+          }
+        });
+      });
+
+      // Observar mudanças no container da galeria
+      if (this.mainSwiper?.nativeElement?.parentElement) {
+        observer.observe(this.mainSwiper.nativeElement.parentElement, {
+          childList: true,
+          subtree: true
+        });
+      }
+
+      // Desconectar observer após 5 segundos para evitar vazamentos
+      setTimeout(() => observer.disconnect(), 5000);
+    }
+
+    // Estratégia 3: Retry com intervalos crescentes
+    this.retryInitialization(0);
+  }
+
+  private retryInitialization(attempt: number): void {
+    const maxAttempts = 10;
+    const delay = Math.min(100 * Math.pow(1.5, attempt), 2000); // Delay crescente até 2s
+
+    setTimeout(() => {
+      if (this.attemptSwiperInitialization()) {
+        console.log(`✅ SwiperGallery: Inicializado na tentativa ${attempt + 1}`);
+        return;
+      }
+
+      if (attempt < maxAttempts) {
+        console.log(`🔄 SwiperGallery: Tentativa ${attempt + 1}/${maxAttempts} - retry em ${delay}ms`);
+        this.retryInitialization(attempt + 1);
+      } else {
+        console.warn('⚠️ SwiperGallery: Falha após todas as tentativas');
+      }
+    }, delay);
+  }
+
+  private attemptSwiperInitialization(): boolean {
     if (!this.mediasProcessed) {
       this.processMedias();
     }
 
-    // Verificar se o elemento Swiper existe com retry mais robusto
     if (this.mainSwiper?.nativeElement) {
       const swiperEl = this.mainSwiper.nativeElement;
-      console.log('✅ SwiperGallery: Elemento Swiper encontrado');
-      this.configureSwiperEvents();
-    } else {
-      // Tentar novamente com delay maior se não encontrou
-      setTimeout(() => {
-        if (this.mainSwiper?.nativeElement) {
-          console.log('✅ SwiperGallery: Elemento Swiper encontrado após retry');
+
+      // Verificar se o elemento está visível e tem dimensões
+      const rect = swiperEl.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        console.log('✅ SwiperGallery: Elemento Swiper encontrado e visível');
+
+        // Usar Intersection Observer para aguardar que o elemento esteja realmente visível
+        if (typeof window !== 'undefined' && window.IntersectionObserver) {
+          this.observeElementVisibility(swiperEl);
+        } else {
+          // Fallback se IntersectionObserver não estiver disponível
           this.configureSwiperEvents();
         }
-        // Remover log de warning desnecessário
-      }, 100);
+        return true;
+      } else {
+        console.log('⏳ SwiperGallery: Elemento existe mas não tem dimensões ainda');
+        return false;
+      }
     }
+
+    return false;
+  }
+
+  private observeElementVisibility(element: HTMLElement): void {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0) {
+          console.log('👁️ SwiperGallery: Elemento está visível, inicializando...');
+
+          // Aguardar um pouco mais para garantir que está completamente visível
+          setTimeout(() => {
+            this.configureSwiperEvents();
+            observer.disconnect(); // Parar de observar
+          }, 200);
+        }
+      });
+    }, {
+      threshold: 0.1, // Detectar quando pelo menos 10% está visível
+      rootMargin: '50px' // Adicionar margem para detectar antes
+    });
+
+    observer.observe(element);
+
+    // Desconectar após 10 segundos para evitar vazamentos
+    setTimeout(() => {
+      observer.disconnect();
+    }, 10000);
   }
 
   private configureSwiperEvents(): void {
     if (this.mainSwiper?.nativeElement) {
       const swiperEl = this.mainSwiper.nativeElement;
 
-      // Aguardar um pouco mais para garantir que tudo está inicializado
-      setTimeout(() => {
+      // Verificar se já está inicializado
+      if (swiperEl.swiper) {
+        console.log('✅ SwiperGallery: Swiper já estava inicializado');
+        this.swiperLoaded = true;
+        return;
+      }
+
+      // Aguardar inicialização com polling mais agressivo
+      const checkSwiper = (attempts = 0) => {
         if (swiperEl.swiper) {
           console.log('✅ SwiperGallery: Swiper instance encontrada');
           this.swiperLoaded = true;
-          // Swiper já está inicializado
-        } else {
-          console.log('🔄 SwiperGallery: Aguardando inicialização do Swiper...');
-          // Tentar novamente em 100ms, máximo 10 tentativas
-          this.retryCount = (this.retryCount || 0) + 1;
-          if (this.retryCount < 10) {
-            setTimeout(() => this.configureSwiperEvents(), 100);
-          } else {
-            console.warn('⚠️ SwiperGallery: Swiper não carregou após 10 tentativas - usando fallback');
-            // Manter fallback ativo
-          }
+          return;
         }
-      }, 50);
+
+        if (attempts < 50) { // 50 tentativas = 5 segundos
+          setTimeout(() => checkSwiper(attempts + 1), 100);
+        } else {
+          console.warn('⚠️ SwiperGallery: Timeout aguardando Swiper instance');
+          // Tentar forçar inicialização
+          this.forceSwiperInitialization(swiperEl);
+        }
+      };
+
+      checkSwiper();
+    }
+  }
+
+  private forceSwiperInitialization(swiperEl: any): void {
+    try {
+      // Tentar inicializar manualmente se o Swiper não inicializou
+      if (typeof swiperEl.initialize === 'function') {
+        console.log('🔄 SwiperGallery: Forçando inicialização manual');
+        swiperEl.initialize();
+        this.swiperLoaded = true;
+      } else {
+        console.log('⚠️ SwiperGallery: Não foi possível forçar inicialização');
+      }
+    } catch (error) {
+      console.error('❌ SwiperGallery: Erro ao forçar inicialização:', error);
     }
   }
 

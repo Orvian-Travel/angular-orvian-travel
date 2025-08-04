@@ -14,13 +14,27 @@ async function initializeSwiperAndBootstrap() {
     // Register Swiper custom elements
     register();
 
-    // Ensure custom elements are defined before bootstrap
+    // Aguardar que custom elements sejam definidos COM TIMEOUT
     if (typeof window !== 'undefined' && window.customElements) {
-      await Promise.all([
+      const timeout = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Timeout aguardando custom elements')), 10000)
+      );
+
+      const customElementsReady = Promise.all([
         customElements.whenDefined('swiper-container'),
         customElements.whenDefined('swiper-slide')
       ]);
+
+      try {
+        await Promise.race([customElementsReady, timeout]);
+        console.log('✅ Swiper custom elements definidos com sucesso');
+      } catch (timeoutError) {
+        console.warn('⚠️ Timeout aguardando custom elements, continuando mesmo assim:', timeoutError);
+      }
     }
+
+    // Aguardar um frame adicional para garantir que tudo está registrado
+    await new Promise(resolve => requestAnimationFrame(resolve));
 
     console.log('✅ Swiper registered successfully');
 
@@ -36,7 +50,5 @@ async function initializeSwiperAndBootstrap() {
       console.error('❌ Critical error bootstrapping app:', bootstrapError);
     }
   }
-}
-
-// Initialize the application
+}// Initialize the application
 initializeSwiperAndBootstrap();
