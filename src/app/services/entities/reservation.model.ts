@@ -2,11 +2,13 @@ import { PackageDateDetail } from "./package-date.model";
 import { PaymentDetail } from "./payment.model";
 import { SaveTravelerRequest, TravelerDetail } from "./traveler.model";
 import { SaveUserRequest, UserDetail, } from "./user.model";
+import { RatingDetail } from "./rating.model";
 
 export enum ReservationSituation {
   PENDENTE = 'PENDENTE',
   CONFIRMADA = 'CONFIRMADA',
   CANCELADA = 'CANCELADA',
+  COMPLETED = 'COMPLETED',
 }
 
 export interface ReservationDetail {
@@ -18,6 +20,7 @@ export interface ReservationDetail {
   packageDate: PackageDateDetail;
   travelers: TravelerDetail[];
   payment: PaymentDetail;
+  rating?: RatingDetail; // Rating opcional da reserva
   createdAt: Date;
   updatedAt: Date;
 }

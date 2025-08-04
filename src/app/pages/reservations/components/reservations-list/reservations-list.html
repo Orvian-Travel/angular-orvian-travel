@@ -117,14 +117,67 @@
           </div>
 
           <div class="card-actions">
+            <!-- Botão para visualizar avaliações do pacote (sempre visível) -->
+            <button
+              class="action-btn btn-view-ratings"
+              (click)="viewPackageRatings(reservation)"
+              title="Ver todas as avaliações deste pacote">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              Ver Avaliações
+            </button>
+
             <!-- Botões baseados no status -->
             <ng-container [ngSwitch]="reservation.situation">
               <!-- Reserva Confirmada -->
               <ng-container *ngSwitchCase="'CONFIRMADA'">
+                
+                <!-- Botão de Avaliação (só após viagem) -->
+                <button
+                  *ngIf="canRateReservation(reservation)"
+                  class="action-btn btn-rating"
+                  (click)="openRatingModal(reservation.id)"
+                  title="Avaliar experiência">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Avaliar
+                </button>
+
+                <!-- Mensagem informativa quando não pode avaliar ainda -->
+                <div 
+                  *ngIf="reservation.situation === 'CONFIRMADA' && !hasExistingRating(reservation) && !canRateReservation(reservation)"
+                  class="evaluation-info">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                    <path d="m9 12 2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Avaliação disponível após a viagem
+                </div>
+
+                <!-- Avaliação Existente -->
+                <div *ngIf="hasExistingRating(reservation)" class="existing-rating">
+                  <div class="rating-display">
+                    <div class="rating-stars">
+                      <span *ngFor="let filled of getStarsArray(getReservationRating(reservation.id)?.rate || 0)" 
+                            class="star" 
+                            [class.filled]="filled">★</span>
+                    </div>
+                    <span class="rating-text">Avaliado</span>
+                  </div>
+                  <button 
+                    class="action-btn btn-edit-rating" 
+                    (click)="editRating(reservation)"
+                    title="Editar avaliação">
+                    Editar
+                  </button>
+                </div>
+
                 <button
                   class="action-btn btn-secondary"
-                  (click)="cancelReservation(reservation.id)"
-                >
+                  (click)="cancelReservation(reservation.id)">
                   Cancelar
                 </button>
               </ng-container>
@@ -134,14 +187,12 @@
                 <button
                   *ngIf="reservation.payment?.status === 'PENDENTE'"
                   class="action-btn btn-primary"
-                  (click)="payReservation(reservation.id)"
-                >
+                  (click)="payReservation(reservation.id)">
                   Pagar agora
                 </button>
                 <button
                   class="action-btn btn-secondary"
-                  (click)="cancelReservation(reservation.id)"
-                >
+                  (click)="cancelReservation(reservation.id)">
                   Cancelar
                 </button>
               </ng-container>
@@ -151,6 +202,88 @@
                 <!-- Nenhum botão para reservas canceladas -->
               </ng-container>
             </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Avaliação -->
+  <app-rating-modal
+    [isOpen]="isRatingModalOpen"
+    [reservationId]="selectedReservationId"
+    [existingRating]="selectedRating"
+    (modalClosed)="closeRatingModal()"
+    (ratingSubmitted)="onRatingSubmitted($event)">
+  </app-rating-modal>
+
+  <!-- Modal para Visualizar Avaliações do Pacote -->
+  <div 
+    class="ratings-view-modal" 
+    *ngIf="isViewRatingsModalOpen"
+    (click)="closeViewRatingsModal()">
+    
+    <div class="ratings-modal-container" (click)="$event.stopPropagation()">
+      <!-- Header do Modal -->
+      <div class="ratings-modal-header">
+        <h2>Avaliações do Pacote</h2>
+        <h3>{{ selectedPackageTitle }}</h3>
+        <button 
+          class="ratings-close-button"
+          (click)="closeViewRatingsModal()"
+          aria-label="Fechar modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Estatísticas -->
+      <div class="ratings-stats" *ngIf="packageRatings.length > 0">
+        <div class="average-rating">
+          <span class="avg-number">{{ getPackageAverageRating() }}</span>
+          <div class="avg-stars">
+            <span *ngFor="let filled of getStarsArray(roundNumber(getPackageAverageRating()))" 
+                  class="star" 
+                  [class.filled]="filled">★</span>
+          </div>
+          <span class="total-reviews">{{ packageRatings.length }} avaliação(ões)</span>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="isLoadingPackageRatings" class="ratings-loading">
+        <div class="loading-spinner"></div>
+        <p>Carregando avaliações...</p>
+      </div>
+
+      <!-- Lista de Avaliações -->
+      <div class="ratings-list" *ngIf="!isLoadingPackageRatings">
+        <div *ngIf="packageRatings.length === 0" class="no-ratings">
+          <div class="no-ratings-icon">⭐</div>
+          <h4>Nenhuma avaliação encontrada</h4>
+          <p>Este pacote ainda não possui avaliações de outros clientes.</p>
+        </div>
+
+        <div 
+          *ngFor="let rating of packageRatings" 
+          class="rating-item">
+          
+          <div class="rating-header">
+            <div class="rating-stars">
+              <span *ngFor="let filled of getStarsArray(rating.rate)" 
+                    class="star" 
+                    [class.filled]="filled">★</span>
+            </div>
+            <div class="rating-date">{{ formatDate(rating.createdAt) }}</div>
+          </div>
+
+          <div class="rating-user" *ngIf="rating.userName">
+            Por: {{ rating.userName }}
+          </div>
+
+          <div class="rating-comment">
+            "{{ rating.comment }}"
           </div>
         </div>
       </div>

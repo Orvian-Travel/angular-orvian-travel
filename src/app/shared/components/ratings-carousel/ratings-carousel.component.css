@@ -1,0 +1,369 @@
+/* ===== SEÇÃO DE AVALIAÇÕES ===== */
+.ratings-section {
+  padding: 4rem 2rem;
+  background: transparent;
+  position: relative;
+  z-index: 100;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--orvian-primary-color);
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--orvian-gray-003);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ===== ESTADOS DE LOADING E ERROR ===== */
+.loading-container,
+.error-container,
+.empty-state {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+
+.empty-state {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.7;
+}
+
+.empty-state h3 {
+  color: var(--orvian-primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: var(--orvian-gray-003);
+  font-size: 1rem;
+  margin: 0;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--orvian-gray-001);
+  border-top: 4px solid var(--orvian-primary-variant);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.retry-button {
+  background: var(--orvian-primary-variant);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.retry-button:hover {
+  background: var(--orvian-primary-color);
+}
+
+/* ===== CARROSSEL ===== */
+.carousel-container {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.carousel-track {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.rating-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  transition: transform 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.rating-card.active {
+  opacity: 1;
+}
+
+/* ===== ESTRELAS ===== */
+.rating-stars {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.star {
+  font-size: 2rem;
+  color: var(--orvian-gray-001);
+  transition: color 0.3s ease;
+}
+
+.star.filled {
+  color: #fbbf24;
+  text-shadow: 0 2px 4px rgba(251, 191, 36, 0.3);
+}
+
+/* ===== COMENTÁRIO ===== */
+.rating-comment {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--orvian-gray-004);
+  font-style: italic;
+  margin-bottom: 2rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== NOME DO PACOTE ===== */
+.rating-package {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--orvian-primary-variant);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid var(--orvian-primary-variant);
+}
+
+.rating-package svg {
+  color: var(--orvian-primary-variant);
+  flex-shrink: 0;
+}
+
+/* ===== INFORMAÇÕES ===== */
+.rating-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--orvian-gray-001);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.rating-author {
+  color: var(--orvian-primary-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.rating-date {
+  color: var(--orvian-gray-003);
+  font-size: 0.9rem;
+  flex: 1;
+  text-align: center;
+}
+
+.rating-score {
+  background: var(--orvian-primary-variant);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+/* ===== NAVEGAÇÃO ===== */
+.carousel-nav {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.carousel-nav:hover:not(:disabled) {
+  background: var(--orvian-primary-variant);
+  color: white;
+  transform: scale(1.1);
+}
+
+.carousel-nav:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ===== INDICADORES ===== */
+.carousel-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: none;
+  background: var(--orvian-gray-001);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: var(--orvian-primary-variant);
+  transform: scale(1.2);
+}
+
+.indicator:hover {
+  background: var(--orvian-primary-color);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+  .ratings-section {
+    padding: 3rem 1rem;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .carousel-wrapper {
+    gap: 1rem;
+  }
+
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+  }
+
+  .carousel-track {
+    height: 350px;
+  }
+
+  .rating-card {
+    padding: 2rem;
+  }
+
+  .rating-comment {
+    font-size: 1.1rem;
+  }
+
+  .star {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ratings-section {
+    padding: 2rem 0.5rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .carousel-wrapper {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
+  .carousel-nav.prev {
+    left: 1rem;
+  }
+
+  .carousel-nav.next {
+    right: 1rem;
+  }
+
+  .carousel-track {
+    height: 320px;
+    margin: 0 3rem;
+  }
+
+  .rating-card {
+    padding: 1.5rem;
+  }
+
+  .rating-info {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}

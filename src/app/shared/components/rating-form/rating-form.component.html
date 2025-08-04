@@ -1,0 +1,91 @@
+<!-- Formulário de Avaliação -->
+<div class="rating-form-container">
+  <div class="rating-form-header">
+    <h3 class="form-title">
+      {{ existingRating ? 'Editar Avaliação' : 'Avaliar Experiência' }}
+    </h3>
+    <p class="form-subtitle">
+      Compartilhe sua experiência e ajude outros viajantes
+    </p>
+  </div>
+
+  <form [formGroup]="ratingForm" (ngSubmit)="onSubmit()" class="rating-form">
+    
+    <!-- Seção de Estrelas -->
+    <div class="form-group">
+      <label class="form-label">Sua nota *</label>
+      <div class="stars-container">
+        <button
+          type="button"
+          *ngFor="let star of [1,2,3,4,5]"
+          class="star-button"
+          [class]="getStarClass(star)"
+          (click)="setRating(star)"
+          (mouseenter)="setHoverRating(star)"
+          (mouseleave)="clearHoverRating()"
+          [attr.aria-label]="'Dar ' + star + ' estrela' + (star > 1 ? 's' : '')">
+          ★
+        </button>
+      </div>
+      <div class="rating-text" *ngIf="selectedRating > 0">
+        <span [ngSwitch]="selectedRating">
+          <span *ngSwitchCase="1">😞 Muito ruim</span>
+          <span *ngSwitchCase="2">😐 Ruim</span>
+          <span *ngSwitchCase="3">🙂 Regular</span>
+          <span *ngSwitchCase="4">😊 Bom</span>
+          <span *ngSwitchCase="5">😍 Excelente</span>
+        </span>
+      </div>
+      <div class="error-message" *ngIf="hasFieldError('rate')">
+        {{ getFieldError('rate') }}
+      </div>
+    </div>
+
+    <!-- Seção de Comentário -->
+    <div class="form-group">
+      <label for="comment" class="form-label">Seu comentário *</label>
+      <textarea
+        id="comment"
+        formControlName="comment"
+        class="form-textarea"
+        [class.error]="hasFieldError('comment')"
+        placeholder="Conte-nos sobre sua experiência... O que mais gostou? O que poderia melhorar?"
+        rows="5">
+      </textarea>
+      <div class="textarea-footer">
+        <div class="char-counter" [class.warning]="getRemainingChars() < 50">
+          {{ getRemainingChars() }} caracteres restantes
+        </div>
+      </div>
+      <div class="error-message" *ngIf="hasFieldError('comment')">
+        {{ getFieldError('comment') }}
+      </div>
+    </div>
+
+    <!-- Mensagem de Erro Geral -->
+    <div class="submit-error" *ngIf="submitError">
+      <div class="error-icon">⚠️</div>
+      <div class="error-text">{{ submitError }}</div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onCancel()"
+        [disabled]="isSubmitting">
+        Cancelar
+      </button>
+      
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="ratingForm.invalid || isSubmitting">
+        <span *ngIf="isSubmitting" class="loading-spinner"></span>
+        {{ isSubmitting ? 'Salvando...' : (existingRating ? 'Atualizar' : 'Enviar Avaliação') }}
+      </button>
+    </div>
+
+  </form>
+</div>
