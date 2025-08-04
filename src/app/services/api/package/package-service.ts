@@ -3,24 +3,25 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PagedResponse } from '../../entities/paged-response.model';
-import { environment } from '../../../../environments/environment';
 import {
   PackageDetail,
   SavePackageRequest,
   SavePackageResponse,
+  SumTotalByPackage,
   UpdatePackageRequest
 } from '../../entities/package.model';
 import { IPackageService } from './package-service.interface';
 import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
+import { ConfigService } from '../../config.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class PackageService implements IPackageService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/packages`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/packages`; }
 
   public getAllPackages(pageNumber: number = 0, pageSize: number = 6): Observable<PackageDetail[]> {
     const url = `${this.baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}`;
@@ -53,6 +54,10 @@ export class PackageService implements IPackageService {
 
   public getPackageById(id: string): Observable<PackageDetail> {
     return this.http.get<PackageDetail>(`${this.baseUrl}/${id}`);
+  }
+
+  getSumTotalByPackage(): Observable<SumTotalByPackage[]> {
+    return this.http.get<SumTotalByPackage[]>(`${this.baseUrl}/sumbypackage`);
   }
 
   createPackage(savePackageRequest: SavePackageRequest): Observable<SavePackageResponse> {

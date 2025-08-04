@@ -8,15 +8,15 @@ import {
   UpdateTravelerRequest
 } from '../../entities/traveler.model';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TravelerService implements ITravelerService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/travelers`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/travelers`; }
 
   getAllTravelers(): Observable<TravelerDetail[]> {
     return this.http.get<TravelerDetail[]>(this.baseUrl);

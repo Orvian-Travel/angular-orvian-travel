@@ -3,22 +3,23 @@ import { IReservationService } from './reservation-service.interface';
 import { map, Observable } from 'rxjs';
 import { PagedResponse } from '../../entities/paged-response.model';
 import {
+  ReservationDateDTO,
   ReservationDetail,
   SaveReservationRequest,
   SaveReservationResponse,
   UpdateReservationRequest
 } from '../../entities/reservation.model';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
 import { transformPagedResponse } from '../../../shared/utils/transform-page-utils';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReservationService implements IReservationService {
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private configService: ConfigService) { }
 
-  private readonly baseUrl = `${environment.apiUrl}/reservations`;
+  private get baseUrl() { return `${this.configService.getApiUrl()}/reservations`; }
 
   getAllReservations(): Observable<ReservationDetail[]> {
     return this.http.get<any>(this.baseUrl).pipe(
@@ -33,11 +34,12 @@ export class ReservationService implements IReservationService {
     );
   }
 
-  getAllReservationsWithPaginationWithStatus(
+  getAllReservationsWithPaginationWithStatusAndReservationDate(
     pageNumber: number,
     pageSize: number,
     userId?: string,
-    status?: string
+    status?: string,
+    reservationDate?: Date
   ) {
     let params = new HttpParams()
       .set('pageNumber', pageNumber.toString())
@@ -51,11 +53,29 @@ export class ReservationService implements IReservationService {
       params = params.set('status', status);
     }
 
+    // Formatação da data para o padrão esperado pelo backend (YYYY-MM-DD)
+    if (reservationDate) {
+      const formattedDate = reservationDate.toISOString().split('T')[0]; // Converte para YYYY-MM-DD
+      params = params.set('reservationDate', formattedDate);
+    }
+
     console.log('URL da requisição:', `${this.baseUrl}/search?${params.toString()}`);
 
     return this.http.get<any>(`${this.baseUrl}/search`, { params }).pipe(
-      map(response => transformPagedResponse<ReservationDetail>(response, 'reservationSearchResultDTOList')) // Mudança aqui
+      map(response => transformPagedResponse<ReservationDetail>(response, 'reservationSearchResultDTOList'))
     );
+  }
+
+  // Busca as datas disponíveis para filtros (datas em que o usuário possui reservas)
+  getAvailableReservationDates(userId?: string): Observable<ReservationDateDTO[]> {
+    console.log('Buscando datas disponíveis em /available-dates para userId:', userId);
+
+    let params = new HttpParams();
+    if (userId) {
+      params = params.set('userId', userId);
+    }
+
+    return this.http.get<ReservationDateDTO[]>(`${this.baseUrl}/available-dates`, { params });
   }
 
   getReservationById(id: string): Observable<ReservationDetail> {
@@ -81,6 +101,10 @@ export class ReservationService implements IReservationService {
 
   updateReservation(id: string, updateReservationRequest: UpdateReservationRequest): Observable<void> {
     return this.http.put<void>(`${this.baseUrl}/${id}`, updateReservationRequest);
+  }
+
+  deleteReservation(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 
 }

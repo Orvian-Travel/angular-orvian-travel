@@ -1,55 +1,117 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-
-declare var Chart: any;
+import { Component, Inject, OnInit } from '@angular/core';
+import { BaseChartDirective } from 'ng2-charts';
+import { ChartConfiguration } from 'chart.js';
+import { CommonModule } from '@angular/common';
+import { SERVICES_TOKEN } from '@services/services-token';
+import { PackageService } from '@services/api/package/package-service';
+import { IPackageService } from '@services/api/package/package-service.interface';
+import { SumTotalByPackage } from '@services/entities/package.model';
 
 @Component({
   selector: 'app-admin-dashboard',
-  imports: [],
+  imports: [
+    BaseChartDirective,
+    CommonModule
+  ],
   templateUrl: './admin-dashboard.html',
-  styleUrl: './admin-dashboard.css'
+  styleUrl: './admin-dashboard.css',
+  providers: [
+    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService }
+  ]
 })
-export class AdminDashboard implements OnInit, AfterViewInit {
-  private salesChart: any;
+export class AdminDashboard implements OnInit {
+  chartType: 'doughnut' = 'doughnut';
 
-  ngOnInit() {}
+  destinationData: { name: string; value: number }[] = [];
 
-  ngAfterViewInit() {
-    this.initSalesChart();
+  Packages: SumTotalByPackage[] = [];
+
+  constructor(@Inject(SERVICES_TOKEN.HTTP.PACKAGE) private packageService: IPackageService) { }
+
+  faturamentoSemanal: string = this.formatCurrency(
+    this.Packages.filter(item => item.reservationWeek === this.getCurrentISOWeek())
+      .reduce((total, item) => total + item.approvedPaymentsSum, 0)
+  );
+
+  ngOnInit() {
+    this.packageService.getSumTotalByPackage().subscribe(data => {
+
+      this.Packages = data;
+
+      const currentYear = new Date().getFullYear();
+      this.destinationData.push(...data
+        .filter(item => item.reservationYear === currentYear)
+        .map(item => ({
+          name: item.destination,
+          value: item.approvedPaymentsSum
+        })));
+    });
   }
 
-  private initSalesChart() {
-    const ctx = document.getElementById('salesChart') as HTMLCanvasElement;
-    if (ctx) {
-      this.salesChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Paraty, RJ', 'Bonito, MS', 'Gramado, RS', 'Fernando de Noronha, PE', 'Jericoacoara, CE', 'Lençóis, BA', 'Ouro Preto, MG', 'Alter do Chão, PA'],
-          datasets: [{
-            data: [35, 25, 20, 10, 5, 5, 3, 2],
-            backgroundColor: [
-              '#E53E3E',
-              '#3182CE',
-              '#38A169',
-              '#00B5D8',
-              '#D69E2E',
-              '#9F7AEA',
-              '#48BB78',
-              '#4FD1C7'
-            ],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              display: false
-            }
-          },
-          cutout: '70%'
+  get autoColors(): string[] {
+    return this.destinationData.map((_, index) => {
+      const hue = (index * 137.508) % 360;
+      const saturation = 65 + (index % 3) * 10;
+      const lightness = 50 + (index % 2) * 5;
+
+      return `hsl(${Math.round(hue)}, ${saturation}%, ${lightness}%)`;
+    });
+  }
+
+  get chartData(): ChartConfiguration<'doughnut'>['data'] {
+    const colors = this.autoColors;
+
+    return {
+      labels: this.destinationData.map(item => item.name),
+      datasets: [{
+        data: this.destinationData.map(item => item.value),
+        backgroundColor: colors,
+        borderWidth: 2,
+        borderColor: '#ffffff',
+        hoverBackgroundColor: colors.map(color =>
+          color.replace('50%', '40%')
+        )
+      }]
+    };
+  }
+
+  get destinationDataWithColors() {
+    return this.destinationData.map((item, index) => ({
+      ...item,
+      color: this.autoColors[index]
+    }));
+  }
+
+  chartOptions: ChartConfiguration<'doughnut'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return this.formatCurrency(context.parsed);
+          }
         }
-      });
-    }
+      }
+    },
+    cutout: '70%'
+  };
+
+  getCurrentISOWeek(): number {
+    const date = new Date();
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const days = Math.floor((date.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
+    return Math.ceil((days + startOfYear.getDay() + 1) / 7);
   }
+
+  formatCurrency(value: number): string {
+    return `R$ ${value.toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })}`;
+  }
+
 }

@@ -1,6 +1,6 @@
 <div class="packages-container">
     <div class="section-header mb-4">
-        <h1 class="display-6 fw-bold text-dark">Controle de Pacotes</h1>
+        <h1 class="display-6 fw-bold text-dark">Gerenciador de Pacotes</h1>
         <p class="text-muted">Gerencie todos os pacotes de viagem disponíveis na plataforma.</p>
     </div>
 
@@ -8,7 +8,7 @@
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="h4 fw-bold text-dark mb-0">Lista de Pacotes</h2>
-                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPackageModal">
+                <button class="btn btn-orvian-primary" data-bs-toggle="modal" data-bs-target="#addPackageModal">
                     <i class="fas fa-plus me-2"></i>Adicionar Pacote
                 </button>
             </div>
@@ -18,39 +18,29 @@
                     <thead class="table-light">
                         <tr>
                             <th>ID</th>
-                            <th>Imagem</th>
+                            <th>Título</th>
                             <th>Destino</th>
                             <th>Preço</th>
                             <th>Duração</th>
-                            <th>Status</th>
+                            <th>Quantidade Máxima</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let package of packages; index as i">
                             <td>{{ package.id }}</td>
-                            <td>
-                                <img [src]="package.image" [alt]="package.destination" 
-                                     class="package-thumbnail">
-                            </td>
+                            <td>{{ package.title }}</td>
                             <td>{{ package.destination }}</td>
                             <td>{{ formatCurrencyBrazilian(package.price) }}</td>
-                            <td>{{ package.duration }}</td>
+                            <td>{{ package.duration }} dias</td>
+                            <td>{{ package.maxPeople }} pessoa(s)</td>
                             <td>
-                                <span class="badge" 
-                                      [class]="package.status === 'Ativo' ? 'bg-success' : 'bg-danger'">
-                                    {{ package.status }}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary me-2" 
-                                        (click)="editPackage(package)" 
+                                <button class="btn btn-sm btn-edit me-2" 
                                         data-bs-toggle="modal" 
                                         data-bs-target="#editPackageModal">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-sm btn-outline-danger" 
-                                        (click)="deletePackage(package.id)">
+                                <button class="btn btn-sm btn-delete" >
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </td>
@@ -60,9 +50,42 @@
             </div>
         </div>
     </div>
+    
+    <!-- Paginação -->
+    <div *ngIf="totalPages > 1" class="pagination-container">
+        <nav class="pagination-nav">
+            <button
+                class="pagination-btn pagination-prev"
+                [disabled]="currentPage === 0"
+                (click)="previousPage()"
+            >
+                Anterior
+            </button>
+            <div class="pagination-numbers">
+                <button
+                    *ngFor="let page of getPageNumbers()"
+                    class="pagination-number"
+                    [class.active]="page === currentPage"
+                    (click)="goToPage(page)"
+                >
+                    {{ page + 1 }}
+                </button>
+            </div>
+            <button
+                class="pagination-btn pagination-next"
+                [disabled]="currentPage === totalPages - 1"
+                (click)="nextPage()"
+            >
+                Próximo
+            </button>
+        </nav>
+        <div class="pagination-info">
+            Página {{ currentPage + 1 }} de {{ totalPages }} 
+        </div>
+    </div>
 </div>
 
-<!-- Add Package Modal -->
+<!-- 
 <div class="modal fade" id="addPackageModal" tabindex="-1" aria-labelledby="addPackageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -73,7 +96,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetModal()"></button>
             </div>
             
-            <!-- Etapa 1: Formulário -->
             <div *ngIf="currentStep === 1" class="modal-body">
                 <form #addPackageForm="ngForm" (ngSubmit)="addPackage(addPackageForm)">
                     <div class="row">
@@ -114,7 +136,6 @@
                 </form>
             </div>
 
-            <!-- Etapa 2: Confirmação -->
             <div *ngIf="currentStep === 2" class="modal-body">
                 <div class="text-center mb-4">
                     <div class="confirmation-card card border-0 shadow-sm p-4">
@@ -204,7 +225,6 @@
     </div>
 </div>
 
-<!-- Edit Package Modal -->
 <div class="modal fade" id="editPackageModal" tabindex="-1" aria-labelledby="editPackageModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -215,7 +235,6 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="resetEditModal()"></button>
             </div>
             
-            <!-- Etapa 1: Formulário -->
             <div *ngIf="currentEditStep === 1" class="modal-body">
                 <form #editPackageForm="ngForm" (ngSubmit)="updatePackage(editPackageForm)">
                     <input type="hidden" name="id" [ngModel]="selectedPackage?.id">
@@ -260,7 +279,6 @@
                 </form>
             </div>
 
-            <!-- Etapa 2: Confirmação -->
             <div *ngIf="currentEditStep === 2" class="modal-body">
                 <div class="text-center mb-4">
                     <div class="confirmation-card card border-0 shadow-sm p-4">
@@ -349,3 +367,4 @@
         </div>
     </div>
 </div>
+-->

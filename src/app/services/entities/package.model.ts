@@ -10,8 +10,15 @@ export interface PackageDetail {
   price: number;
   maxPeople: number;
   packageDates: PackageDateDetail[];
+  medias: PackageMediaDetail[];
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface PackageMediaDetail {
+  id: string;
+  type: string;
+  contentType?: string;
 }
 
 export interface SavePackageRequest {
@@ -44,6 +51,15 @@ export interface UpdatePackageRequest {
   duration: number;
   price: number;
   maxPeople: number;
+}
+
+export interface SumTotalByPackage {
+  destination: string;
+  name: string;                        // mudança aqui
+  reservationYear: number;
+  reservationWeek: number;
+  confirmedReservationsCount: number;  // mudança aqui
+  approvedPaymentsSum: number;         // mudança aqui
 }
 
 // export interface UpdatePackageResponse {
