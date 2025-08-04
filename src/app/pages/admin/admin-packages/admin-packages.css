@@ -375,3 +375,141 @@
     font-size: 0.9rem;
   }
 }
+
+/* Estilos para o formulário de adicionar pacote */
+.additional-images-container {
+  border: 1px dashed #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+}
+
+.additional-image-item {
+  margin-bottom: 0.5rem;
+}
+
+.additional-image-item:last-of-type {
+  margin-bottom: 1rem;
+}
+
+.image-preview-container {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+}
+
+.image-preview-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.375rem;
+}
+
+.image-label {
+  z-index: 10;
+}
+
+.image-label .badge {
+  font-size: 0.7rem;
+}
+
+/* Estilos específicos para o Step 2 - Datas */
+.dates-section {
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.dates-section::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dates-section::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.dates-section::-webkit-scrollbar-thumb {
+    background: var(--orvian-primary-variant);
+    border-radius: 3px;
+}
+
+.alert-info {
+    background-color: #E3F2FD;
+    border-color: #BBDEFB;
+    color: #1565C0;
+    border-radius: 8px;
+}
+
+.date-entry {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 2px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.date-entry:hover {
+    border-color: var(--orvian-primary-variant);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.date-entry h6 {
+    color: var(--orvian-primary-variant);
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.date-entry .form-label {
+    font-weight: 600;
+    color: #4A5568;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.date-entry .form-control {
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.date-entry .form-control:focus {
+    border-color: var(--orvian-primary-variant);
+    box-shadow: 0 0 0 3px rgba(var(--orvian-primary-variant-rgb), 0.1);
+}
+
+.date-entry .form-control[readonly] {
+    background-color: #F7FAFC;
+    cursor: not-allowed;
+}
+
+.date-entry small.text-muted {
+    color: #718096 !important;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.date-entry .btn-outline-danger {
+    border-color: #E53E3E;
+    color: #E53E3E;
+    padding: 0.375rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.date-entry .btn-outline-danger:hover:not(:disabled) {
+    background-color: #E53E3E;
+    color: white;
+}
+
+.date-entry .btn-outline-danger:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
