@@ -3,9 +3,10 @@ import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { SERVICES_TOKEN } from '@services/services-token';
-import { PackageService } from '@services/api/package/package-service';
-import { IPackageService } from '@services/api/package/package-service.interface';
-import { SumTotalByPackage } from '@services/entities/package.model';
+import { AdminService } from '@services/api/admin/admin-service';
+import { IAdminService } from '@services/api/admin/admin-service.interface';
+import { SumTotalByPackage } from '@services/entities/dashboard.model';
+
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -16,7 +17,7 @@ import { SumTotalByPackage } from '@services/entities/package.model';
   templateUrl: './admin-dashboard.html',
   styleUrl: './admin-dashboard.css',
   providers: [
-    { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService }
+    { provide: SERVICES_TOKEN.HTTP.ADMIN, useClass: AdminService }
   ]
 })
 export class AdminDashboard implements OnInit {
@@ -26,26 +27,47 @@ export class AdminDashboard implements OnInit {
 
   Packages: SumTotalByPackage[] = [];
 
-  constructor(@Inject(SERVICES_TOKEN.HTTP.PACKAGE) private packageService: IPackageService) { }
+  constructor(@Inject(SERVICES_TOKEN.HTTP.ADMIN) private adminService: IAdminService) { }
 
-  faturamentoSemanal: string = this.formatCurrency(
-    this.Packages.filter(item => item.reservationWeek === this.getCurrentISOWeek())
-      .reduce((total, item) => total + item.approvedPaymentsSum, 0)
-  );
+  faturamentoSemanal!: string;
+
+  newUserCount: number | null = 0;
+
+  ratingAVG: {
+    currentRating: number | null,
+    beforeRating: number | null,
+    percentage: number | null
+  } = {
+      currentRating: null,
+      beforeRating: null,
+      percentage: null
+    };
+
+  newPackageCount: number | null = 0;
 
   ngOnInit() {
-    this.packageService.getSumTotalByPackage().subscribe(data => {
+    this.adminService.getDashboardWeekReview().subscribe((data) => {
+      console.log('Dados completos da API:', data);
+      console.log('newPackages da API:', data.newPackages);
+      console.log('Tipo de newPackages:', typeof data.newPackages);
 
-      this.Packages = data;
+      this.destinationData = data.salesByPackage.map(item => ({
+        name: item.name,
+        value: item.approvedPaymentsSum
+      }));
 
-      const currentYear = new Date().getFullYear();
-      this.destinationData.push(...data
-        .filter(item => item.reservationYear === currentYear)
-        .map(item => ({
-          name: item.destination,
-          value: item.approvedPaymentsSum
-        })));
-    });
+      this.Packages = data.salesByPackage;
+
+      this.faturamentoSemanal = this.formatCurrency(
+        this.Packages.filter(item => item.reservationWeek === this.getCurrentISOWeek())
+          .reduce((total, item) => total + item.approvedPaymentsSum, 0)
+      );
+
+      this.newUserCount = data.newUsers;
+      this.ratingAVG = data.weekRating;
+      this.newPackageCount = data.newPackages;
+      console.log('Dados do Dashboard:', data)
+    })
   }
 
   get autoColors(): string[] {
