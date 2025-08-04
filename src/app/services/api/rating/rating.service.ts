@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { environment } from '../../../../environments/environment';
 import { RatingDetail, CreateRatingDTO } from '../../entities/rating.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RatingService {
-  private apiUrl = `${environment.apiUrl}/ratings`;
+  private apiUrl = "http://localhost:8080/api/v1/ratings";
 
   constructor(private http: HttpClient) { }
 
