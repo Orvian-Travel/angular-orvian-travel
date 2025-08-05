@@ -664,12 +664,12 @@ export class AdminPackages implements OnInit {
       console.log('Enviando pacote:', createPackageRequest);
 
       this.packageService.createPackage(createPackageRequest).subscribe({
-        next: (response: SavePackageResponse) => {
-          console.log('Pacote criado com sucesso:', response);
+        next: () => {
+          console.log('Pacote criado com sucesso.');
           Swal.fire({
             icon: 'success',
             title: 'Sucesso!',
-            text: `O pacote para ${response.destination} foi criado com sucesso!`,
+            text: `O pacote para ${this.tempPackageData.destination} foi criado com sucesso!`,
             confirmButtonText: 'OK',
           });
 
@@ -678,10 +678,9 @@ export class AdminPackages implements OnInit {
           this.resetPackageForm();
           const modal = document.getElementById('addPackageModal');
           if (modal) {
-            const bootstrapModal = (window as any).bootstrap.Modal.getInstance(
-              modal
-            );
+            const bootstrapModal = (window as any).bootstrap.Modal.getInstance(modal);
             if (bootstrapModal) {
+              const bootstrapModal = (window as any).bootstrap.Modal.getInstance(modal);
               bootstrapModal.hide();
             }
           }
