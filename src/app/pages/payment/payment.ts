@@ -13,6 +13,7 @@ import { IReservationService } from '../../services/api/reservation/reservation-
 import { IPaymentService } from '../../services/api/payment/payment-service.interface';
 import { PaymentMethod } from '../../services/entities/payment.model';
 import { FormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-payment',
@@ -348,17 +349,56 @@ export class Payment implements OnInit, OnDestroy {
     const token = localStorage.getItem('orvian_token');
 
     if (!token) {
-      alert('Você precisa estar logado para fazer uma reserva');
+      Swal.fire({
+        icon: 'error',
+        title: 'Erro de autenticação',
+        text: 'Você precisa estar logado para realizar o pagamento. Por favor, faça login.',
+        confirmButtonText: 'Fazer Login',
+      });
       this.router.navigate(['/login']);
       return;
     }
 
     const user = this.getUser();
-    const travelers = this.collectTravelersData();
-    const packageDateId = this.getSelectedPackageDateId();
+    if (!user?.id) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Usuário não encontrado',
+        text: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
+        confirmButtonText: 'Fazer Login',
+      });
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    if (!this.selectedPaymentMethod) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Método de pagamento não selecionado',
+        text: 'Por favor, selecione um método de pagamento.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+    const validationResult = this.validateTravelersData();
+    if (!validationResult.isValid) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Dados incompletos',
+        text: validationResult.message,
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
 
     if (!user?.id) {
-      alert('Erro: Não foi possível identificar o usuário. Tente fazer login novamente.');
+      Swal.fire({
+        icon: 'error',
+        title: 'Usuário não encontrado',
+        text: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
+        confirmButtonText: 'Fazer Login',
+      });
       this.router.navigate(['/login']);
       return;
     }
@@ -376,6 +416,112 @@ export class Payment implements OnInit, OnDestroy {
         this.createPendingReservation();
       }
     })
+  }
+
+  private validateTravelersData(): { isValid: boolean; message: string } {
+    const travelerCards = document.querySelectorAll('.traveler-card');
+    
+    if (travelerCards.length === 0) {
+      return {
+        isValid: false,
+        message: 'É necessário adicionar pelo menos um viajante.'
+      };
+    }
+
+    let travelerNumber = 1;
+    
+    for (const card of travelerCards) {
+      const nameInput = card.querySelector('input[type="text"]') as HTMLInputElement;
+      if (!nameInput?.value?.trim()) {
+        this.highlightInvalidField(travelerNumber, 'name');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: O nome é obrigatório.`
+        };
+      }
+
+      const birthDateInput = card.querySelector('input[type="date"]') as HTMLInputElement;
+      if (!birthDateInput?.value) {
+        this.highlightInvalidField(travelerNumber, 'birthDate');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: A data de nascimento é obrigatória.`
+        };
+      }
+
+      const birthDate = new Date(birthDateInput.value);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      if (travelerNumber === 1 && age < 18) {
+        this.highlightInvalidField(travelerNumber, 'birthDate');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: O primeiro viajante deve ser maior de idade (18 anos).`
+        };
+      }
+
+      const documentTypeSelect = card.querySelector('.document-type-select') as HTMLSelectElement;
+      if (!documentTypeSelect?.value) {
+        this.highlightInvalidField(travelerNumber, 'documentType');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: Selecione o tipo de documento.`
+        };
+      }
+
+      const documentNumberInput = card.querySelector('.document-number-input') as HTMLInputElement;
+      if (!documentNumberInput?.value?.trim()) {
+        this.highlightInvalidField(travelerNumber, 'documentNumber');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: O número do documento é obrigatório.`
+        };
+      }
+
+      if (documentTypeSelect.value === 'cpf') {
+        const cpfValue = documentNumberInput.value.replace(/\D/g, '');
+        if (cpfValue.length !== 11) {
+          this.highlightInvalidField(travelerNumber, 'documentNumber');
+          return {
+            isValid: false,
+            message: `Viajante ${travelerNumber}: CPF deve ter 11 dígitos.`
+          };
+        }
+      }
+
+      if (documentTypeSelect.value === 'passaporte') {
+        const passportValue = documentNumberInput.value;
+        if (passportValue.length !== 8) {
+          this.highlightInvalidField(travelerNumber, 'documentNumber');
+          return {
+            isValid: false,
+            message: `Viajante ${travelerNumber}: Passaporte deve ter 8 caracteres (2 letras + 6 números).`
+          };
+        }
+      }
+
+      const emailInput = card.querySelector('input[type="email"]') as HTMLInputElement;
+      if (!emailInput?.value?.trim()) {
+        this.highlightInvalidField(travelerNumber, 'email');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: O email é obrigatório.`
+        };
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value)) {
+        this.highlightInvalidField(travelerNumber, 'email');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: Email inválido.`
+        };
+      }
+
+      travelerNumber++;
+    }
+
+    return { isValid: true, message: '' };
   }
 
   private createConfirmedReservation(): void {
@@ -403,9 +549,7 @@ export class Payment implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Erro ao criar reserva confirmada:', err);
-
-        const message = err.error?.message || 'Erro ao criar reserva';
-        alert('Erro: ' + message);
+        this.handleReservationError(err, 'confirmada');
       }
     });
   }
@@ -432,11 +576,84 @@ export class Payment implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('Erro ao criar reserva pendente:', err);
-
-        const message = err.error?.message || 'Erro ao criar reserva';
-        alert('Erro: ' + message);
+        this.handleReservationError(err, 'pendente');
       }
     });
+  }
+
+   private handleReservationError(error: any, reservationType: 'confirmada' | 'pendente'): void {
+    console.error(`Erro detalhado da reserva ${reservationType}:`, error);
+
+    let title = 'Erro na reserva';
+    let message = 'Não foi possível criar a reserva. Tente novamente.';
+
+    if (error.status === 400) {
+      if (error.error?.message?.includes('traveler') || error.error?.message?.includes('viajante')) {
+        title = 'Dados dos viajantes inválidos';
+        message = 'Verifique os dados dos viajantes e tente novamente.';
+      } else if (error.error?.message?.includes('package') || error.error?.message?.includes('pacote')) {
+        title = 'Problema com o pacote';
+        message = 'Erro na seleção do pacote. Tente selecionar novamente.';
+      } else if (error.error?.message?.includes('date') || error.error?.message?.includes('data')) {
+        title = 'Problema com a data';
+        message = 'A data selecionada não está disponível.';
+      } else {
+        title = 'Dados inválidos';
+        message = error.error?.message || 'Verifique todos os dados informados.';
+      }
+    } else if (error.status === 409) {
+      title = 'Reserva já existente';
+      message = 'Você já possui uma reserva para esta data. Verifique suas reservas.';
+    } else if (error.status === 422) {
+      title = 'Dados incompletos';
+      message = 'Alguns dados obrigatórios estão faltando ou são inválidos.';
+    } else if (error.status === 500) {
+      title = 'Erro interno';
+      message = 'Erro interno do servidor. Tente novamente em alguns minutos.';
+    }
+
+    Swal.fire({
+      icon: 'error',
+      title: title,
+      text: message,
+      confirmButtonText: 'OK',
+    });
+  }
+
+  private highlightInvalidField(travelerNumber: number, fieldType: string): void {
+    const travelerCards = document.querySelectorAll('.traveler-card');
+    const targetCard = travelerCards[travelerNumber - 1];
+    
+    if (!targetCard) return;
+
+    let targetInput: HTMLElement | null = null;
+
+    switch (fieldType) {
+      case 'name':
+        targetInput = targetCard.querySelector('input[type="text"]');
+        break;
+      case 'birthDate':
+        targetInput = targetCard.querySelector('input[type="date"]');
+        break;
+      case 'documentType':
+        targetInput = targetCard.querySelector('.document-type-select');
+        break;
+      case 'documentNumber':
+        targetInput = targetCard.querySelector('.document-number-input');
+        break;
+      case 'email':
+        targetInput = targetCard.querySelector('input[type="email"]');
+        break;
+    }
+
+    if (targetInput) {
+      targetInput.classList.add('is-invalid');
+      targetInput.focus();
+      
+      setTimeout(() => {
+        targetInput?.classList.remove('is-invalid');
+      }, 3000);
+    }
   }
 
   onDocumentTypeChange(event: Event): void {
