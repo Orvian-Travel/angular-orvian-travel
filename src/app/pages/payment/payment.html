@@ -16,8 +16,8 @@
               <hr />
               <div class="price-breakdown">
                 <div class="d-flex justify-content-between mb-2">
-                  <span>01 pacote</span>
-                  <span class="fw-semibold">{{ packageDetail?.price | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                  <span>{{ travelerCount }} pacote(s)</span>
+                  <span class="fw-semibold">{{ packageDetail?.price! * travelerCount! | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
                 </div>
                 <hr />
                 <div class="d-flex justify-content-between">

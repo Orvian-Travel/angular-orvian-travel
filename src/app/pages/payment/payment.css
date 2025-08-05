@@ -1,6 +1,7 @@
-/* Custom CSS para trabalhar com Bootstrap 5 */
+body{
+    margin-top: 3.5rem;
+}
 
-/* RESET GLOBAL COMPLETO - FORÇA FUNDO BRANCO EM TUDO */
 body.payment-active {
   background: white !important;
   background-color: white !important;
