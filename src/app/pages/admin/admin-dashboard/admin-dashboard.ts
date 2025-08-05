@@ -52,7 +52,7 @@ export class AdminDashboard implements OnInit {
       console.log('Tipo de newPackages:', typeof data.newPackages);
 
       this.destinationData = data.salesByPackage.map(item => ({
-        name: item.name,
+        name: item.destination,
         value: item.approvedPaymentsSum
       }));
 

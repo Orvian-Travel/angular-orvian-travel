@@ -54,6 +54,18 @@ export class DialogManager implements IDialogManager {
     return from(swalPromise);
   }
 
+  showWarningAlert(title: string, message: string, showIcon: boolean): Observable<SweetAlertResult> {
+    const swalPromise = Swal.fire({
+      title: title,
+      text: message,
+      confirmButtonText: 'OK',
+      confirmButtonColor: '#007bff',
+      ...(showIcon && { icon: 'warning' })
+    });
+
+    return from(swalPromise);
+  }
+
   showConfirmationAlert(
     title: string,
     message: string,
