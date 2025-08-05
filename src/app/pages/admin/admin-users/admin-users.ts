@@ -5,6 +5,7 @@ import { UserDetail } from '../../../services/entities/user.model';
 import { UserService } from '../../../services/api/user/user-service';
 import { PagedResponse } from '../../../services/entities/paged-response.model';
 import Swal from 'sweetalert2';
+import { AuthStateService } from '@services/auth/auth-state-service';
 
 @Component({
   selector: 'app-admin-users',
@@ -25,7 +26,12 @@ export class AdminUsers implements OnInit {
   totalUsers = 0;
   totalPages = 0;
 
-  constructor(private userService: UserService){}
+  constructor(
+    private userService: UserService,
+    private authStateService: AuthStateService
+  ) {}
+
+  isAdmin: boolean = false;
 
   newUser: any = {
     name: '',
@@ -46,6 +52,7 @@ export class AdminUsers implements OnInit {
 
   ngOnInit() {
     this.loadUsers();
+    this.isAdmin = this.authStateService.isAdmin();
   }
 
   private loadUsers() {
@@ -156,12 +163,6 @@ export class AdminUsers implements OnInit {
     };
 
     this.documentType = user.document && user.document.length === 14 ? 'cpf' : 'passport';
-
-    const modal = document.getElementById('editUserModal');
-    if(modal){
-      const modalInstance = (window as any).bootstrap.Modal.getOrCreateInstance(modal);
-      modalInstance.show();
-    }
   }
 
   editUser(form: NgForm) {
@@ -183,9 +184,20 @@ export class AdminUsers implements OnInit {
               modalInstance.hide();
             }
           }
+          Swal.fire({
+            title: 'Sucesso!',
+            text: 'Usuário editado com sucesso!',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
         },
         error: (err) => {
-          alert('Erro ao editar usuário: ' + (err?.error?.message || 'Tente novamente.'));
+          Swal.fire({
+            title: 'Erro!',
+            text: 'Erro ao editar usuário: ' + (err?.error?.message || 'Tente novamente.'),
+            icon: 'error'
+          });
         }
       });
     }
