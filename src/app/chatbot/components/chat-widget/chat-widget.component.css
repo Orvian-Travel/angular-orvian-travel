@@ -1,0 +1,336 @@
+/* Botão flutuante (chat minimizado) */
+.chat-bubble {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #F7A700 0%, #B97D00 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 3s ease-in-out infinite;
+}
+
+.chat-bubble:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+}
+
+.chat-bubble.pulse {
+  animation: pulse-notification 2s infinite, float 3s ease-in-out infinite;
+}
+
+.chat-bubble-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  background: #ff4757;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: bounce 1s infinite;
+}
+
+.chat-bubble-tooltip {
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  background: #2c3e50;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.chat-bubble-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border: 6px solid transparent;
+  border-top-color: #2c3e50;
+}
+
+.chat-bubble:hover .chat-bubble-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Container do widget expandido */
+.chat-widget-container {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 380px;
+  height: 500px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Header do widget */
+.widget-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #F7A700 0%, #B97D00 100%);
+  color: white;
+}
+
+.widget-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.widget-icon {
+  font-size: 20px;
+}
+
+.widget-title h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.widget-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-minimize,
+.btn-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-minimize:hover,
+.btn-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* Área do chat */
+.widget-chat {
+  flex: 1;
+  overflow: hidden;
+  color: #1b9dbd;
+}
+
+/* Sobrescrever estilos do chat-interface para o widget */
+.widget-chat ::ng-deep .chat-container {
+  height: 100%;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.widget-chat ::ng-deep .chat-header {
+  display: none; /* Esconder header original */
+}
+
+.widget-chat ::ng-deep .chat-messages {
+  height: calc(100% - 120px); /* Ajustar altura */
+}
+
+/* Overlay para mobile */
+.chat-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Posicionamento alternativo */
+.chat-widget-container.bottom-left {
+  left: auto;
+  left: 20px;
+}
+
+.chat-bubble.bottom-left {
+  left: auto;
+  left: 20px;
+}
+
+/* Responsividade Mobile */
+@media (max-width: 768px) {
+  .chat-bubble {
+    bottom: 15px;
+    left: 15px;
+    width: 56px;
+    height: 56px;
+  }
+
+  .chat-icon {
+    font-size: 22px;
+  }
+
+  .chat-bubble-tooltip {
+    display: none; /* Esconder tooltip no mobile */
+  }
+
+  .chat-widget-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    z-index: 1001;
+  }
+
+  .widget-header {
+    padding: 12px 16px;
+  }
+
+  .widget-title h4 {
+    font-size: 14px;
+  }
+}
+
+/* Animações */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse-notification {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 6px 30px rgba(255, 71, 87, 0.6);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  60% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Estados especiais */
+.chat-bubble.hidden {
+  display: none;
+}
+
+.chat-widget-container.maximized {
+  width: 450px;
+  height: 600px;
+}
+
+/* Melhorias de acessibilidade */
+.chat-bubble:focus {
+  outline: 3px solid rgba(102, 126, 234, 0.5);
+  outline-offset: 2px;
+}
+
+.btn-minimize:focus,
+.btn-close:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 1px;
+}
+
+/* Dark mode support (futuro) */
+@media (prefers-color-scheme: dark) {
+  .chat-widget-container {
+    background: #2c3e50;
+    color: white;
+  }
+  
+  .chat-bubble-tooltip {
+    background: #34495e;
+  }
+}
+
+/* Animação de entrada customizada */
+.slide-in-up-enter {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+}
+
+.slide-in-up-enter-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: all 0.3s ease-out;
+}
+
+.slide-in-up-leave {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.slide-in-up-leave-active {
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  transition: all 0.2s ease-in;
+}
