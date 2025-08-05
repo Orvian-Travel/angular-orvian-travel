@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration } from 'chart.js';
 import { CommonModule } from '@angular/common';
@@ -20,19 +20,16 @@ import { SumTotalByPackage } from '@services/entities/dashboard.model';
     { provide: SERVICES_TOKEN.HTTP.ADMIN, useClass: AdminService }
   ]
 })
-export class AdminDashboard implements OnInit {
-  chartType: 'doughnut' = 'doughnut';
-
-  destinationData: { name: string; value: number }[] = [];
-
-  Packages: SumTotalByPackage[] = [];
-
+export class AdminDashboard implements OnInit, OnDestroy {
   constructor(@Inject(SERVICES_TOKEN.HTTP.ADMIN) private adminService: IAdminService) { }
 
+  private intervalId!: number;
+  isFirstLoad: boolean = true;
+  chartType: 'doughnut' = 'doughnut';
+  destinationData: { name: string; value: number }[] = [];
+  Packages: SumTotalByPackage[] = [];
   faturamentoSemanal!: string;
-
   newUserCount: number | null = 0;
-
   ratingAVG: {
     currentRating: number | null,
     beforeRating: number | null,
@@ -42,14 +39,39 @@ export class AdminDashboard implements OnInit {
       beforeRating: null,
       percentage: null
     };
-
   newPackageCount: number | null = 0;
 
+  chartOptions: ChartConfiguration<'doughnut'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            return this.formatCurrency(context.parsed);
+          }
+        }
+      }
+    },
+    animation: true,
+    cutout: '60%',
+  };
+
   ngOnInit() {
+    this.loadDashboardData();
+
+    this.intervalId = setInterval(() => {
+      console.log('Atualizando dados do dashboard...');
+      this.loadDashboardData();
+    }, 180000); // Atualiza a cada 3 minutos
+
+  }
+
+  loadDashboardData() {
     this.adminService.getDashboardWeekReview().subscribe((data) => {
-      console.log('Dados completos da API:', data);
-      console.log('newPackages da API:', data.newPackages);
-      console.log('Tipo de newPackages:', typeof data.newPackages);
 
       this.destinationData = data.salesByPackage.map(item => ({
         name: item.destination,
@@ -66,7 +88,6 @@ export class AdminDashboard implements OnInit {
       this.newUserCount = data.newUsers;
       this.ratingAVG = data.weekRating;
       this.newPackageCount = data.newPackages;
-      console.log('Dados do Dashboard:', data)
     })
   }
 
@@ -104,24 +125,6 @@ export class AdminDashboard implements OnInit {
     }));
   }
 
-  chartOptions: ChartConfiguration<'doughnut'>['options'] = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            return this.formatCurrency(context.parsed);
-          }
-        }
-      }
-    },
-    cutout: '70%'
-  };
-
   getCurrentISOWeek(): number {
     const date = new Date();
     const startOfYear = new Date(date.getFullYear(), 0, 1);
@@ -134,6 +137,12 @@ export class AdminDashboard implements OnInit {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })}`;
+  }
+
+  ngOnDestroy(): void {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+    }
   }
 
 }
