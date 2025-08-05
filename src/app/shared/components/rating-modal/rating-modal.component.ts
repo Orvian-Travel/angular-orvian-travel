@@ -16,6 +16,7 @@ export class RatingModalComponent {
   @Input() existingRating?: RatingDetail;
   @Output() modalClosed = new EventEmitter<void>();
   @Output() ratingSubmitted = new EventEmitter<RatingDetail>();
+  @Output() ratingDeleted = new EventEmitter<void>();
 
   /**
    * Fecha o modal
@@ -46,6 +47,14 @@ export class RatingModalComponent {
    * Manipula o cancelamento do formulário
    */
   onFormCancelled(): void {
+    this.closeModal();
+  }
+
+  /**
+   * Manipula o delete da avaliação
+   */
+  onRatingDeleted(): void {
+    this.ratingDeleted.emit();
     this.closeModal();
   }
 }

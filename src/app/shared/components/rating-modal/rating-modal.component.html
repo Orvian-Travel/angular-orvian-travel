@@ -27,6 +27,7 @@
         [reservationId]="reservationId"
         [existingRating]="existingRating"
         (ratingSubmitted)="onRatingSubmitted($event)"
+        (ratingDeleted)="onRatingDeleted()"
         (formCancelled)="onFormCancelled()">
       </app-rating-form>
     </div>

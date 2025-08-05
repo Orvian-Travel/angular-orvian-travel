@@ -1125,3 +1125,98 @@ app-reservations-list {
   color: #ffffff !important;
   font-weight: bold !important;
 }
+
+/* ===== ESTILOS PARA BOTÕES DE RATING ===== */
+.btn-rating {
+  background-color: #f59e0b;
+  color: white;
+  border: 2px solid #f59e0b;
+}
+
+.btn-rating:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+}
+
+.btn-info {
+  background-color: #3b82f6;
+  color: white;
+  border: 2px solid #3b82f6;
+}
+
+.btn-info:hover {
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+/* Estilo para botão de editar avaliação */
+.btn-edit-rating {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  color: white;
+  border: 2px solid #8b5cf6;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-edit-rating:hover {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  border-color: #7c3aed;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.edit-rating-icons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.edit-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.delete-icon {
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.action-btn mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+}
+
+/* Ajustes para card-actions com múltiplos botões */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-actions .action-btn {
+  display: flex;
+  min-width: 190px;
+  align-items: center;
+  text-align: center;
+  font-size: 0.8rem;
+  padding: 0.6rem 0.8rem;
+}
+
+/* Responsividade para botões */
+@media (max-width: 768px) {
+  .card-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .card-actions .action-btn {
+    width: 100%;
+    min-width: auto;
+  }
+}

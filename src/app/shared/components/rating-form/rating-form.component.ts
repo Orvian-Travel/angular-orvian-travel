@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RatingService } from '../../../services/api/rating/rating.service';
@@ -11,17 +11,21 @@ import { CreateRatingDTO, RatingDetail } from '../../../services/entities/rating
   templateUrl: './rating-form.component.html',
   styleUrls: ['./rating-form.component.css']
 })
-export class RatingFormComponent implements OnInit {
+export class RatingFormComponent implements OnInit, OnChanges {
   @Input() reservationId!: string;
   @Input() existingRating?: RatingDetail;
   @Output() ratingSubmitted = new EventEmitter<RatingDetail>();
+  @Output() ratingDeleted = new EventEmitter<void>();
   @Output() formCancelled = new EventEmitter<void>();
 
   ratingForm: FormGroup;
   isSubmitting = false;
+  isDeleting = false;
   submitError: string | null = null;
+  deleteError: string | null = null;
   selectedRating = 0;
   hoverRating = 0;
+  showDeleteConfirmation = false;
 
   constructor(
     private fb: FormBuilder,
@@ -34,6 +38,16 @@ export class RatingFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadExistingRating();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['existingRating']) {
+      this.loadExistingRating();
+    }
+  }
+
+  private loadExistingRating(): void {
     if (this.existingRating) {
       this.selectedRating = this.existingRating.rate;
       this.ratingForm.patchValue({
@@ -115,6 +129,49 @@ export class RatingFormComponent implements OnInit {
   }
 
   /**
+   * Mostra confirmação para deletar avaliação
+   */
+  showDeleteConfirmationDialog(): void {
+    this.showDeleteConfirmation = true;
+    this.deleteError = null;
+  }
+
+  /**
+   * Cancela a confirmação de delete
+   */
+  cancelDelete(): void {
+    this.showDeleteConfirmation = false;
+    this.deleteError = null;
+  }
+
+  /**
+   * Confirma e executa o delete da avaliação
+   */
+  confirmDelete(): void {
+    if (!this.existingRating?.id) {
+      this.deleteError = 'ID da avaliação não encontrado.';
+      return;
+    }
+
+    this.isDeleting = true;
+    this.deleteError = null;
+
+    this.ratingService.deleteRating(this.existingRating.id).subscribe({
+      next: () => {
+        this.isDeleting = false;
+        this.showDeleteConfirmation = false;
+        this.ratingDeleted.emit();
+        this.resetForm();
+      },
+      error: (error) => {
+        console.error('Erro ao deletar avaliação:', error);
+        this.deleteError = this.getDeleteErrorMessage(error);
+        this.isDeleting = false;
+      }
+    });
+  }
+
+  /**
    * Reseta o formulário
    */
   private resetForm(): void {
@@ -122,6 +179,8 @@ export class RatingFormComponent implements OnInit {
     this.selectedRating = 0;
     this.hoverRating = 0;
     this.submitError = null;
+    this.deleteError = null;
+    this.showDeleteConfirmation = false;
   }
 
   /**
@@ -131,6 +190,21 @@ export class RatingFormComponent implements OnInit {
     Object.keys(this.ratingForm.controls).forEach(key => {
       this.ratingForm.get(key)?.markAsTouched();
     });
+  }
+
+  /**
+   * Retorna mensagem de erro amigável para delete
+   */
+  private getDeleteErrorMessage(error: any): string {
+    if (error.status === 401) {
+      return 'Você precisa estar logado para deletar a avaliação.';
+    } else if (error.status === 403) {
+      return 'Você não tem permissão para deletar esta avaliação.';
+    } else if (error.status === 404) {
+      return 'Avaliação não encontrada.';
+    } else {
+      return 'Erro ao deletar avaliação. Tente novamente.';
+    }
   }
 
   /**

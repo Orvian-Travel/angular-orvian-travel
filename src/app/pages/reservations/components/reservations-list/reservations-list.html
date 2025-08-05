@@ -256,6 +256,48 @@
                   <ng-container [ngSwitch]="reservation.situation">
                     <!-- Reserva Confirmada -->
                     <ng-container *ngSwitchCase="'CONFIRMADA'">
+                      <!-- Botão para visualizar avaliações do pacote -->
+                      <button
+                        class="action-btn btn-info"
+                        (click)="viewPackageRatings(reservation)"
+                        title="Ver todas as avaliações deste pacote"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                        Ver Avaliações
+                      </button>
+                      
+                      <!-- Botão para avaliar (só aparece após a data de viagem) -->
+                      <button
+                        *ngIf="canRateReservation(reservation)"
+                        class="action-btn"
+                        [class.btn-rating]="!hasExistingRating(reservation.id)"
+                        [class.btn-edit-rating]="hasExistingRating(reservation.id)"
+                        (click)="rateReservation(reservation)"
+                        [title]="hasExistingRating(reservation.id) ? 'Editar ou deletar sua avaliação' : 'Avaliar este pacote'">
+                        
+                        <!-- Ícone e texto para nova avaliação -->
+                        <ng-container *ngIf="!hasExistingRating(reservation.id)">
+                          <mat-icon>star</mat-icon>
+                          Avaliar Pacote
+                        </ng-container>
+                        
+                        <!-- Ícone e texto para editar avaliação existente -->
+                        <ng-container *ngIf="hasExistingRating(reservation.id)">
+                          <span class="edit-rating-icons">
+                            <mat-icon class="edit-icon">edit</mat-icon>
+                            <span class="delete-icon">🗑️</span>
+                          </span>
+                          Editar Avaliação
+                        </ng-container>
+                      </button>
+
+                      <!-- Debug: Mostra informações sobre a data -->
+                      <!-- <small style="color: red; font-size: 10px; display: block;">
+                        Debug: Fim viagem: {{reservation.packageDate.endDate | date:'dd/MM/yyyy'}} | 
+                        Hoje: {{(new Date()) | date:'dd/MM/yyyy'}} | 
+                        Pode avaliar: {{canRateReservation(reservation)}}
+                      </small> -->
+                      
                       <button
                         class="action-btn btn-secondary"
                         (click)="cancelReservation(reservation.id)"
@@ -266,6 +308,16 @@
 
                     <!-- Reserva Pendente -->
                     <ng-container *ngSwitchCase="'PENDENTE'">
+                      <!-- Botão para visualizar avaliações do pacote -->
+                      <button
+                        class="action-btn btn-info"
+                        (click)="viewPackageRatings(reservation)"
+                        title="Ver todas as avaliações deste pacote"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                        Ver Avaliações
+                      </button>
+                      
                       <div
                         *ngIf="reservation.payment.status === 'PENDENTE'"
                         class="pending-message"
@@ -283,7 +335,15 @@
 
                     <!-- Reserva Cancelada - sem botões -->
                     <ng-container *ngSwitchCase="'CANCELADA'">
-                      <!-- Nenhum botão para reservas canceladas -->
+                      <!-- Botão para visualizar avaliações do pacote -->
+                      <button
+                        class="action-btn btn-info"
+                        (click)="viewPackageRatings(reservation)"
+                        title="Ver todas as avaliações deste pacote"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                        Ver Avaliações
+                      </button>
                     </ng-container>
                   </ng-container>
                 </div>
@@ -295,3 +355,25 @@
     </div>
   </div>
 </main>
+
+<!-- Modal de Avaliação -->
+<app-rating-modal
+  *ngIf="showRatingModal && selectedReservationForRating"
+  [reservationId]="selectedReservationForRating.id"
+  [existingRating]="existingRatingForReservation"
+  [isOpen]="showRatingModal"
+  (modalClosed)="onRatingModalClose()"
+  (ratingSubmitted)="onRatingSaved()"
+  (ratingDeleted)="onRatingDeleted()"
+>
+</app-rating-modal>
+
+<!-- Modal de Visualização de Avaliações do Pacote -->
+<app-package-ratings-viewer
+  *ngIf="showPackageRatingsViewer && selectedPackageForViewing"
+  [packageId]="selectedPackageForViewing.id"
+  [packageTitle]="selectedPackageForViewing.title"
+  [isVisible]="showPackageRatingsViewer"
+  (close)="onPackageRatingsViewerClose()"
+>
+</app-package-ratings-viewer>

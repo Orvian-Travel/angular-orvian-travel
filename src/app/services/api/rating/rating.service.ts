@@ -2,15 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RatingDetail, CreateRatingDTO } from '../../entities/rating.model';
+import { ConfigService } from '../../config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RatingService {
-  private apiUrl = "http://localhost:8080/api/v1/ratings";
+  private apiUrl: string;
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient, private configService: ConfigService) {
+    this.apiUrl = `${this.configService.getApiUrl()}/ratings`;
+  }
   /**
    * Busca todos os ratings
    * Endpoint: GET /api/v1/ratings
@@ -80,6 +82,25 @@ export class RatingService {
         error: () => {
           observer.next(false);
           observer.complete();
+        }
+      });
+    });
+  }
+
+  /**
+   * Método alternativo para buscar rating por reserva
+   * Busca todos os ratings e filtra por reservationId
+   */
+  findRatingByReservation(reservationId: string): Observable<RatingDetail | null> {
+    return new Observable(observer => {
+      this.getAllRatings().subscribe({
+        next: (ratings) => {
+          const foundRating = ratings.find(rating => rating.reservationId === reservationId);
+          observer.next(foundRating || null);
+          observer.complete();
+        },
+        error: (error) => {
+          observer.error(error);
         }
       });
     });

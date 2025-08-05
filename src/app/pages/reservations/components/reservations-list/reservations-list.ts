@@ -19,6 +19,10 @@ import {
   ReservationSituation
 } from '../../../../services/entities/reservation.model';
 import { PaymentMethod, PaymentStatus } from '../../../../services/entities/payment.model';
+import { RatingModalComponent } from '../../../../shared/components/rating-modal/rating-modal.component';
+import { PackageRatingsViewerComponent } from '../../../../shared/components/package-ratings-viewer/package-ratings-viewer.component';
+import { RatingService } from '../../../../services/api/rating/rating.service';
+import { RatingDetail } from '../../../../services/entities/rating.model';
 
 @Component({
   selector: 'app-reservations-list',
@@ -29,7 +33,9 @@ import { PaymentMethod, PaymentStatus } from '../../../../services/entities/paym
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatIconModule
+    MatIconModule,
+    RatingModalComponent,
+    PackageRatingsViewerComponent
   ],
   templateUrl: './reservations-list.html',
   styleUrl: './reservations-list.css',
@@ -53,8 +59,21 @@ export class ReservationsList implements OnInit {
 
   constructor(
     @Inject(SERVICES_TOKEN.HTTP.RESERVATION) private readonly reservationService: IReservationService,
-    private authStateService: AuthStateService
+    private authStateService: AuthStateService,
+    private ratingService: RatingService
   ) { }
+
+  // Propriedades para o modal de avaliação
+  showRatingModal = false;
+  selectedReservationForRating: ReservationDetail | null = null;
+  existingRatingForReservation: RatingDetail | undefined = undefined;
+  
+  // Cache para avaliações existentes por reserva
+  existingRatingsCache: Map<string, RatingDetail | null> = new Map();
+
+  // Propriedades para o modal de visualização de avaliações do pacote
+  showPackageRatingsViewer = false;
+  selectedPackageForViewing: { id: string, title: string } | null = null;
 
 
   ngOnInit(): void {
@@ -131,6 +150,9 @@ export class ReservationsList implements OnInit {
         this.totalElements = response.page?.totalElements || 0;
         this.totalPages = response.page?.totalPages || 0;
 
+        // Carrega cache de avaliações após carregar reservas
+        this.loadExistingRatingsCache();
+
       },
       error: (error: Error) => {
         console.error('Erro ao carregar reservas:', error);
@@ -140,6 +162,32 @@ export class ReservationsList implements OnInit {
       }
     });
 
+  }
+
+  /**
+   * Carrega cache de avaliações existentes para as reservas atuais
+   */
+  private loadExistingRatingsCache(): void {
+    this.reservations.forEach(reservation => {
+      if (this.canRateReservation(reservation)) {
+        this.ratingService.findRatingByReservation(reservation.id).subscribe({
+          next: (rating) => {
+            this.existingRatingsCache.set(reservation.id, rating);
+          },
+          error: () => {
+            this.existingRatingsCache.set(reservation.id, null);
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Verifica se já existe avaliação para uma reserva (usando cache)
+   */
+  hasExistingRating(reservationId: string): boolean {
+    return this.existingRatingsCache.get(reservationId) !== null && 
+           this.existingRatingsCache.get(reservationId) !== undefined;
   }
 
   onImageError(event: Event): void {
@@ -297,5 +345,111 @@ export class ReservationsList implements OnInit {
       console.error('Erro ao formatar data de cancelamento:', error);
       return '';
     }
+  }
+
+  // ===== MÉTODOS PARA RATING SYSTEM =====
+
+  /**
+   * Verifica se o usuário pode avaliar uma reserva
+   * Regra: Só pode avaliar após a data de término da viagem
+   */
+  canRateReservation(reservation: ReservationDetail): boolean {
+    // Só pode avaliar reservas confirmadas
+    if (reservation.situation !== ReservationSituation.CONFIRMADA) {
+      return false;
+    }
+
+    // Verifica se já passou da data de término da viagem
+    if (reservation.packageDate?.endDate) {
+      const endDate = new Date(reservation.packageDate.endDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Remove as horas para comparar apenas a data
+      endDate.setHours(0, 0, 0, 0);
+      
+      return endDate < today; // Retorna true se a viagem já terminou
+    }
+
+    return false;
+  }
+
+  /**
+   * Abre o modal para avaliar uma reserva
+   */
+  rateReservation(reservation: ReservationDetail): void {
+    this.selectedReservationForRating = reservation;
+    
+    // Primeiro tenta o endpoint específico
+    this.ratingService.getRatingByReservation(reservation.id).subscribe({
+      next: (existingRating) => {
+        this.existingRatingForReservation = existingRating;
+        this.showRatingModal = true;
+      },
+      error: (error) => {
+        // Se o endpoint específico falhar, tenta buscar na lista geral
+        this.ratingService.findRatingByReservation(reservation.id).subscribe({
+          next: (foundRating) => {
+            this.existingRatingForReservation = foundRating || undefined;
+            this.showRatingModal = true;
+          },
+          error: (searchError) => {
+            console.error('Erro na busca geral:', searchError);
+            this.existingRatingForReservation = undefined;
+            this.showRatingModal = true;
+          }
+        });
+      }
+    });
+  }
+
+  /**
+   * Fecha o modal de avaliação
+   */
+  onRatingModalClose(): void {
+    this.showRatingModal = false;
+    this.selectedReservationForRating = null;
+    this.existingRatingForReservation = undefined;
+  }
+
+  /**
+   * Callback chamado quando uma avaliação é salva
+   */
+  onRatingSaved(): void {
+    this.onRatingModalClose();
+    // Aguarda um pouco antes de recarregar para garantir que a avaliação foi persistida
+    setTimeout(() => {
+      this.loadReservations();
+    }, 500);
+  }
+
+  /**
+   * Callback chamado quando uma avaliação é deletada
+   */
+  onRatingDeleted(): void {
+    this.onRatingModalClose();
+    // Aguarda um pouco antes de recarregar para garantir que a avaliação foi removida
+    setTimeout(() => {
+      this.loadReservations();
+    }, 500);
+  }
+
+  /**
+   * Abre o modal para visualizar todas as avaliações de um pacote
+   */
+  viewPackageRatings(reservation: ReservationDetail): void {
+    if (reservation.packageDate?.travelPackageId) {
+      this.selectedPackageForViewing = {
+        id: reservation.packageDate.travelPackageId,
+        title: reservation.packageDate.packageTitle || 'Pacote'
+      };
+      this.showPackageRatingsViewer = true;
+    }
+  }
+
+  /**
+   * Fecha o modal de visualização de avaliações do pacote
+   */
+  onPackageRatingsViewerClose(): void {
+    this.showPackageRatingsViewer = false;
+    this.selectedPackageForViewing = null;
   }
 }
