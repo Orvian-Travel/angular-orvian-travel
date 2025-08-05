@@ -15,6 +15,7 @@ import { PaymentPending } from './pages/payment-pending/payment-pending';
 import { AdminDashboard } from '@pages/admin/admin-dashboard/admin-dashboard';
 import { AdminUsers } from '@pages/admin/admin-users/admin-users';
 import { AdminPackages } from '@pages/admin/admin-packages/admin-packages';
+import { Faq } from '@pages/faq/faq'
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -30,6 +31,8 @@ export const routes: Routes = [
   { path: 'payment', component: Payment, canActivate: [authGuard] },
   { path: 'payment/approved', component: PaymentApproved, canActivate: [authGuard] },
   { path: 'payment/pending', component: PaymentPending, canActivate: [authGuard] },
+
+  { path: 'faq', component: Faq },
 
   {
     path: 'admin',

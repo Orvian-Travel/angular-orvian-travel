@@ -1,0 +1,107 @@
+<app-header></app-header>
+
+<main class="faq-main">
+  <div class="container">
+    <section class="faq-hero">
+      <div class="row justify-content-center text-center">
+        <div class="col-lg-8">
+          <h1 class="faq-title">Perguntas Frequentes</h1>
+          <p class="faq-subtitle">
+            Encontre respostas para as dúvidas mais comuns sobre nossos serviços e viagens.
+            Se não encontrar o que procura, entre em contato conosco!
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="faq-categories">
+      <div class="row justify-content-center">
+        <div class="col-12">
+          <div class="category-filters">
+            <button 
+              class="btn category-btn"
+              [class.active]="selectedCategory === 'all'"
+              (click)="filterByCategory('all')"
+            >
+              Todas
+            </button>
+            <button 
+              class="btn category-btn"
+              [class.active]="selectedCategory === 'Reservas'"
+              (click)="filterByCategory('Reservas')"
+            >
+              Reservas
+            </button>
+            <button 
+              class="btn category-btn"
+              [class.active]="selectedCategory === 'Pagamento'"
+              (click)="filterByCategory('Pagamento')"
+            >
+              Pagamento
+            </button>
+            <button 
+              class="btn category-btn"
+              [class.active]="selectedCategory === 'Viagem'"
+              (click)="filterByCategory('Viagem')"
+            >
+              Viagem
+            </button>
+            <button 
+              class="btn category-btn"
+              [class.active]="selectedCategory === 'Cancelamento'"
+              (click)="filterByCategory('Cancelamento')"
+            >
+              Cancelamento
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="faq-content">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <!-- FAQ Accordion -->
+          <div class="faq-accordion">
+            <div 
+              class="faq-item"
+              *ngFor="let faq of filteredFAQs; let i = index"
+              [class.active]="faq.isOpen"
+            >
+              <div class="faq-question" (click)="toggleFAQ(i)">
+                <h3>{{ faq.question }}</h3>
+                <div class="faq-icon">
+                  <i class="fas" [class.fa-plus]="!faq.isOpen" [class.fa-minus]="faq.isOpen"></i>
+                </div>
+              </div>
+              <div class="faq-answer" [class.open]="faq.isOpen">
+                <div class="faq-answer-content">
+                  <p [innerHTML]="faq.answer"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="faq-contact">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 text-center">
+          <div class="contact-card">
+            <h2>Não encontrou sua resposta?</h2>
+            <p>Nossa equipe está pronta para ajudar você com qualquer dúvida!</p>
+            <div class="contact-methods">
+              <div class="contact-item">
+                <i class="fas fa-envelope"></i>
+                <span>suporte&#64;orviantravel.com</span>
+              </div>
+              <div class="contact-item" (click)="supportRedirect()">
+                <i class="fab fa-whatsapp"></i>
+                <span>WhatsApp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+<app-footer></app-footer>
