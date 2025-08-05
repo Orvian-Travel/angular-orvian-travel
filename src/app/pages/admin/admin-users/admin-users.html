@@ -162,8 +162,44 @@
                         <input type="text" class="form-control" id="userEmail" name="email" [(ngModel)]="newUser.email" required autocomplete="off">
                     </div>
                     <div class="mb-3">
-                        <label for="userPassword" class="form-label">Senha</label>
-                        <input type="password" class="form-control" id="userPassword" name="password" [(ngModel)]="newUser.password" required autocomplete="new-password">
+                      <label for="userPassword" class="form-label">Senha</label>
+                      <input type="password" class="form-control" id="userPassword" name="password"
+                        [(ngModel)]="newUser.password" required autocomplete="new-password"
+                        (focus)="showPasswordReqs()" (blur)="hidePasswordReqs()" (input)="validatePasswordMatch()">
+                      <div *ngIf="showPasswordRequirements" class="password-requirements mt-2">
+                        <small class="text-muted d-block mb-2">A senha deve conter:</small>
+                        <ul class="requirements-list mb-0 ps-3">
+                          <li [class.text-success]="newUser.password?.length >= 8 && newUser.password?.length <= 20">
+                            Entre 8 e 20 caracteres
+                          </li>
+                          <li [class.text-success]="hasLowercase(newUser.password)">
+                            Pelo menos uma letra minúscula
+                          </li>
+                          <li [class.text-success]="hasUppercase(newUser.password)">
+                            Pelo menos uma letra maiúscula
+                          </li>
+                          <li [class.text-success]="hasNumber(newUser.password)">
+                            Pelo menos um número
+                          </li>
+                          <li [class.text-success]="hasSpecial(newUser.password)">
+                            Pelo menos um caractere especial (#$%^&+=!)
+                          </li>
+                          <li [class.text-success]="hasNoSpaces(newUser.password)">
+                            Sem espaços em branco
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="confirmPassword" class="form-label">Confirmar Senha</label>
+                      <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                        [(ngModel)]="confirmPassword" required (input)="validatePasswordMatch()">
+                      <div *ngIf="confirmPassword && !passwordsMatch" class="invalid-feedback d-block">
+                        As senhas não coincidem
+                      </div>
+                      <div *ngIf="confirmPassword && passwordsMatch && newUser.password" class="valid-feedback d-block">
+                        ✓ As senhas coincidem
+                      </div>
                     </div>
                     <div class="mb-3">
                         <label for="userPhone" class="form-label">Telefone</label>

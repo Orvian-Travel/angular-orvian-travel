@@ -26,6 +26,10 @@ export class AdminUsers implements OnInit {
   totalUsers = 0;
   totalPages = 0;
 
+  passwordsMatch: boolean = false;
+  confirmPassword: string = '';
+  showPasswordRequirements: boolean = false;
+
   constructor(
     private userService: UserService,
     private authStateService: AuthStateService
@@ -127,7 +131,12 @@ export class AdminUsers implements OnInit {
   }
 
   addUser(form: NgForm) {
-    if (form.valid) {
+    this.validatePasswordMatch();
+    if (
+      form.valid &&
+      this.isPasswordValid(this.newUser.password) &&
+      this.passwordsMatch
+    ) {
       this.userService.createUser(this.newUser).subscribe({
         next: () => {
           this.loadUsers();
@@ -148,6 +157,13 @@ export class AdminUsers implements OnInit {
         error: (err) => {
           alert('Erro ao adicionar usuário: ' + (err?.error?.message || 'Tente novamente.'));
         }
+      });
+    } else {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Senha inválida',
+        text: 'A senha deve atender todos os requisitos e coincidir com a confirmação.',
+        confirmButtonText: 'Entendi'
       });
     }
   }
@@ -319,42 +335,48 @@ export class AdminUsers implements OnInit {
     this.newUser.phone = value;
   }
 
-
-  /*
-  editUser(user: User) {
-    this.selectedUser = { ...user };
+  isPasswordValid(password: string): boolean {
+    if (!password) return false;
+    const requirements = {
+      length: password.length >= 8 && password.length <= 20,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[@#$%^&+=!]/.test(password),
+      noSpaces: !/\s/.test(password)
+    };
+    return Object.values(requirements).every(req => req);
   }
 
-  updateUser(form: NgForm) {
-    if (form.valid && this.selectedUser) {
-      const index = this.users.findIndex(u => u.id === this.selectedUser!.id);
-      if (index !== -1) {
-        this.users[index] = {
-          ...this.selectedUser,
-          name: form.value.name,
-          email: form.value.email,
-          phone: form.value.phone,
-          role: form.value.role
-        };
-      }
-      
-      this.selectedUser = null;
-      
-      // Close modal programmatically
-      const modal = document.getElementById('editUserModal');
-      if (modal) {
-        const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
-        if (modalInstance) {
-          modalInstance.hide();
-        }
-      }
-    }
+  validatePasswordMatch(): void {
+    this.passwordsMatch = !!(
+      this.newUser.password &&
+      this.confirmPassword &&
+      this.newUser.password === this.confirmPassword
+    );
   }
 
-  deleteUser(userId: number) {
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
-      this.users = this.users.filter(user => user.id !== userId);
-    }
+  showPasswordReqs(): void {
+    this.showPasswordRequirements = true;
   }
-     */
+  
+  hidePasswordReqs(): void {
+    this.showPasswordRequirements = false;
+  }
+
+  hasLowercase(password: string): boolean {
+    return /[a-z]/.test(password || '');
+  }
+  hasUppercase(password: string): boolean {
+    return /[A-Z]/.test(password || '');
+  }
+  hasNumber(password: string): boolean {
+    return /[0-9]/.test(password || '');
+  }
+  hasSpecial(password: string): boolean {
+    return /[@#$%^&+=!]/.test(password || '');
+  }
+  hasNoSpaces(password: string): boolean {
+    return password ? !/\s/.test(password) : false;
+  }
 }
