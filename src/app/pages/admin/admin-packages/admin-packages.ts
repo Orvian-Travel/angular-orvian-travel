@@ -793,7 +793,12 @@ export class AdminPackages implements OnInit {
 
   onEditDateChange(index: number, field: 'startDate' | 'endDate', value: string) {
     if (this.editPackageData.packageDates && value) {
-      this.editPackageData.packageDates[index][field] = new Date(value);
+      // Força o tipo para string (yyyy-MM-dd)
+      (this.editPackageData.packageDates[index] as any)[field] = value;
+      if (field === 'startDate') {
+        const duration = Number(this.editPackageData.duration) || 1;
+        (this.editPackageData.packageDates[index] as any).endDate = this.calculateEndDate(value, duration);
+      }
     }
   }
 }

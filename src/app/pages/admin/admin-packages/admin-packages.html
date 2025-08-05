@@ -375,16 +375,15 @@
                 <div class="col-md-4">
                 <label class="form-label">Check-in</label>
                 <input type="date" class="form-control"
-                        [ngModel]="date.startDate ? (date.startDate | date:'yyyy-MM-dd') : ''"
+                        [ngModel]="date.startDate ? (date.startDate) : ''"
                         (ngModelChange)="onEditDateChange(i, 'startDate', $event)"
                         name="editStartDate{{i}}" required>
                 </div>
                 <div class="col-md-4">
                 <label class="form-label">Check-out</label>
                 <input type="date" class="form-control"
-                        [ngModel]="date.endDate ? (date.endDate | date:'yyyy-MM-dd') : ''"
-                        (ngModelChange)="onEditDateChange(i, 'endDate', $event)"
-                        name="editEndDate{{i}}" required>
+                        [ngModel]="date.endDate ? (date.endDate) : ''"
+                        name="editEndDate{{i}}" readonly required>
                 </div>
                 <div class="col-md-3">
                 <label class="form-label">Reservas Disponíveis</label>
