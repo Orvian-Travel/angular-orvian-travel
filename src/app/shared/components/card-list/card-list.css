@@ -151,10 +151,9 @@ app-card {
 }
 
 .price-disclaimer {
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   color: var(--orvian-gray-003);
   margin: 0;
-  font-style: italic;
 }
 
 .btnClear {
