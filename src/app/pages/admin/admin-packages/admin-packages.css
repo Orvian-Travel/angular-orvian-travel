@@ -54,6 +54,7 @@ h2.h4, .h4 {
 /* ===== CARDS ===== */
 .packages-management {
     border-radius: 12px;
+    padding: 1.5rem;
     overflow: hidden;
 }
 
