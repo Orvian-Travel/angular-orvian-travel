@@ -82,6 +82,30 @@
     color: var(--orvian-gray-003) !important;
 }
 
+.btn-orvian-primary{
+    background-color: var(--orvian-primary-variant);
+    color: white;
+    border: solid 2px var(--orvian-primary-variant);
+    transition: all 0.3s ease;
+}
+
+.btn-orvian-primary:hover{
+    background-color: white;
+    color: var(--orvian-primary-variant);
+}
+
+.btn-orvian-secondary{
+    background-color: white;
+    border: solid 2px var(--orvian-primary-variant);
+    color: var(--orvian-primary-variant);
+    transition: all 0.3s ease;
+}
+
+.btn-orvian-secondary:hover{
+    background-color: var(--orvian-primary-variant);
+    color: white;
+}
+
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 1rem;
