@@ -3,12 +3,12 @@
 }
 
 .section-header h1 {
-    color: #2D3748;
+    color: var(--orvian-primary-color);
     margin-bottom: 0.5rem;
 }
 
 .section-header p {
-    color: #718096;
+    color: var(--orvian-gray-003);
 }
 
 .stat-card {
@@ -33,12 +33,12 @@
 }
 
 .stat-label {
-    color: #718096;
+    color: var(--orvian-gray-003);
     font-weight: 500;
 }
 
 .stat-value {
-    color: #2D3748;
+    color: var(--orvian-primary-color);
 }
 
 .chart-section {
@@ -46,7 +46,7 @@
 }
 
 .chart-section h2 {
-    color: #2D3748;
+    color: var(--orvian-primary-color);
 }
 
 .legend-color {
@@ -61,8 +61,25 @@
 }
 
 .legend-item small {
-    color: #4A5568;
+    color: var(--orvian-gray-004);
     font-weight: 500;
+}
+
+/* Estilos para seção de exportação */
+.export-section {
+    border-radius: 12px;
+}
+
+.export-section h2 {
+    color: var(--orvian-primary-color);
+}
+
+.export-section p {
+    color: var(--orvian-gray-003);
+}
+
+.export-section .text-muted {
+    color: var(--orvian-gray-003) !important;
 }
 
 @media (max-width: 768px) {

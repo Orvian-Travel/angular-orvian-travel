@@ -131,7 +131,8 @@ app-root {
 /* Remove o padding-top para páginas que não têm header */
 app-login,
 app-register,
-app-forgot-password {
+app-forgot-password,
+app-admin-tela {
   margin-top: -5.5rem; /* Compensa o padding-top do app-root */
   min-height: 100vh;
   display: block;

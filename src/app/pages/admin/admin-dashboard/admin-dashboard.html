@@ -1,11 +1,11 @@
 <div class="dashboard-container">
   <div class="section-header mb-4">
-    <h1 class="display-6 fw-bold text-dark">Visão Geral</h1>
+    <h1 class="display-6 fw-bold">Visão Geral</h1>
     <p class="text-muted">Tenha uma visão geral dos dados da plataforma.</p>
   </div>
 
   <div class="report-section mb-5">
-    <h2 class="h4 fw-bold text-dark mb-4">Relatório Semanal</h2>
+    <h2 class="h4 fw-bold mb-4">Relatório Semanal</h2>
     <div class="row g-4">
       <div class="col-md-6 col-xl-3">
         <div class="stat-card card border-0 shadow-sm h-100">
@@ -17,7 +17,7 @@
               <span class="stat-label d-block small text-muted"
                 >Faturamento</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0">{{
+              <span class="stat-value h4 fw-bold mb-0">{{
                 faturamentoSemanal
               }}</span>
             </div>
@@ -34,7 +34,7 @@
               <span class="stat-label d-block small text-muted"
                 >Novos usuários</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0">{{
+              <span class="stat-value h4 fw-bold mb-0">{{
                 newUserCount
               }}</span>
             </div>
@@ -53,12 +53,12 @@
               >
               <span
                 *ngIf="ratingAVG.percentage !== null"
-                class="stat-value h4 fw-bold text-dark mb-0"
+                class="stat-value h4 fw-bold mb-0"
                 >{{ ratingAVG.percentage }}%
               </span>
               <span
                 *ngIf="ratingAVG.percentage === null"
-                class="stat-value h4 fw-bold text-dark mb-0"
+                class="stat-value h4 fw-bold mb-0"
                 >N/A
               </span>
             </div>
@@ -75,7 +75,7 @@
               <span class="stat-label d-block small text-muted"
                 >Número de Pacotes</span
               >
-              <span class="stat-value h4 fw-bold text-dark mb-0">{{
+              <span class="stat-value h4 fw-bold mb-0">{{
                 newPackageCount
               }}</span>
             </div>
@@ -87,7 +87,7 @@
 
   <div class="chart-section card border-0 shadow-sm">
     <div class="card-body">
-      <h2 class="h4 fw-bold text-dark mb-4">Vendas por destino nesse ano</h2>
+      <h2 class="h4 fw-bold mb-4">Vendas por destino nesse ano</h2>
       <div class="row align-items-center">
         <div class="col-lg-6 text-center">
           <div
@@ -141,7 +141,7 @@
   <!-- Seção de Exportação de Reservas -->
   <div class="export-section card border-0 shadow-sm mt-4">
     <div class="card-body">
-      <h2 class="h4 fw-bold text-dark mb-4">Exportar Relatórios de Reservas</h2>
+      <h2 class="h4 fw-bold mb-4">Exportar Relatórios de Reservas</h2>
       <p class="text-muted mb-4">
         Baixe relatórios completos das reservas em diferentes formatos.
       </p>
