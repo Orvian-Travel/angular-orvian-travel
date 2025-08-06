@@ -132,6 +132,7 @@ app-root {
 app-login,
 app-register,
 app-forgot-password,
+app-admin-tela,
 app-reset-password {
   margin-top: -5.5rem; /* Compensa o padding-top do app-root */
   min-height: 100vh;

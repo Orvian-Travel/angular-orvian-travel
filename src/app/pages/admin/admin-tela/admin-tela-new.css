@@ -20,12 +20,29 @@
     background-color: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
+    margin: 0;
+    padding: 0;
 }
 
 /* Garantir que não há elementos flutuantes no topo */
 .admin-container::before, 
 .admin-container::after {
     display: none !important;
+}
+
+/* Reset global para admin */
+app-admin-tela {
+    display: block;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Garantir que app-root não interfira */
+app-root:has(app-admin-tela) {
+    padding-top: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
 }
 
 body {
@@ -131,6 +148,9 @@ div[style*="position: absolute"][style*="top: 0"] {
     flex: 1;
     background-color: #f8f9fa;
     min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
 }
 
 .content-section {
