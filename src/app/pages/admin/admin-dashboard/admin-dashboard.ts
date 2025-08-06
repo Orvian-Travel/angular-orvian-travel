@@ -24,7 +24,6 @@ export class AdminDashboard implements OnInit, OnDestroy {
   constructor(@Inject(SERVICES_TOKEN.HTTP.ADMIN) private adminService: IAdminService) { }
 
   private intervalId!: number;
-  isFirstLoad: boolean = true;
   chartType: 'doughnut' = 'doughnut';
   destinationData: { name: string; value: number }[] = [];
   Packages: SumTotalByPackage[] = [];
@@ -57,7 +56,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
         }
       }
     },
-    animation: true,
+    animation: false,
     cutout: '60%',
   };
 
@@ -65,7 +64,6 @@ export class AdminDashboard implements OnInit, OnDestroy {
     this.loadDashboardData();
 
     this.intervalId = setInterval(() => {
-      console.log('Atualizando dados do dashboard...');
       this.loadDashboardData();
     }, 180000); // Atualiza a cada 3 minutos
 
@@ -110,8 +108,6 @@ export class AdminDashboard implements OnInit, OnDestroy {
       datasets: [{
         data: this.destinationData.map(item => item.value),
         backgroundColor: colors,
-        borderWidth: 2,
-        borderColor: '#ffffff',
         hoverBackgroundColor: colors.map(color =>
           color.replace('50%', '40%')
         )
@@ -143,7 +139,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
   // Métodos de exportação de reservas
   exportReservationsPDF(): void {
     this.isExporting = true;
-    
+
     this.adminService.exportReservationsPDF().subscribe({
       next: (blob: Blob) => {
         this.downloadFile(blob, 'reservas.pdf', 'application/pdf');
@@ -159,7 +155,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
 
   exportReservationsExcel(): void {
     this.isExporting = true;
-    
+
     this.adminService.exportReservationsExcel().subscribe({
       next: (blob: Blob) => {
         this.downloadFile(blob, 'reservas.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
