@@ -56,7 +56,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
         }
       }
     },
-    animation: false,
+    animation: true,
     cutout: '60%',
   };
 
@@ -108,6 +108,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
       datasets: [{
         data: this.destinationData.map(item => item.value),
         backgroundColor: colors,
+        borderWidth: 0,
         hoverBackgroundColor: colors.map(color =>
           color.replace('50%', '40%')
         )
