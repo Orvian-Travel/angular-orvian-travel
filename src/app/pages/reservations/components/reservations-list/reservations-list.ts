@@ -258,7 +258,7 @@ export class ReservationsList implements OnInit {
 
   getPackageTitle(reservation: ReservationDetail): string {
     // Você pode ajustar isso baseado na estrutura real do seu pacote
-    return `Pacote para ${reservation.packageDate?.packageTitle || 'Destino'}`;
+    return `${reservation.packageDate?.packageTitle || 'Destino'}`;
   }
 
   getPackageDuration(reservation: ReservationDetail): string {
