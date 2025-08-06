@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {
   PackageDetail,
   SavePackageRequest,
@@ -53,6 +54,12 @@ interface CreatePackageRequest extends SavePackageRequest {
 })
 export class AdminPackages implements OnInit {
   @ViewChild('addPackageForm') addPackageForm!: NgForm;
+  @ViewChild('addPackageModal') addPackageModalTemplate!: TemplateRef<any>;
+  @ViewChild('editPackageModal') editPackageModalTemplate!: TemplateRef<any>;
+
+  // Referencias dos modais ng-bootstrap
+  private addModalRef?: NgbModalRef;
+  private editModalRef?: NgbModalRef;
 
   packages: PackageDetail[] = [];
   selectedPackage: PackageDetail | null = null;
@@ -82,7 +89,7 @@ export class AdminPackages implements OnInit {
   editPackageData: Partial<PackageDetail> = {};
   selectedPackageId: string | null = null;
 
-  openEditModal(pkg: PackageDetail): void {
+  prepareEditModal(pkg: PackageDetail): void {
     this.selectedPackageId = pkg.id;
     this.editPackageData = {
       ...pkg,
@@ -189,8 +196,9 @@ export class AdminPackages implements OnInit {
 
   constructor(
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE)
-    private readonly packageService: IPackageService
-  ) {}
+    private readonly packageService: IPackageService,
+    private modalService: NgbModal
+  ) { }
 
   ngOnInit() {
     this.loadPackages();
@@ -212,6 +220,39 @@ export class AdminPackages implements OnInit {
           );
         },
       });
+  }
+
+  // Métodos para controle dos modais ng-bootstrap
+  openAddModal(): void {
+    this.prepareAddModal();
+    this.addModalRef = this.modalService.open(this.addPackageModalTemplate, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  openEditModal(pkg: PackageDetail): void {
+    this.prepareEditModal(pkg);
+    this.editModalRef = this.modalService.open(this.editPackageModalTemplate, {
+      size: 'lg',
+      backdrop: 'static',
+      keyboard: false
+    });
+  }
+
+  closeAddModal(): void {
+    if (this.addModalRef) {
+      this.addModalRef.close();
+      this.addModalRef = undefined;
+    }
+  }
+
+  closeEditModal(): void {
+    if (this.editModalRef) {
+      this.editModalRef.close();
+      this.editModalRef = undefined;
+    }
   }
 
   nextPage(): void {
@@ -254,6 +295,26 @@ export class AdminPackages implements OnInit {
 
   goBackToForm() {
     this.currentStep = 1;
+  }
+
+  prepareAddModal(): void {
+    this.currentStep = 1;
+    this.tempPackageData = {
+      title: '',
+      description: '',
+      destination: '',
+      duration: 1,
+      price: 0,
+      maxPeople: 1
+    };
+    this.selectedImageFile = null;
+    this.packageDates = [{
+      startDate: '',
+      endDate: '',
+      availableReservations: 1
+    }];
+    this.mainImageFile = null;
+    this.additionalImageFiles = [];
   }
 
   resetModal() {
@@ -603,8 +664,7 @@ export class AdminPackages implements OnInit {
       for (let j = i + 1; j < this.packageDates.length; j++) {
         if (this.datesOverlap(this.packageDates[i], this.packageDates[j])) {
           alert(
-            `Conflito entre as datas ${i + 1} e ${
-              j + 1
+            `Conflito entre as datas ${i + 1} e ${j + 1
             }. As datas não podem se sobrepor.`
           );
           return;
