@@ -19,6 +19,10 @@ export class AdminUsers implements OnInit {
   error: string | null = null;
   documentType: string = '';
 
+  // Propriedades para pesquisa
+  searchTerm: string = '';
+  isSearching: boolean = false;
+
   selectedUser: UserDetail | null = null;
 
   currentPage = 0;
@@ -33,7 +37,7 @@ export class AdminUsers implements OnInit {
   constructor(
     private userService: UserService,
     private authStateService: AuthStateService
-  ) {}
+  ) { }
 
   isAdmin: boolean = false;
 
@@ -59,11 +63,15 @@ export class AdminUsers implements OnInit {
     this.isAdmin = this.authStateService.isAdmin();
   }
 
-  private loadUsers() {
+  private loadUsers(searchName?: string) {
     this.loading = true;
     this.error = null;
 
-    this.userService.getAllUsersWithPagination(this.currentPage, this.pageSize).subscribe({
+    const serviceCall = searchName
+      ? this.userService.getAllUsersWithPaginationWithName(this.currentPage, this.pageSize, searchName)
+      : this.userService.getAllUsersWithPagination(this.currentPage, this.pageSize);
+
+    serviceCall.subscribe({
       next: (response: PagedResponse<UserDetail>) => {
         this.users = response._embedded.DTOList;
         this.totalUsers = response.page?.totalElements || 0;
@@ -89,18 +97,39 @@ export class AdminUsers implements OnInit {
         return role || 'N/A';
     }
   }
-  
+
   previousPage() {
     if (this.currentPage > 0) {
       this.currentPage--;
-      this.loadUsers();
+      this.loadUsers(this.searchTerm || undefined);
+    }
+  }
+
+  // Métodos para pesquisa
+  onSearch() {
+    this.currentPage = 0; // Resetar para primeira página
+    this.isSearching = !!this.searchTerm.trim();
+    this.loadUsers(this.searchTerm.trim() || undefined);
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.isSearching = false;
+    this.currentPage = 0;
+    this.loadUsers();
+  }
+
+  onSearchInputChange() {
+    // Se o campo estiver vazio, limpar a pesquisa automaticamente
+    if (!this.searchTerm.trim()) {
+      this.clearSearch();
     }
   }
 
   nextPage() {
-    if(this.currentPage < this.totalPages - 1) {
+    if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
-      this.loadUsers();
+      this.loadUsers(this.searchTerm || undefined);
     }
   }
 
@@ -108,22 +137,22 @@ export class AdminUsers implements OnInit {
     console.log('Mudando da página', this.currentPage, 'para a página', page);
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
-      this.loadUsers();
+      this.loadUsers(this.searchTerm || undefined);
     }
   }
 
-  getPageNumbers(): number[]{
+  getPageNumbers(): number[] {
     const pages: number[] = [];
     const maxPagesToShow = 5;
 
-    if(this.totalPages <= maxPagesToShow) {
-      for(let i = 0; i < this.totalPages; i++) {
+    if (this.totalPages <= maxPagesToShow) {
+      for (let i = 0; i < this.totalPages; i++) {
         pages.push(i);
       }
     } else {
       const startPage = Math.max(0, this.currentPage - 2);
       const endPage = Math.min(this.totalPages - 1, startPage + maxPagesToShow - 1);
-      for(let i = startPage; i <= endPage; i++) {
+      for (let i = startPage; i <= endPage; i++) {
         pages.push(i);
       }
     }
@@ -141,11 +170,11 @@ export class AdminUsers implements OnInit {
         next: () => {
           this.loadUsers();
           form.resetForm();
-          this.newUser = { name: '', email: '', password: '', phone: '', document: '', birthDate: ''};
+          this.newUser = { name: '', email: '', password: '', phone: '', document: '', birthDate: '' };
 
           const modal = document.getElementById('addUserModal');
           if (modal) {
-            if(document.activeElement instanceof HTMLElement) {
+            if (document.activeElement instanceof HTMLElement) {
               document.activeElement.blur();
             }
             const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
@@ -196,7 +225,7 @@ export class AdminUsers implements OnInit {
           const modal = document.getElementById('editUserModal');
           if (modal) {
             const modalInstance = (window as any).bootstrap.Modal.getInstance(modal);
-            if(modalInstance){
+            if (modalInstance) {
               modalInstance.hide();
             }
           }
@@ -253,9 +282,9 @@ export class AdminUsers implements OnInit {
   onDocumentTypeChange(event: Event, isEdit: boolean = false): void {
     const select = event.target as HTMLSelectElement;
     this.documentType = select.value;
-    if(isEdit) {
+    if (isEdit) {
       this.editUserFormData.document = '';
-    }else{
+    } else {
       this.newUser.document = '';
     }
     this.newUser.document = '';
@@ -288,9 +317,9 @@ export class AdminUsers implements OnInit {
       value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
     }
     input.value = value;
-    if(isEdit){
+    if (isEdit) {
       this.editUserFormData.document = value;
-    }else{
+    } else {
       this.newUser.document = value;
     }
   }
@@ -316,9 +345,9 @@ export class AdminUsers implements OnInit {
       }
     }
     input.value = formattedValue;
-    if(isEdit){
+    if (isEdit) {
       this.editUserFormData.document = formattedValue;
-    }else{
+    } else {
       this.newUser.document = formattedValue;
     }
   }
@@ -359,7 +388,7 @@ export class AdminUsers implements OnInit {
   showPasswordReqs(): void {
     this.showPasswordRequirements = true;
   }
-  
+
   hidePasswordReqs(): void {
     this.showPasswordRequirements = false;
   }

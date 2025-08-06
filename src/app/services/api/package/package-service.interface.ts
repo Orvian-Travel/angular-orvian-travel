@@ -13,6 +13,8 @@ export interface IPackageService {
 
   getAllPackagesWithPagination(pageNumber: number, pageSize: number): Observable<PagedResponse<PackageDetail>>;
 
+  getAllPackagesWithTitleAndPagination(pageNumber: number, pageSize: number, title: string): Observable<PagedResponse<PackageDetail>>;
+
   getAllPackagesBySearchPagination(pageNumber: number, pageSize: number, title: string, startDate: string, maxPeople: number): Observable<PagedResponse<PackageDetail>>;
 
   getPackageById(id: string): Observable<PackageDetail>;

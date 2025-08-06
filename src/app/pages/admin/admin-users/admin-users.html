@@ -1,305 +1,582 @@
 <div class="users-container">
-    <div class="section-header mb-4">
-        <h1 class="display-6 fw-bold text-dark">Controle de Usuários</h1>
-        <p class="text-muted">Gerencie todos os usuários cadastrados na plataforma.</p>
-    </div>
-
-    <div class="users-management card border-0 shadow-sm">
-        <div class="card-body">
-            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
-                <h2 class="h4 fw-bold text-dark mb-0">Lista de Usuários</h2>
-                <button class="btn btn-orvian-primary" data-bs-toggle="modal" data-bs-target="#addUserModal" *ngIf="isAdmin">
-                    <i class="fas fa-plus me-2"></i>Adicionar Usuário
-                </button>
-            </div>
-
-            <!-- Desktop Table View -->
-            <div class="d-none d-lg-block">
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefone</th>
-                                <th>Tipo</th>
-                                <th>Documento</th>
-                                <th *ngIf="isAdmin">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let user of users; index as i">
-                                <td>{{ user.id }}</td>
-                                <td>{{ user.name }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.phone }}</td>
-                                <td>
-                                    <span class="badge">
-                                        {{ getRoleDisplayName(user.role) }}
-                                    </span>
-                                </td>
-                                <td>{{ user.document }}</td>
-                                <td>
-                                    <button class="btn btn-sm btn-edit me-2" *ngIf="isAdmin" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#editUserModal"
-                                            (click)="openEditUserModal(user)">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-delete" *ngIf="isAdmin" (click)="deleteUser(user.id)">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Mobile/Tablet Card View -->
-            <div class="d-lg-none">
-                <div class="row g-3">
-                    <div class="col-12" *ngFor="let user of users; index as i">
-                        <div class="user-card card border-0 shadow-sm">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start mb-3">
-                                    <div>
-                                        <h5 class="card-title fw-bold mb-1">{{ user.name }}</h5>
-                                        <span class="badge badge-role">{{ getRoleDisplayName(user.role) }}</span>
-                                    </div>
-                                    <div class="user-avatar">
-                                        <i class="fas fa-user-circle fa-2x"></i>
-                                    </div>
-                                </div>
-                                
-                                <div class="user-details">
-                                    <div class="detail-item">
-                                        <i class="fas fa-envelope text-muted me-2"></i>
-                                        <small>{{ user.email }}</small>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-phone text-muted me-2"></i>
-                                        <small>{{ user.phone }}</small>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-id-card text-muted me-2"></i>
-                                        <small>{{ user.document }}</small>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-hashtag text-muted me-2"></i>
-                                        <small>ID: {{ user.id }}</small>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex gap-2 mt-3">
-                                    <button class="btn btn-edit flex-fill" *ngIf="isAdmin" 
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#editUserModal"
-                                            (click)="openEditUserModal(user)">
-                                        <i class="fas fa-edit me-1"></i>Editar
-                                    </button>
-                                    <button class="btn btn-delete flex-fill" *ngIf="isAdmin" (click)="deleteUser(user.id)">
-                                        <i class="fas fa-trash me-1"></i>Excluir
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-  <div *ngIf="totalPages > 1" class="pagination-container">
-    <nav class="pagination-nav">
-      <button
-        class="pagination-btn pagination-prev"
-        [disabled]="currentPage === 0"
-        (click)="previousPage()"
-      >
-        Anterior
-      </button>
-      <div class="pagination-numbers">
-        <button
-            *ngFor="let page of getPageNumbers()"
-            class="pagination-number"
-            [class.active]="page === currentPage"
-            (click)="goToPage(page)"
-        >
-            {{ page + 1 }}
-        </button>
-      </div>
-      <button
-        class="pagination-btn pagination-next"
-        [disabled]="currentPage === totalPages - 1"
-        (click)="nextPage()"
-      >
-        Próximo
-      </button>
-    </nav>
-    <div class="pagination-info">
-        Página {{ currentPage + 1 }} de {{ totalPages }} 
-        ({{ totalUsers }} usuários no total)
-    </div>
+  <div class="section-header mb-4">
+    <h1 class="display-6 fw-bold">Controle de Usuários</h1>
+    <p class="text-muted">
+      Gerencie todos os usuários cadastrados na plataforma.
+    </p>
   </div>
 
-<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true" data-bs-backdrop="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">Adicionar Usuário</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="users-management card border-0 shadow-sm">
+    <div class="card-body">
+      <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3"
+      >
+        <h2 class="h4 fw-bold mb-0">Lista de Usuários</h2>
+        <button
+          class="btn btn-orvian-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#addUserModal"
+          *ngIf="isAdmin"
+        >
+          <i class="fas fa-plus me-2"></i>Adicionar Usuário
+        </button>
+      </div>
+
+      <!-- Barra de Pesquisa -->
+      <div class="search-section mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-8 col-lg-9">
+            <label for="searchInput" class="form-label fw-semibold"
+              >Pesquisar por nome</label
+            >
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control search-input"
+                id="searchInput"
+                placeholder="Digite o nome do usuário..."
+                [(ngModel)]="searchTerm"
+                (input)="onSearchInputChange()"
+                (keyup.enter)="onSearch()"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="clearSearch()"
+                *ngIf="searchTerm"
+                title="Limpar pesquisa"
+              >
+                <i class="fas fa-times"></i>
+              </button>
             </div>
-            <div class="modal-body">
-                <form #addUserForm="ngForm">
-                    <div class="mb-3">
-                        <label for="userName" class="form-label">Nome</label>
-                        <input type="text" class="form-control" id="userName" name="name" [(ngModel)]="newUser.name" required autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                        <label for="userEmail" class="form-label">Email</label>
-                        <input type="text" class="form-control" id="userEmail" name="email" [(ngModel)]="newUser.email" required autocomplete="off">
-                    </div>
-                    <div class="mb-3">
-                      <label for="userPassword" class="form-label">Senha</label>
-                      <input type="password" class="form-control" id="userPassword" name="password"
-                        [(ngModel)]="newUser.password" required autocomplete="new-password"
-                        (focus)="showPasswordReqs()" (blur)="hidePasswordReqs()" (input)="validatePasswordMatch()">
-                      <div *ngIf="showPasswordRequirements" class="password-requirements mt-2">
-                        <small class="text-muted d-block mb-2">A senha deve conter:</small>
-                        <ul class="requirements-list mb-0 ps-3">
-                          <li [class.text-success]="newUser.password?.length >= 8 && newUser.password?.length <= 20">
-                            Entre 8 e 20 caracteres
-                          </li>
-                          <li [class.text-success]="hasLowercase(newUser.password)">
-                            Pelo menos uma letra minúscula
-                          </li>
-                          <li [class.text-success]="hasUppercase(newUser.password)">
-                            Pelo menos uma letra maiúscula
-                          </li>
-                          <li [class.text-success]="hasNumber(newUser.password)">
-                            Pelo menos um número
-                          </li>
-                          <li [class.text-success]="hasSpecial(newUser.password)">
-                            Pelo menos um caractere especial (#$%^&+=!)
-                          </li>
-                          <li [class.text-success]="hasNoSpaces(newUser.password)">
-                            Sem espaços em branco
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="confirmPassword" class="form-label">Confirmar Senha</label>
-                      <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                        [(ngModel)]="confirmPassword" required (input)="validatePasswordMatch()">
-                      <div *ngIf="confirmPassword && !passwordsMatch" class="invalid-feedback d-block">
-                        As senhas não coincidem
-                      </div>
-                      <div *ngIf="confirmPassword && passwordsMatch && newUser.password" class="valid-feedback d-block">
-                        ✓ As senhas coincidem
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="userPhone" class="form-label">Telefone</label>
-                        <input type="text" class="form-control" id="userPhone" name="phone" [(ngModel)]="newUser.phone" required maxlength="15" (input)="formatPhone($event)" />
-                    </div>
-                    <div class="form-group mb-3">
-                    <label for="text">Tipo de Documento</label>
-                        <select class="form-select form-control form-control-custom document-type-select"
-                                (change)="onDocumentTypeChange($event)">
-                            <option value="">Selecione um tipo</option>
-                            <option value="cpf">CPF</option>
-                            <option value="passport">Passaporte</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="text">Número do Documento</label>
-                        <input type="text" id="userDocument" name="document" [(ngModel)]="newUser.document"
-                            class="form-control form-control-custom document-number-input"
-                            [placeholder]="documentType === 'cpf' ? '000.000.000-00' : documentType === 'passport' ? 'AB123456' : 'Selecione o tipo de documento'"
-                            [maxLength]="documentType === 'cpf' ? 14 : documentType === 'passport' ? 8 : 8"
-                            [disabled]="!documentType"
-                            required
-                            (input)="documentType === 'cpf' ? formatCPF($event) : documentType === 'passport' ? formatPassport($event) : null"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="userBirthdate" class="form-label">Data de nascimento</label>
-                        <input type="date" class="form-control" id="userBirthdate" name="birthdate" [(ngModel)]="newUser.birthDate" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-orvian-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <form #addUserForm="ngForm" (ngSubmit)="addUser(addUserForm)">
-                            <button type="submit" class="btn btn-orvian-primary">Adicionar</button>
-                        </form>
-                    </div>
-                </form>
-            </div>
+          </div>
+          <div class="col-md-4 col-lg-3">
+            <button
+              class="btn btn-orvian-primary w-100"
+              type="button"
+              (click)="onSearch()"
+              [disabled]="loading"
+            >
+              <i class="fas fa-search me-2"></i>
+              <span *ngIf="!loading">Pesquisar</span>
+              <span *ngIf="loading">
+                <i class="fas fa-spinner fa-spin me-1"></i>Buscando...
+              </span>
+            </button>
+          </div>
         </div>
+
+        <!-- Indicador de pesquisa ativa -->
+        <div *ngIf="isSearching" class="search-indicator mt-3">
+          <div class="alert alert-info d-flex align-items-center mb-0">
+            <i class="fas fa-search me-2"></i>
+            <span>
+              Mostrando resultados para: <strong>"{{ searchTerm }}"</strong> ({{
+                totalUsers
+              }}
+              usuário<span *ngIf="totalUsers !== 1">s</span> encontrado<span
+                *ngIf="totalUsers !== 1"
+                >s</span
+              >)
+            </span>
+            <button
+              type="button"
+              class="btn-close ms-auto"
+              (click)="clearSearch()"
+              title="Limpar pesquisa"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop Table View -->
+      <div class="d-none d-lg-block">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Tipo</th>
+                <th>Documento</th>
+                <th *ngIf="isAdmin">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users; index as i">
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.phone }}</td>
+                <td>
+                  <span class="badge">
+                    {{ getRoleDisplayName(user.role) }}
+                  </span>
+                </td>
+                <td>{{ user.document }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-edit me-2"
+                    *ngIf="isAdmin"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editUserModal"
+                    (click)="openEditUserModal(user)"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-delete"
+                    *ngIf="isAdmin"
+                    (click)="deleteUser(user.id)"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile/Tablet Card View -->
+      <div class="d-lg-none">
+        <div class="row g-3">
+          <div class="col-12" *ngFor="let user of users; index as i">
+            <div class="user-card card border-0 shadow-sm">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-start mb-3"
+                >
+                  <div>
+                    <h5 class="card-title fw-bold mb-1">{{ user.name }}</h5>
+                    <span class="badge badge-role">{{
+                      getRoleDisplayName(user.role)
+                    }}</span>
+                  </div>
+                  <div class="user-avatar">
+                    <i class="fas fa-user-circle fa-2x"></i>
+                  </div>
+                </div>
+
+                <div class="user-details">
+                  <div class="detail-item">
+                    <i class="fas fa-envelope text-muted me-2"></i>
+                    <small>{{ user.email }}</small>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-phone text-muted me-2"></i>
+                    <small>{{ user.phone }}</small>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-id-card text-muted me-2"></i>
+                    <small>{{ user.document }}</small>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-hashtag text-muted me-2"></i>
+                    <small>ID: {{ user.id }}</small>
+                  </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                  <button
+                    class="btn btn-edit flex-fill"
+                    *ngIf="isAdmin"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editUserModal"
+                    (click)="openEditUserModal(user)"
+                  >
+                    <i class="fas fa-edit me-1"></i>Editar
+                  </button>
+                  <button
+                    class="btn btn-delete flex-fill"
+                    *ngIf="isAdmin"
+                    (click)="deleteUser(user.id)"
+                  >
+                    <i class="fas fa-trash me-1"></i>Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+<div *ngIf="totalPages > 1" class="pagination-container">
+  <nav class="pagination-nav">
+    <button
+      class="pagination-btn pagination-prev"
+      [disabled]="currentPage === 0"
+      (click)="previousPage()"
+    >
+      Anterior
+    </button>
+    <div class="pagination-numbers">
+      <button
+        *ngFor="let page of getPageNumbers()"
+        class="pagination-number"
+        [class.active]="page === currentPage"
+        (click)="goToPage(page)"
+      >
+        {{ page + 1 }}
+      </button>
+    </div>
+    <button
+      class="pagination-btn pagination-next"
+      [disabled]="currentPage === totalPages - 1"
+      (click)="nextPage()"
+    >
+      Próximo
+    </button>
+  </nav>
+  <div class="pagination-info">
+    Página {{ currentPage + 1 }} de {{ totalPages }} ({{ totalUsers }} usuários
+    no total)
+  </div>
 </div>
 
-<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true" data-bs-backdrop="false">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editUserModalLabel">Editar Usuário</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<div
+  class="modal fade"
+  id="addUserModal"
+  tabindex="-1"
+  aria-labelledby="addUserModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addUserModalLabel">Adicionar Usuário</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form #addUserForm="ngForm">
+          <div class="mb-3">
+            <label for="userName" class="form-label">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="userName"
+              name="name"
+              [(ngModel)]="newUser.name"
+              required
+              autocomplete="off"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="userEmail" class="form-label">Email</label>
+            <input
+              type="text"
+              class="form-control"
+              id="userEmail"
+              name="email"
+              [(ngModel)]="newUser.email"
+              required
+              autocomplete="off"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="userPassword" class="form-label">Senha</label>
+            <input
+              type="password"
+              class="form-control"
+              id="userPassword"
+              name="password"
+              [(ngModel)]="newUser.password"
+              required
+              autocomplete="new-password"
+              (focus)="showPasswordReqs()"
+              (blur)="hidePasswordReqs()"
+              (input)="validatePasswordMatch()"
+            />
+            <div
+              *ngIf="showPasswordRequirements"
+              class="password-requirements mt-2"
+            >
+              <small class="text-muted d-block mb-2"
+                >A senha deve conter:</small
+              >
+              <ul class="requirements-list mb-0 ps-3">
+                <li
+                  [class.text-success]="
+                    newUser.password?.length >= 8 &&
+                    newUser.password?.length <= 20
+                  "
+                >
+                  Entre 8 e 20 caracteres
+                </li>
+                <li [class.text-success]="hasLowercase(newUser.password)">
+                  Pelo menos uma letra minúscula
+                </li>
+                <li [class.text-success]="hasUppercase(newUser.password)">
+                  Pelo menos uma letra maiúscula
+                </li>
+                <li [class.text-success]="hasNumber(newUser.password)">
+                  Pelo menos um número
+                </li>
+                <li [class.text-success]="hasSpecial(newUser.password)">
+                  Pelo menos um caractere especial (#$%^&+=!)
+                </li>
+                <li [class.text-success]="hasNoSpaces(newUser.password)">
+                  Sem espaços em branco
+                </li>
+              </ul>
             </div>
-            <div class="modal-body">
-                <form #editUserForm="ngForm" (ngSubmit)="editUser(editUserForm)">
-                    <input type="hidden" name="id">
-                    <div class="mb-3">
-                        <label for="editUserName" class="form-label">Nome</label>
-                        <input type="text" class="form-control" id="editUserName" name="name" [(ngModel)]="editUserFormData.name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editUserEmail" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="editUserEmail" name="email" [(ngModel)]="editUserFormData.email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editUserPhone" class="form-label">Telefone</label>
-                        <input type="tel" class="form-control" id="editUserPhone" name="phone" [(ngModel)]="editUserFormData.phone" required>
-                    </div>
-                    <div class="form-group mb-3">
-                    <label for="text">Tipo de Documento</label>
-                        <select class="form-select form-control form-control-custom document-type-select"
-                                [(ngModel)]="documentType"
-                                name="userDocument"
-                                (change)="onDocumentTypeChange($event, true)">
-                            <option value="">Selecione um tipo</option>
-                            <option value="cpf">CPF</option>
-                            <option value="passport">Passaporte</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="text">Número do Documento</label>
-                        <input type="text" id="editUserDocument" name="document" [(ngModel)]="editUserFormData.document"
-                            class="form-control form-control-custom document-number-input"
-                            [placeholder]="documentType === 'cpf' ? '000.000.000-00' : documentType === 'passport' ? 'AB123456' : 'Selecione o tipo de documento'"
-                            [maxLength]="documentType === 'cpf' ? 14 : documentType === 'passport' ? 8 : 8"
-                            [disabled]="!documentType"
-                            required
-                            (input)="documentType === 'cpf' ? formatCPF($event, true) : documentType === 'passport' ? formatPassport($event, true) : null"
-                        />
-                    </div>
-                    <div class="mb-3">
-                        <label for="editUserRole" class="form-label">Tipo de Usuário</label>
-                        <select class="form-control" id="editUserRole" name="role" [(ngModel)]="editUserFormData.role" required>
-                            <option value="">Selecione o tipo</option>
-                            <option value="USER">Usuário</option>
-                            <option value="ATENDENTE">Atendente</option>
-                            <option value="ADMIN">Administrador</option>
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-orvian-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-orvian-primary">Salvar Alterações</button>
-                    </div>
-                </form>
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label"
+              >Confirmar Senha</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="confirmPassword"
+              name="confirmPassword"
+              [(ngModel)]="confirmPassword"
+              required
+              (input)="validatePasswordMatch()"
+            />
+            <div
+              *ngIf="confirmPassword && !passwordsMatch"
+              class="invalid-feedback d-block"
+            >
+              As senhas não coincidem
             </div>
-        </div>
+            <div
+              *ngIf="confirmPassword && passwordsMatch && newUser.password"
+              class="valid-feedback d-block"
+            >
+              ✓ As senhas coincidem
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="userPhone" class="form-label">Telefone</label>
+            <input
+              type="text"
+              class="form-control"
+              id="userPhone"
+              name="phone"
+              [(ngModel)]="newUser.phone"
+              required
+              maxlength="15"
+              (input)="formatPhone($event)"
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="text">Tipo de Documento</label>
+            <select
+              class="form-select form-control form-control-custom document-type-select"
+              (change)="onDocumentTypeChange($event)"
+            >
+              <option value="">Selecione um tipo</option>
+              <option value="cpf">CPF</option>
+              <option value="passport">Passaporte</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="text">Número do Documento</label>
+            <input
+              type="text"
+              id="userDocument"
+              name="document"
+              [(ngModel)]="newUser.document"
+              class="form-control form-control-custom document-number-input"
+              [placeholder]="
+                documentType === 'cpf'
+                  ? '000.000.000-00'
+                  : documentType === 'passport'
+                  ? 'AB123456'
+                  : 'Selecione o tipo de documento'
+              "
+              [maxLength]="
+                documentType === 'cpf'
+                  ? 14
+                  : documentType === 'passport'
+                  ? 8
+                  : 8
+              "
+              [disabled]="!documentType"
+              required
+              (input)="
+                documentType === 'cpf'
+                  ? formatCPF($event)
+                  : documentType === 'passport'
+                  ? formatPassport($event)
+                  : null
+              "
+            />
+          </div>
+          <div class="mb-3">
+            <label for="userBirthdate" class="form-label"
+              >Data de nascimento</label
+            >
+            <input
+              type="date"
+              class="form-control"
+              id="userBirthdate"
+              name="birthdate"
+              [(ngModel)]="newUser.birthDate"
+              required
+            />
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-orvian-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <form #addUserForm="ngForm" (ngSubmit)="addUser(addUserForm)">
+              <button type="submit" class="btn btn-orvian-primary">
+                Adicionar
+              </button>
+            </form>
+          </div>
+        </form>
+      </div>
     </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  id="editUserModal"
+  tabindex="-1"
+  aria-labelledby="editUserModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="false"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editUserModalLabel">Editar Usuário</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form #editUserForm="ngForm" (ngSubmit)="editUser(editUserForm)">
+          <input type="hidden" name="id" />
+          <div class="mb-3">
+            <label for="editUserName" class="form-label">Nome</label>
+            <input
+              type="text"
+              class="form-control"
+              id="editUserName"
+              name="name"
+              [(ngModel)]="editUserFormData.name"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="editUserEmail" class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              id="editUserEmail"
+              name="email"
+              [(ngModel)]="editUserFormData.email"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="editUserPhone" class="form-label">Telefone</label>
+            <input
+              type="tel"
+              class="form-control"
+              id="editUserPhone"
+              name="phone"
+              [(ngModel)]="editUserFormData.phone"
+              required
+            />
+          </div>
+          <div class="form-group mb-3">
+            <label for="text">Tipo de Documento</label>
+            <select
+              class="form-select form-control form-control-custom document-type-select"
+              [(ngModel)]="documentType"
+              name="userDocument"
+              (change)="onDocumentTypeChange($event, true)"
+            >
+              <option value="">Selecione um tipo</option>
+              <option value="cpf">CPF</option>
+              <option value="passport">Passaporte</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="text">Número do Documento</label>
+            <input
+              type="text"
+              id="editUserDocument"
+              name="document"
+              [(ngModel)]="editUserFormData.document"
+              class="form-control form-control-custom document-number-input"
+              [placeholder]="
+                documentType === 'cpf'
+                  ? '000.000.000-00'
+                  : documentType === 'passport'
+                  ? 'AB123456'
+                  : 'Selecione o tipo de documento'
+              "
+              [maxLength]="
+                documentType === 'cpf'
+                  ? 14
+                  : documentType === 'passport'
+                  ? 8
+                  : 8
+              "
+              [disabled]="!documentType"
+              required
+              (input)="
+                documentType === 'cpf'
+                  ? formatCPF($event, true)
+                  : documentType === 'passport'
+                  ? formatPassport($event, true)
+                  : null
+              "
+            />
+          </div>
+          <div class="mb-3">
+            <label for="editUserRole" class="form-label">Tipo de Usuário</label>
+            <select
+              class="form-control"
+              id="editUserRole"
+              name="role"
+              [(ngModel)]="editUserFormData.role"
+              required
+            >
+              <option value="">Selecione o tipo</option>
+              <option value="USER">Usuário</option>
+              <option value="ATENDENTE">Atendente</option>
+              <option value="ADMIN">Administrador</option>
+            </select>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-orvian-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-orvian-primary">
+              Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>

@@ -37,6 +37,13 @@ export class PackageService implements IPackageService {
     );
   }
 
+  public getAllPackagesWithTitleAndPagination(pageNumber: number, pageSize: number, title: string): Observable<PagedResponse<PackageDetail>> {
+    const url = `${this.baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}&title=${title}`;
+    return this.http.get<any>(url).pipe(
+      map(response => transformPagedResponse<PackageDetail>(response, 'packageSearchResultDTOList'))
+    );
+  }
+
   getAllPackagesBySearchPagination(
     pageNumber: number = 0,
     pageSize: number = 10,
