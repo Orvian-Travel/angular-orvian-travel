@@ -19,6 +19,29 @@
     width: 100%;
     background-color: #f8f9fa;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative;
+}
+
+/* Garantir que não há elementos flutuantes no topo */
+.admin-container::before, 
+.admin-container::after {
+    display: none !important;
+}
+
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden;
+}
+
+/* Remover qualquer barra azul ou elemento no topo da página */
+*:not(.sidebar):not(.main-content):not(.admin-container) {
+    position: relative !important;
+}
+
+div[style*="position: fixed"][style*="top: 0"], 
+div[style*="position: absolute"][style*="top: 0"] {
+    display: none !important;
 }
 
 /* Sidebar */
@@ -315,7 +338,6 @@
     cursor: pointer;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -346,6 +368,18 @@
 .overlay.active {
     display: block;
     opacity: 1;
+}
+
+/* ===== OCULTAR ELEMENTOS DESNECESSÁRIOS ===== */
+/* Ocultar VLibras e outros widgets em telas admin */
+[vw], .vw-plugin-top-wrapper, .vw-plugin-wrapper, [vw-access-button] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Remover qualquer barra azul no topo */
+body::before, html::before {
+    display: none !important;
 }
 
 /* ===== RESPONSIVIDADE ===== */
