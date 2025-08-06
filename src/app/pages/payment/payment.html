@@ -20,6 +20,14 @@
                 </div>
                 <hr />
                 <div class="d-flex justify-content-between">
+                  <span class="fw-semibold">ICMS (6%)</span>
+                  <span class="fw-semibold">{{ getTotalPrice() * (6/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="fw-semibold">Taxa de Serviço (4%)</span>
+                  <span class="fw-semibold">{{ getTotalPrice() * (4/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
                   <span class="fw-bold">Total (taxas e impostos inclusos)</span>
                   <span class="fw-bold">{{ getTotalPrice() * (1+10/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
                 </div>
@@ -215,12 +223,12 @@
                       >Quantas parcelas?</label
                     >
                     <select class="form-select">
-                      <option value="1">1x de {{ getTotalPrice() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
-                      <option value="2">2x de R$ {{ getTotalPrice() / 2 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
-                      <option value="3">3x de {{ getTotalPrice() / 3 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
-                      <option value="4">4x de {{ getTotalPrice() / 4 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
-                      <option value="5">5x de {{ getTotalPrice() / 5 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
-                      <option value="6">6x de {{ getTotalPrice() / 6 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="1">1x de {{ getTotalPrice() * (1+10/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="2">2x de R$ {{ getTotalPrice() * (1+10/100) / 2 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="3">3x de {{ getTotalPrice() * (1+10/100) / 3 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="4">4x de {{ getTotalPrice() * (1+10/100) / 4 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="5">5x de {{ getTotalPrice() * (1+10/100) / 5 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="6">6x de {{ getTotalPrice() * (1+10/100) / 6 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
                     </select>
                   </div>
                 </div>
