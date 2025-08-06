@@ -187,6 +187,16 @@ export class Payment implements OnInit, OnDestroy {
         );
       }
 
+      const inputs = travelerCard.querySelectorAll('input, select');
+      inputs.forEach(input => {
+        input.addEventListener('input', () => {
+          setTimeout(() => {}, 0);
+        });
+        input.addEventListener('change', () => {
+          setTimeout(() => {}, 0);
+        });
+      });
+
       container.appendChild(travelerCard);
       this.updateRemoveButtons();
     }
@@ -818,5 +828,46 @@ export class Payment implements OnInit, OnDestroy {
       }
       return user;
     }
+  }
+
+  get isFormValid(): boolean {
+    const travelerCards = document.querySelectorAll('.traveler-card');
+    if (travelerCards.length === 0) return false;
+
+    if (!this.selectedPaymentMethod) return false;
+
+    for (const card of travelerCards) {
+      const nameInput = card.querySelector('input[type="text"]') as HTMLInputElement;
+      if (!nameInput?.value?.trim()) return false;
+
+      const birthDateInput = card.querySelector('input[type="date"]') as HTMLInputElement;
+      if (!birthDateInput?.value) return false;
+
+      const documentTypeSelect = card.querySelector('.document-type-select') as HTMLSelectElement;
+      if (!documentTypeSelect?.value) return false;
+
+      const documentNumberInput = card.querySelector('.document-number-input') as HTMLInputElement;
+      if (!documentNumberInput?.value?.trim()) return false;
+
+      const emailInput = card.querySelector('input[type="email"]') as HTMLInputElement;
+      if (!emailInput?.value?.trim()) return false;
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value)) return false;
+    }
+
+    if (this.selectedPaymentMethod === 'CREDITO') {
+      const cardNumberInput = document.getElementById('card-number') as HTMLInputElement;
+      const cardExpiryInput = document.getElementById('card-expiry') as HTMLInputElement;
+      const cardNameInput = document.querySelector('#cartao-form input[placeholder="Nome do Titular"]') as HTMLInputElement;
+      const cvvInput = document.querySelector('#cartao-form input[placeholder="***"]') as HTMLInputElement;
+
+      if (!cardNumberInput?.value?.replace(/\s/g, '').length || cardNumberInput.value.replace(/\s/g, '').length < 16) return false;
+      if (!cardExpiryInput?.value || cardExpiryInput.value.length < 5) return false;
+      if (!cardNameInput?.value?.trim()) return false;
+      if (!cvvInput?.value || cvvInput.value.length < 3) return false;
+    }
+
+    return true;
   }
 }
