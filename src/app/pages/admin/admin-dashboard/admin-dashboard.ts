@@ -40,6 +40,7 @@ export class AdminDashboard implements OnInit, OnDestroy {
       percentage: null
     };
   newPackageCount: number | null = 0;
+  isExporting: boolean = false;
 
   chartOptions: ChartConfiguration<'doughnut'>['options'] = {
     responsive: true,
@@ -137,6 +138,50 @@ export class AdminDashboard implements OnInit, OnDestroy {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })}`;
+  }
+
+  // Métodos de exportação de reservas
+  exportReservationsPDF(): void {
+    this.isExporting = true;
+    
+    this.adminService.exportReservationsPDF().subscribe({
+      next: (blob: Blob) => {
+        this.downloadFile(blob, 'reservas.pdf', 'application/pdf');
+        this.isExporting = false;
+      },
+      error: (error) => {
+        console.error('Erro ao exportar PDF:', error);
+        alert('Erro ao exportar relatório em PDF. Tente novamente.');
+        this.isExporting = false;
+      }
+    });
+  }
+
+  exportReservationsExcel(): void {
+    this.isExporting = true;
+    
+    this.adminService.exportReservationsExcel().subscribe({
+      next: (blob: Blob) => {
+        this.downloadFile(blob, 'reservas.xlsx', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        this.isExporting = false;
+      },
+      error: (error) => {
+        console.error('Erro ao exportar Excel:', error);
+        alert('Erro ao exportar planilha Excel. Tente novamente.');
+        this.isExporting = false;
+      }
+    });
+  }
+
+  private downloadFile(blob: Blob, filename: string, mimeType: string): void {
+    const url = window.URL.createObjectURL(new Blob([blob], { type: mimeType }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 
   ngOnDestroy(): void {

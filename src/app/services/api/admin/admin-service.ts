@@ -17,5 +17,17 @@ export class AdminService implements IAdminService {
     return this.http.get<Dashboard>(`${this.baseUrl}/dashboard-week`);
   }
 
+  exportReservationsPDF(): Observable<Blob> {
+    return this.http.get(`${this.configService.getApiUrl()}/reservations/export-pdf`, {
+      responseType: 'blob'
+    });
+  }
+
+  exportReservationsExcel(): Observable<Blob> {
+    return this.http.get(`${this.configService.getApiUrl()}/reservations/export-sheet`, {
+      responseType: 'blob'
+    });
+  }
+
 
 }

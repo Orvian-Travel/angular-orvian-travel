@@ -137,4 +137,50 @@
       </div>
     </div>
   </div>
+
+  <!-- Seção de Exportação de Reservas -->
+  <div class="export-section card border-0 shadow-sm mt-4">
+    <div class="card-body">
+      <h2 class="h4 fw-bold text-dark mb-4">Exportar Relatórios de Reservas</h2>
+      <p class="text-muted mb-4">
+        Baixe relatórios completos das reservas em diferentes formatos.
+      </p>
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <button
+            class="btn btn-danger w-100 d-flex align-items-center justify-content-center"
+            (click)="exportReservationsPDF()"
+            [disabled]="isExporting"
+          >
+            <i class="fas fa-file-pdf me-2"></i>
+            <span *ngIf="!isExporting">Exportar para PDF</span>
+            <span *ngIf="isExporting">
+              <i class="fas fa-spinner fa-spin me-2"></i>Exportando...
+            </span>
+          </button>
+          <small class="text-muted d-block mt-2">
+            Gera um relatório completo em formato PDF com todas as reservas
+          </small>
+        </div>
+
+        <div class="col-md-6">
+          <button
+            class="btn btn-success w-100 d-flex align-items-center justify-content-center"
+            (click)="exportReservationsExcel()"
+            [disabled]="isExporting"
+          >
+            <i class="fas fa-file-excel me-2"></i>
+            <span *ngIf="!isExporting">Exportar para Excel</span>
+            <span *ngIf="isExporting">
+              <i class="fas fa-spinner fa-spin me-2"></i>Exportando...
+            </span>
+          </button>
+          <small class="text-muted d-block mt-2">
+            Gera uma planilha Excel para análise e manipulação dos dados
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
