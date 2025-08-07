@@ -64,7 +64,7 @@
                       <input
                         type="text"
                         class="form-control"
-                        placeholder=""
+                        placeholder="Digite o nome completo"
                         required
                       />
                     </div>
@@ -76,29 +76,15 @@
                     </div>
                     <div class="col-md-6">
                       <label class="form-label small fw-semibold text-muted"
-                        >TIPO DE DOCUMENTO</label
-                      >
-                      <select
-                        class="form-select document-type-select"
-                        (change)="onDocumentTypeChange($event)"
-                        required
-                      >
-                        <option value="">Tipo de Documento</option>
-                        <option value="cpf">CPF</option>
-                        <option value="passaporte">Passaporte</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6">
-                      <label class="form-label small fw-semibold text-muted"
-                        >NÚMERO</label
+                        >NÚMERO DO CPF</label
                       >
                       <input
                         type="text"
                         class="form-control document-number-input"
-                        placeholder="Selecione o tipo de documento"
-                        maxlength="8"
-                        disabled
+                        maxlength="14"
+                        placeholder="000.000.000-00"
                         required
+                        (input)="formatCPF($event)"
                       />
                     </div>
                     <div class="col-md-6">
@@ -108,7 +94,7 @@
                       <input
                         type="email"
                         class="form-control"
-                        placeholder=""
+                        placeholder="Digite o email do viajante"
                         required
                       />
                     </div>

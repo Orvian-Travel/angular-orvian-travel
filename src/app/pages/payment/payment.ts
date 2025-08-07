@@ -471,44 +471,22 @@ export class Payment implements OnInit, OnDestroy {
         };
       }
 
-      const documentTypeSelect = card.querySelector('.document-type-select') as HTMLSelectElement;
-      if (!documentTypeSelect?.value) {
-        this.highlightInvalidField(travelerNumber, 'documentType');
-        return {
-          isValid: false,
-          message: `Viajante ${travelerNumber}: Selecione o tipo de documento.`
-        };
-      }
-
       const documentNumberInput = card.querySelector('.document-number-input') as HTMLInputElement;
       if (!documentNumberInput?.value?.trim()) {
         this.highlightInvalidField(travelerNumber, 'documentNumber');
         return {
           isValid: false,
-          message: `Viajante ${travelerNumber}: O número do documento é obrigatório.`
+          message: `Viajante ${travelerNumber}: O número do CPF é obrigatório.`
         };
       }
 
-      if (documentTypeSelect.value === 'cpf') {
-        const cpfValue = documentNumberInput.value.replace(/\D/g, '');
-        if (cpfValue.length !== 11) {
-          this.highlightInvalidField(travelerNumber, 'documentNumber');
-          return {
-            isValid: false,
-            message: `Viajante ${travelerNumber}: CPF deve ter 11 dígitos.`
-          };
-        }
-      }
-
-      if (documentTypeSelect.value === 'passaporte') {
-        const passportValue = documentNumberInput.value;
-        if (passportValue.length !== 8) {
-          this.highlightInvalidField(travelerNumber, 'documentNumber');
-          return {
-            isValid: false,
-            message: `Viajante ${travelerNumber}: Passaporte deve ter 8 caracteres (2 letras + 6 números).`
-          };
-        }
+      const cpfValue = documentNumberInput.value.replace(/\D/g, '');
+      if (cpfValue.length !== 11) {
+        this.highlightInvalidField(travelerNumber, 'documentNumber');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: CPF deve ter 11 dígitos.`
+        };
       }
 
       const emailInput = card.querySelector('input[type="email"]') as HTMLInputElement;
@@ -736,10 +714,12 @@ export class Payment implements OnInit, OnDestroy {
 
     value = value.substring(0, 11);
 
-    if (value.length <= 11) {
-      value = value.replace(/(\d{3})(\d)/, '$1.$2');
-      value = value.replace(/(\d{3})(\d)/, '$1.$2');
-      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    if (value.length > 9) {
+      value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    } else if (value.length > 6) {
+      value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else if (value.length > 3) {
+      value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
     }
 
     input.value = value;
