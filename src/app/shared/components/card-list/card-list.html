@@ -1,0 +1,76 @@
+<main class="container my-5" #cardListContainer>
+  <div class="section-header">
+    <h2 class="section-title">{{ cardListTitle }}</h2>
+    <p class="section-subtitle">
+      Descubra destinos incríveis com os melhores preços
+    </p>
+    <button (click)="limparBusca()" class="btnClear mt-2" *ngIf="isSearching">
+      Limpar Busca
+    </button>
+  </div>
+  <div class="packages-grid">
+    <div
+      class="package-card"
+      (click)="navigateToDetails(package.id)"
+      *ngFor="let package of packages"
+    >
+      <div class="card-image-wrapper">
+        <img
+          [src]="getPackageImageUrl(package)"
+          class="card-image"
+          alt="{{ package.title }}"
+        />
+        <div class="duration-badge">
+          <span>{{ package.duration }} dias</span>
+        </div>
+      </div>
+      <div class="card-content">
+        <div class="package-tag">{{ package.maxPeople }} pessoas</div>
+        <h3 class="package-title">{{ package.title }}</h3>
+        <div class="price-section">
+          <span class="price-label">A partir de</span>
+          <div class="price-wrapper">
+            <span class="currency">R$</span>
+            <span class="price">{{
+              package.price | number : "1.2-2" : "pt-BR"
+            }}</span>
+            <span class="price-period">/pessoa</span>
+          </div>
+          <p class="price-disclaimer">*Taxas não incluídas</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <nav class="pagination-nav">
+      <button
+        class="pagination-btn pagination-prev"
+        [disabled]="currentPage === 0"
+        (click)="previousPage()"
+      >
+        Anterior
+      </button>
+      <div class="pagination-numbers">
+        <button
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          class="pagination-number"
+          [class.active]="i === currentPage"
+          (click)="goToPage(i)"
+        >
+          {{ i + 1 }}
+        </button>
+      </div>
+      <button
+        class="pagination-btn pagination-next"
+        [disabled]="currentPage === totalPages - 1"
+        (click)="nextPage()"
+      >
+        Próximo
+      </button>
+    </nav>
+    <div class="pagination-info">
+      Página {{ currentPage + 1 }} de {{ totalPages }} ({{ totalElements }}
+      pacotes no total)
+    </div>
+  </div>
+</main>

@@ -1,0 +1,136 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { TokenModel } from '../entities/token-model';
+import { Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class AuthStateService {
+  private readonly TOKEN_KEY = 'orvian_token';
+  private readonly USER_KEY = 'orvian_user';
+  private readonly REDIRECT_KEY = 'orvian_redirect_after_login';
+
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(
+    this.hasValidToken()
+  );
+  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
+
+  constructor(
+    private router: Router
+  ) {
+
+    this.checkAuthState();
+  }
+
+  login(tokenData: TokenModel): void {
+    localStorage.setItem(this.TOKEN_KEY, tokenData.token);
+
+    const userData = { name: tokenData.name };
+    localStorage.setItem(this.USER_KEY, JSON.stringify(userData));
+
+    this.isAuthenticatedSubject.next(true);
+  }
+
+  logout(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem(this.REDIRECT_KEY);
+
+    this.router.navigate(['/']);
+
+    this.isAuthenticatedSubject.next(false);
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getDecodedToken(): any {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+
+      const payload = parts[1];
+
+      const decodedPayload = atob(payload);
+
+      return JSON.parse(decodedPayload);
+    } catch (error) {
+      console.error('Erro ao decodificar token:', error);
+      return null;
+    }
+  }
+
+  getUserId(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.sub || null;
+  }
+
+  getUserRole(): string | null {
+    const decoded = this.getDecodedToken();
+    return decoded?.role || null;
+  }
+
+  isAdmin(): boolean {
+    const role = this.getUserRole();
+    return role === 'ADMIN';
+  }
+
+  isAttendant(): boolean {
+    const role = this.getUserRole();
+    return role === 'ATENDENTE';
+  }
+
+  getUser(): any {
+    const userData = localStorage.getItem(this.USER_KEY);
+    return userData ? JSON.parse(userData) : null;
+  }
+
+  isLoggedIn(): boolean {
+    return this.hasValidToken();
+  }
+
+  private hasValidToken(): boolean {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp > currentTime;
+    } catch {
+      return false;
+    }
+  }
+
+  setRedirectUrl(url: string): void {
+    localStorage.setItem(this.REDIRECT_KEY, url);
+  }
+
+  getAndClearRedirectUrl(): string | null {
+    const redirectUrl = localStorage.getItem(this.REDIRECT_KEY);
+    if (redirectUrl) {
+      localStorage.removeItem(this.REDIRECT_KEY);
+    }
+    return redirectUrl;
+  }
+
+  getRedirectUrl(): string {
+    const savedRedirect: string | null = this.getAndClearRedirectUrl();
+
+    if (savedRedirect) {
+      return savedRedirect;
+    }
+
+    return '/';
+  }
+
+  private checkAuthState(): void {
+    this.isAuthenticatedSubject.next(this.hasValidToken());
+  }
+}

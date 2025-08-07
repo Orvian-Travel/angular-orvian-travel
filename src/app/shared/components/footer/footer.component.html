@@ -1,0 +1,45 @@
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-content">
+      <!-- Logo da empresa -->
+      <div class="footer-logo">
+        <img src="/assets/logo-branca.svg" alt="Orvian Travel" class="logo-img">
+      </div>
+      
+      <!-- Informações da empresa -->
+      <div class="footer-info">
+        <h3>Orvian Travel</h3>
+        <p>Saudando a todos pelo mundo!</p>
+      </div>
+      
+      <!-- Links úteis -->
+      <div class="footer-links">
+        <h4>Links Úteis</h4>
+        <ul>
+          <li><a routerLink="/">Início</a></li>
+          <li><a routerLink="/pacotes">Pacotes</a></li>
+          <li><a routerLink="/login">Login</a></li>
+          <li><a routerLink="/register">Cadastro</a></li>
+          <li><a routerLink="/faq">Perguntas Frequentes</a></li>
+        </ul>
+      </div>
+      
+      <!-- Suporte -->
+      <div class="footer-support">
+        <h4>Precisa de Ajuda?</h4>
+        <p>Nossa equipe está pronta para te ajudar!</p>
+        <button (click)="supportRedirect()" class="btn-support">
+          💬 Falar com Suporte
+        </button>
+      </div>
+    </div>
+    
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <div class="copyright">
+        <p>&copy; {{ currentYear }} Orvian Travel. Todos os direitos reservados.</p>
+        <p>Desenvolvido com ❤️ para suas melhores viagens</p>
+      </div>
+    </div>
+  </div>
+</footer>

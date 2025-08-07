@@ -1,0 +1,329 @@
+.hero-section {
+  position: relative;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  min-height: 150px;
+  max-height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+.search-container {
+  background-color: var(--orvian-background-gray);
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 20px 20px 0 0;
+  width: auto;
+  display: inline-block;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  width: 20px;
+  height: 20px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.input-icon.clickable {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+input {
+  outline: none;
+  padding: 0.6rem 1.2rem 0.6rem 2.8rem;
+  border: none;
+  font-size: 16px;
+  background-color: white;
+  border: 1px solid var(--orvian-gray-001);
+  color: var(--orvian-gray-003);
+  border-radius: 0.4rem;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input:focus {
+  outline: solid 1.5px var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+}
+
+select {
+  padding: 0.6rem 2rem 0.8rem 2.8rem;
+  border: none;
+  font-size: 16px;
+  background-color: white;
+  border: 1px solid var(--orvian-gray-001);
+  color: var(--orvian-gray-003);
+  outline: none;
+  border-radius: 0.4rem;
+}
+
+select:focus {
+  outline: solid 1.5px var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+}
+
+button {
+  padding: 0.5rem 1.2rem;
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
+  border: 2px solid var(--orvian-button-button-background-color);
+  font-size: 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--orvian-button-button-background-color-hover);
+  color: var(--orvian-button-button-text-color-hover);
+}
+
+.search-elements {
+  display: flex;
+  padding: 2rem;
+  gap: 1rem;
+  margin: 0;
+  align-items: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 400px;
+  }
+
+  .search-elements {
+    flex-direction: column;
+    padding: 1.5rem;
+    gap: 1rem;
+    white-space: normal;
+  }
+
+  .input-with-icon {
+    width: 100%;
+  }
+
+  input,
+  select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  button {
+    width: 100%;
+    padding: 0.8rem 1.2rem;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    min-height: 350px;
+  }
+
+  .search-container {
+    bottom: 1.5rem;
+    width: 98%;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .search-elements {
+    padding: 1rem;
+    gap: 0.8rem;
+  }
+
+  input,
+  select {
+    font-size: 14px;
+    padding: 0.7rem 1rem 0.7rem 2.5rem;
+  }
+
+  .input-icon {
+    width: 18px;
+    height: 18px;
+    left: 10px;
+  }
+
+  button {
+    padding: 0.9rem 1rem;
+    font-size: 15px;
+  }
+}
+
+/* ===== FORMAS GEOMÉTRICAS DE FUNDO ===== */
+.geometric-patterns {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.pattern-circle {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(247, 167, 0, 0.6);
+  border-radius: 50%;
+  top: 15%;
+  right: 10%;
+  animation: float 6s ease-in-out infinite;
+}
+
+.pattern-triangle {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 45px solid rgba(59, 130, 246, 0.5);
+  top: 25%;
+  left: 8%;
+  animation: rotate 8s linear infinite;
+}
+
+.pattern-square {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(247, 167, 0, 0.4);
+  top: 60%;
+  right: 15%;
+  transform: rotate(45deg);
+  animation: slide 7s ease-in-out infinite;
+}
+
+.pattern-line {
+  position: absolute;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.6), transparent);
+  top: 40%;
+  left: 15%;
+  animation: pulse 5s ease-in-out infinite;
+}
+
+.pattern-dots {
+  position: absolute;
+  top: 70%;
+  left: 12%;
+  animation: float 4s ease-in-out infinite reverse;
+}
+
+.pattern-dots::before,
+.pattern-dots::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: rgba(100, 116, 139, 0.5);
+  border-radius: 50%;
+}
+
+.pattern-dots::before {
+  left: 0;
+}
+
+.pattern-dots::after {
+  left: 15px;
+  animation-delay: 0.5s;
+}
+
+/* ===== ANIMAÇÕES DAS FORMAS GEOMÉTRICAS ===== */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes slide {
+  0%, 100% {
+    transform: rotate(45deg) translateX(0px);
+  }
+  50% {
+    transform: rotate(45deg) translateX(15px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scaleX(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scaleX(1.2);
+  }
+}
+
+/* ===== RESPONSIVIDADE DAS FORMAS GEOMÉTRICAS ===== */
+@media (max-width: 768px) {
+  .pattern-circle {
+    width: 60px;
+    height: 60px;
+    top: 20%;
+    right: 5%;
+  }
+  
+  .pattern-triangle {
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 35px solid rgba(59, 130, 246, 0.5);
+    top: 30%;
+    left: 5%;
+  }
+  
+  .pattern-square {
+    width: 35px;
+    height: 35px;
+    top: 65%;
+    right: 8%;
+  }
+  
+  .pattern-line {
+    width: 70px;
+    top: 45%;
+    left: 10%;
+  }
+  
+  .pattern-dots {
+    top: 75%;
+    left: 8%;
+  }
+}

@@ -1,0 +1,283 @@
+<div class="container-fluid p-0">
+  <div class="row no-gutters min-vh-100">
+    <div
+      class="col-12 col-lg-6 d-flex flex-column align-items-center justify-content-center p-3 p-md-4 order-2 order-lg-1"
+    >
+      <div class="mb-3 d-none d-lg-block flex-grow-1">
+        <div class="logo-back" (click)="returnPage()" style="cursor: pointer">
+          <img src="assets/logo.svg" alt="Orvian Travel" class="logo-voltar" />
+        </div>
+      </div>
+      <div
+        class="d-flex justify-content-center align-items-center mb-5 mb-lg-4"
+      >
+        <img
+          src="assets/images/draw-2.svg"
+          alt="Ilustração"
+          class="img-fluid mobile-illustration"
+        />
+      </div>
+      <div class="text-container text-center text-lg-left w-100 mobile-text">
+        <h2 class="h4 h-lg-3 font-weight-bold mb-2">Pronto para embarcar?</h2>
+        <p class="text-muted mobile-description">
+          Crie sua conta e comece agora a descobrir experiências únicas,
+          destinos dos sonhos e pacotes personalizados só para você.
+        </p>
+      </div>
+    </div>
+    <div
+      class="col-12 col-lg-6 bg-gradient-custom d-flex align-items-center justify-content-center p-3 p-md-4 order-1 order-lg-2 mobile-form-container"
+    >
+      <div class="position-absolute mobile-back-btn d-lg-none">
+        <div
+          class="logo-back-mobile"
+          (click)="returnPage()"
+          style="cursor: pointer"
+        >
+          <img
+            src="assets/logo-branca.svg"
+            alt="Orvian Travel"
+            class="logo-voltar-mobile"
+          />
+        </div>
+      </div>
+      <div class="card shadow mobile-card">
+        <h3 class="text-center mt-5">Crie sua conta</h3>
+        <div class="card-body p-3 p-md-4">
+          <form>
+            <div class="form-group mb-3">
+              <label for="text">NOME</label>
+              <input
+                id="name"
+                class="form-control form-control-custom"
+                placeholder="Digite seu nome"
+                [(ngModel)]="user.name"
+                name="name"
+                required
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="text">TIPO DE DOCUMENTO</label>
+              <select
+                class="form-select form-control form-control-custom document-type-select"
+                (change)="onDocumentTypeChange($event)"
+              >
+                <option value="">Tipo de documento</option>
+                <option value="cpf">CPF</option>
+                <option value="passport">Passaporte</option>
+              </select>
+            </div>
+            <div class="form-group mb-3">
+              <label for="text">NÚMERO DO DOCUMENTO</label>
+              <input
+                type="text"
+                id="document"
+                name="document"
+                class="form-control form-control-custom document-number-input"
+                placeholder="Selecione o tipo de documento"
+                maxlength="8"
+                [(ngModel)]="user.document"
+                disabled
+                required
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="birthdate">DATA DE NASCIMENTO</label>
+              <div class="date-input-container">
+                <img
+                  src="assets/icons/calendar-date.svg"
+                  alt="Calendário"
+                  class="date-icon"
+                  (click)="openDatePicker()"
+                />
+                <input
+                  type="date"
+                  id="birthdate"
+                  name="birthDate"
+                  #birthdateInput
+                  class="date form-control form-control-custom date-input-with-icon"
+                  [(ngModel)]="user.birthDate"
+                  required
+                />
+              </div>
+            </div>
+            <div class="form-group mb-3">
+              <label for="text">TELEFONE</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                class="form-control form-control-custom"
+                placeholder="(00) 00000-0000"
+                maxlength="15"
+                (input)="formatPhone($event)"
+                [(ngModel)]="user.phone"
+                required
+              />
+            </div>
+            <div class="form-group mb-3">
+              <label for="email">EMAIL</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control form-control-custom"
+                placeholder="exemplo@avanade.com"
+                (blur)="validateEmail($event)"
+                (input)="validateEmail($event)"
+                [(ngModel)]="user.email"
+                required
+              />
+            </div>
+            <div class="form-group mb-4">
+              <label for="password">SENHA</label>
+              <div class="password-input-container">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  id="password"
+                  name="password"
+                  class="form-control form-control-custom password-input"
+                  placeholder="********"
+                  [(ngModel)]="user.password"
+                  required
+                  (focus)="showPasswordRequirements($event)"
+                  (blur)="hidePasswordRequirements($event)"
+                  (input)="validatePassword($event)"
+                />
+                <button
+                  type="button"
+                  class="password-toggle-btn"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="
+                    showPassword ? 'Ocultar senha' : 'Mostrar senha'
+                  "
+                >
+                  <i
+                    class="fas"
+                    [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                  ></i>
+                </button>
+              </div>
+
+              <!-- Requisitos de senha - movidos para fora do container -->
+              <div
+                id="password-requirements"
+                class="password-requirements mt-2"
+                style="display: none"
+              >
+                <small class="text-muted d-block mb-2"
+                  >A senha deve conter:</small
+                >
+                <div class="requirements-list">
+                  <div
+                    class="requirement requirement-unmet"
+                    data-requirement="length"
+                  >
+                    <span class="req-icon">✗</span>
+                    <span class="req-text">Entre 8 e 20 caracteres</span>
+                  </div>
+                  <div
+                    class="requirement requirement-unmet"
+                    data-requirement="lowercase"
+                  >
+                    <span class="req-icon">✗</span>
+                    <span class="req-text">Pelo menos uma letra minúscula</span>
+                  </div>
+                  <div
+                    class="requirement requirement-unmet"
+                    data-requirement="uppercase"
+                  >
+                    <span class="req-icon">✗</span>
+                    <span class="req-text">Pelo menos uma letra maiúscula</span>
+                  </div>
+                  <div
+                    class="requirement requirement-unmet"
+                    data-requirement="number"
+                  >
+                    <span class="req-icon">✗</span>
+                    <span class="req-text">Pelo menos um número</span>
+                  </div>
+                  <div
+                    class="requirement requirement-unmet"
+                    data-requirement="special"
+                  >
+                    <span class="req-icon">✗</span>
+                    <span class="req-text"
+                      >Pelo menos um caractere especial (&#64;#$%^&+=!)</span
+                    >
+                  </div>
+                  <div
+                    class="requirement requirement-unmet"
+                    data-requirement="noSpaces"
+                  >
+                    <span class="req-icon">✗</span>
+                    <span class="req-text">Sem espaços em branco</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- NOVO CAMPO: Confirmar Senha -->
+            <div class="form-group mb-4">
+              <label for="confirmPassword">CONFIRMAR SENHA</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                class="form-control form-control-custom"
+                placeholder="Digite a senha novamente"
+                [(ngModel)]="confirmPassword"
+                required
+                (input)="validatePasswordMatch($event)"
+                (blur)="validatePasswordMatch($event)"
+              />
+              <!-- Mensagem de erro para senhas que não coincidem -->
+              <div
+                *ngIf="confirmPassword && !passwordsMatch"
+                class="invalid-feedback d-block"
+              >
+                As senhas não coincidem
+              </div>
+              <!-- Mensagem de sucesso para senhas que coincidem -->
+              <div
+                *ngIf="confirmPassword && passwordsMatch && user.password"
+                class="valid-feedback d-block"
+              >
+                ✓ As senhas coincidem
+              </div>
+            </div>
+            <button
+              class="btn btn-primary btn-block btn-custom-primary font-weight-bold mb-2"
+              type="submit"
+              (click)="register(user)"
+            >
+              Criar conta
+            </button>
+          </form>
+          <div class="text-center login-link">
+            <span class="login-text">Já tem uma conta? </span>
+            <a class="login-link-action" (click)="loginRedirect()">Entrar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Popup de conflito -->
+  <div
+    *ngIf="showConflictPopup"
+    class="popup-overlay"
+    (click)="closeConflictPopup()"
+  >
+    <div class="popup-content" (click)="$event.stopPropagation()">
+      <h4>⚠️ Credenciais já cadastradas</h4>
+      <p>
+        O email, telefone ou documento informado já está em uso. Verifique os
+        dados e tente novamente.
+      </p>
+      <button class="btn btn-primary" (click)="closeConflictPopup()">
+        Entendi
+      </button>
+    </div>
+  </div>
+</div>

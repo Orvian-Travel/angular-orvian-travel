@@ -1,0 +1,18 @@
+body {
+    background-color: #f0fbff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Garante que o conteúdo principal ocupe o espaço disponível */
+app-hero,
+app-card-list {
+    flex-grow: 1;
+}
+
+/* O footer ficará sempre no final */
+app-footer {
+    margin-top: auto;
+}

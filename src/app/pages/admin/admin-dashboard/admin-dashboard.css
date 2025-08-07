@@ -1,0 +1,125 @@
+.dashboard-container {
+    padding: 2rem;
+}
+
+.section-header h1 {
+    color: var(--orvian-primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.section-header p {
+    color: var(--orvian-gray-003);
+}
+
+.stat-card {
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--orvian-primary-variant) 0%, var(--orvian-primary-color) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.stat-label {
+    color: var(--orvian-gray-003);
+    font-weight: 500;
+}
+
+.stat-value {
+    color: var(--orvian-primary-color);
+}
+
+.chart-section {
+    border-radius: 12px;
+}
+
+.chart-section h2 {
+    color: var(--orvian-primary-color);
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    display: inline-block;
+}
+
+.legend-item {
+    margin-bottom: 0.5rem;
+}
+
+.legend-item small {
+    color: var(--orvian-gray-004);
+    font-weight: 500;
+}
+
+/* Estilos para seção de exportação */
+.export-section {
+    border-radius: 12px;
+}
+
+.export-section h2 {
+    color: var(--orvian-primary-color);
+}
+
+.export-section p {
+    color: var(--orvian-gray-003);
+}
+
+.export-section .text-muted {
+    color: var(--orvian-gray-003) !important;
+}
+
+.btn-orvian-primary{
+    background-color: var(--orvian-primary-variant);
+    color: white;
+    border: solid 2px var(--orvian-primary-variant);
+    transition: all 0.3s ease;
+}
+
+.btn-orvian-primary:hover{
+    background-color: white;
+    color: var(--orvian-primary-variant);
+}
+
+.btn-orvian-secondary{
+    background-color: white;
+    border: solid 2px var(--orvian-primary-variant);
+    color: var(--orvian-primary-variant);
+    transition: all 0.3s ease;
+}
+
+.btn-orvian-secondary:hover{
+    background-color: var(--orvian-primary-variant);
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+    }
+    
+    .stat-card {
+        margin-bottom: 1rem;
+    }
+    
+    .chart-section .row {
+        flex-direction: column;
+    }
+    
+    .chart-section .col-lg-6:first-child {
+        margin-bottom: 2rem;
+    }
+}

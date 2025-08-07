@@ -1,0 +1,297 @@
+header {
+  background-color: var(--orvian-header-background);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* ===== CONTAINER E LAYOUT ===== */
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.navbar {
+  padding: 0.05rem 0;
+}
+
+/* ===== LOGO/BRAND ===== */
+.brand {
+  height: 5.2rem;
+  transition: opacity 0.3s ease;
+}
+
+.brand:hover {
+  opacity: 0.8;
+}
+
+.brand img {
+  height: 100%;
+  width: auto;
+}
+
+/* ===== BOTÕES ===== */
+.buttons {
+  gap: 1.5rem;
+  display: flex;
+  align-items: center;
+}
+
+button {
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
+  transition: all 0.3s ease-in-out;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+  background-color: var(--orvian-button-button-background-color-hover);
+  color: var(--orvian-button-button-text-color-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== INFORMAÇÕES DO USUÁRIO ===== */
+.user-info {
+  color: white;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-name {
+  color: white;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 18px;
+}
+
+/* ===== MENU HAMBÚRGUER ===== */
+.navbar-toggler {
+  display: none;
+  background: none;
+  border: 2px solid white;
+  border-radius: 4px;
+  padding: 6px 8px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--orvian-button-button-background-color);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 991.98px) {
+  /* Mostra o botão hambúrguer */
+  .navbar-toggler {
+    display: block;
+  }
+  
+  /* Esconde o menu por padrão */
+  .navbar-collapse {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--orvian-header-background);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+  
+  /* Mostra o menu quando ativo */
+  .navbar-collapse.show {
+    display: block;
+    animation: slideDown 0.3s ease-out;
+  }
+  
+  /* Layout vertical dos botões em mobile */
+  .buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    width: 100%;
+  }
+  
+  .buttons button {
+    width: 100%;
+    text-align: center;
+    padding: 12px 16px;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    gap: 0.75rem;
+    text-align: center;
+    width: 100%;
+  }
+  
+  .user-info .btn {
+    width: 100%;
+    padding: 12px 16px;
+  }
+}
+
+/* ===== ANIMAÇÕES ===== */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== DROPDOWN STYLES ===== */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle-custom {
+  background: transparent !important;
+  border: none !important;
+  color: white !important;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: none !important;
+}
+
+.dropdown-toggle-custom:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  transform: none !important;
+}
+
+.dropdown-toggle-custom:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+  background: transparent;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999;
+  min-width: 200px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+  margin-top: 5px;
+}
+
+.dropdown-menu-custom.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item-custom {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f8f9fa;
+  color: #333;
+  text-decoration: none;
+}
+
+.dropdown-item-custom i {
+  margin-right: 8px;
+  width: 16px;
+  font-size: 14px;
+}
+
+.dropdown-item-custom.logout-item {
+  color: #dc3545;
+}
+
+.dropdown-item-custom.logout-item:hover {
+  background-color: #f8f9fa;
+  color: #dc3545;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #e9ecef;
+  margin: 0;
+}
+
+/* ===== RESPONSIVIDADE DROPDOWN ===== */
+@media (max-width: 991.98px) {
+  .dropdown-menu-custom {
+    right: -16px;
+    min-width: 180px;
+  }
+  
+  /* Ajuste para o dropdown em mobile */
+  .dropdown {
+    width: 100%;
+  }
+  
+  .dropdown-toggle-custom {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 16px;
+  }
+  
+  .dropdown-menu-custom {
+    right: 16px;
+    left: 16px;
+    min-width: auto;
+  }
+}

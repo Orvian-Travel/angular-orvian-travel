@@ -1,0 +1,124 @@
+<div class="container-fluid payment-approved-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="success-card">
+          <div class="success-icon">
+            <div class="checkmark-circle">
+              <svg class="checkmark" width="60" height="60" viewBox="0 0 60 60">
+                <circle
+                  cx="30"
+                  cy="30"
+                  r="28"
+                  fill="none"
+                  stroke="#1b9dbd"
+                  stroke-width="3"
+                />
+                <path
+                  d="M16 30l8 8 20-20"
+                  fill="none"
+                  stroke="#1b9dbd"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="success-content">
+            <h1 class="success-title">Pagamento Aprovado!</h1>
+            <p class="success-subtitle">
+              Sua viagem foi confirmada com sucesso
+            </p>
+            <div class="booking-details">
+              <div class="detail-item">
+                <span class="detail-label">Data da Compra:</span>
+                <span class="detail-value">{{
+                  getFormattedPurshaseDate()
+                }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Valor Total:</span>
+                <span class="detail-value price">{{
+                  totalValue | currency : "BRL" : "symbol" : "1.2-2"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="trip-info-card">
+          <h3 class="trip-title">Detalhes da Viagem</h3>
+          <div class="trip-destination">
+            <div class="destination-icon">
+              <img src="/assets/icons/pin.svg" alt="Destino" class="icon" />
+            </div>
+            <div class="destination-info">
+              <h4>{{ packageName }}</h4>
+              <p>{{ packageDuration }} dias</p>
+            </div>
+          </div>
+          <div class="trip-dates">
+            <div class="date-item">
+              <div class="date-icon">
+                <img
+                  src="/assets/icons/calendar-date.svg"
+                  alt="Check-in"
+                  class="icon"
+                />
+              </div>
+              <div class="date-info">
+                <span class="date-label">Check-in</span>
+                <span class="date-value">{{ getFormattedCheckinDate() }}</span>
+              </div>
+            </div>
+            <div class="date-separator">→</div>
+            <div class="date-item">
+              <div class="date-icon">
+                <img
+                  src="/assets/icons/calendar-date.svg"
+                  alt="Check-out"
+                  class="icon"
+                />
+              </div>
+              <div class="date-info">
+                <span class="date-label">Check-out</span>
+                <span class="date-value">{{ getFormattedCheckoutDate() }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="next-steps-card">
+          <h3 class="steps-title">Próximos Passos</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Confirmação por E-mail</h4>
+                <p>
+                  Você receberá um e-mail com todos os detalhes da sua reserva
+                  em até 5 minutos.
+                </p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Documentação</h4>
+                <p>
+                  Verifique se seus documentos estão válidos e dentro do prazo
+                  de vencimento.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary-custom" routerLink="/reservations">
+            Minhas Reservas
+          </button>
+        </div>
+        <app-contact-support></app-contact-support>
+      </div>
+    </div>
+  </div>
+</div>

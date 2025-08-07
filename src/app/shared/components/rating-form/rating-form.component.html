@@ -1,0 +1,177 @@
+<!-- Formulário de Avaliação -->
+<div class="rating-form-container">
+  <div class="rating-form-header">
+    <h3 class="form-title">
+      {{ existingRating ? 'Editar Avaliação' : 'Avaliar Experiência' }}
+    </h3>
+    <p class="form-subtitle">
+      {{ existingRating ? 'Modifique sua avaliação ou delete-a se desejar' : 'Compartilhe sua experiência e ajude outros viajantes' }}
+    </p>
+    
+    <!-- Indicador visual de avaliação existente -->
+    <div *ngIf="existingRating" class="existing-rating-indicator">
+      <div class="indicator-icon">✏️</div>
+      <span class="indicator-text">Você já avaliou este pacote. Pode editar ou deletar sua avaliação.</span>
+    </div>
+  </div>
+
+  <form [formGroup]="ratingForm" (ngSubmit)="onSubmit()" class="rating-form">
+    
+    <!-- Seção de Estrelas -->
+    <div class="form-group">
+      <label class="form-label">Sua nota *</label>
+      <div class="stars-container">
+        <button
+          type="button"
+          *ngFor="let star of [1,2,3,4,5]"
+          class="star-button"
+          [class]="getStarClass(star)"
+          (click)="setRating(star)"
+          (mouseenter)="setHoverRating(star)"
+          (mouseleave)="clearHoverRating()"
+          [attr.aria-label]="'Dar ' + star + ' estrela' + (star > 1 ? 's' : '')">
+          ★
+        </button>
+      </div>
+      <div class="rating-text" *ngIf="selectedRating > 0">
+        <span [ngSwitch]="selectedRating">
+          <span *ngSwitchCase="1">😞 Muito ruim</span>
+          <span *ngSwitchCase="2">😐 Ruim</span>
+          <span *ngSwitchCase="3">🙂 Regular</span>
+          <span *ngSwitchCase="4">😊 Bom</span>
+          <span *ngSwitchCase="5">😍 Excelente</span>
+        </span>
+      </div>
+      <div class="error-message" *ngIf="hasFieldError('rate')">
+        {{ getFieldError('rate') }}
+      </div>
+    </div>
+
+    <!-- Seção de Comentário -->
+    <div class="form-group">
+      <label for="comment" class="form-label">Seu comentário *</label>
+      <textarea
+        id="comment"
+        formControlName="comment"
+        class="form-textarea"
+        [class.error]="hasFieldError('comment')"
+        placeholder="Conte-nos sobre sua experiência... O que mais gostou? O que poderia melhorar?"
+        rows="5">
+      </textarea>
+      <div class="textarea-footer">
+        <div class="char-counter" [class.warning]="getRemainingChars() < 50">
+          {{ getRemainingChars() }} caracteres restantes
+        </div>
+      </div>
+      <div class="error-message" *ngIf="hasFieldError('comment')">
+        {{ getFieldError('comment') }}
+      </div>
+    </div>
+
+    <!-- Mensagem de Erro Geral -->
+    <div class="submit-error" *ngIf="submitError">
+      <div class="error-icon">⚠️</div>
+      <div class="error-text">{{ submitError }}</div>
+    </div>
+
+    <!-- Mensagem de Erro de Delete -->
+    <div class="delete-error" *ngIf="deleteError">
+      <div class="error-icon">⚠️</div>
+      <div class="error-text">{{ deleteError }}</div>
+    </div>
+
+    <!-- Botões de Ação -->
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="onCancel()"
+        [disabled]="isSubmitting || isDeleting">
+        Cancelar
+      </button>
+
+      <!-- Botão de Deletar (só aparece se há avaliação existente) -->
+      <button
+        *ngIf="existingRating"
+        type="button"
+        class="btn btn-danger btn-delete"
+        (click)="showDeleteConfirmationDialog()"
+        [disabled]="isSubmitting || isDeleting"
+        title="Deletar esta avaliação permanentemente">
+        <span class="delete-icon">🗑️</span>
+        <span *ngIf="isDeleting" class="loading-spinner"></span>
+        <span class="delete-text">{{ isDeleting ? 'Deletando...' : 'Deletar' }}</span>
+      </button>
+      
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="ratingForm.invalid || isSubmitting || isDeleting">
+        <span *ngIf="isSubmitting" class="loading-spinner"></span>
+        {{ isSubmitting ? 'Salvando...' : (existingRating ? 'Atualizar Avaliação' : 'Enviar Avaliação') }}
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<!-- Modal de Confirmação de Delete -->
+<div *ngIf="showDeleteConfirmation" class="delete-modal-overlay" (click)="cancelDelete()">
+  <div class="delete-modal-container" (click)="$event.stopPropagation()">
+    <div class="delete-modal-header">
+      <div class="delete-modal-icon">🗑️</div>
+      <h3 class="delete-modal-title">Deletar Avaliação</h3>
+    </div>
+    
+    <div class="delete-modal-content">
+      <p class="delete-warning-text">
+        Tem certeza que deseja <strong>deletar permanentemente</strong> sua avaliação?
+      </p>
+      
+      <!-- Prévia da avaliação que será deletada -->
+      <div *ngIf="existingRating" class="rating-preview">
+        <div class="preview-rating">
+          <span *ngFor="let star of [1,2,3,4,5]" 
+                class="preview-star" 
+                [class.filled]="star <= existingRating.rate">
+            ⭐
+          </span>
+          <span class="preview-rate">({{ existingRating.rate }}/5)</span>
+        </div>
+        <div class="preview-comment">
+          "{{ existingRating.comment }}"
+        </div>
+      </div>
+      
+      <p class="delete-warning-subtext">
+        ⚠️ Esta ação não pode ser desfeita.
+      </p>
+      
+      <!-- Mensagem de erro específica do delete -->
+      <div class="delete-error" *ngIf="deleteError">
+        <div class="error-icon">⚠️</div>
+        <div class="error-text">{{ deleteError }}</div>
+      </div>
+    </div>
+    
+    <div class="delete-modal-actions">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="cancelDelete()"
+        [disabled]="isDeleting">
+        Cancelar
+      </button>
+      
+      <button
+        type="button"
+        class="btn btn-danger btn-delete-confirm"
+        (click)="confirmDelete()"
+        [disabled]="isDeleting">
+        <span class="delete-icon">🗑️</span>
+        <span *ngIf="isDeleting" class="loading-spinner"></span>
+        <span>{{ isDeleting ? 'Deletando...' : 'Sim, Deletar' }}</span>
+      </button>
+    </div>
+  </div>
+</div>

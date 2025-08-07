@@ -1,0 +1,156 @@
+<div class="container-fluid payment-rejected-container">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="error-card">
+          <div class="error-icon">
+            <div class="error-circle">
+              <svg
+                class="pending-clock"
+                width="60"
+                height="60"
+                viewBox="0 0 60 60"
+              >
+                <circle
+                  cx="30"
+                  cy="30"
+                  r="28"
+                  fill="none"
+                  stroke="#ffc107"
+                  stroke-width="3"
+                />
+                <path
+                  d="M30 15v15l10 10"
+                  fill="none"
+                  stroke="#ffc107"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="error-content">
+            <h1 class="error-title">Pagamento em Processamento</h1>
+            <p class="error-subtitle">
+              Seu boleto foi registrado e está aguardando compensação
+            </p>
+            <div class="booking-status">
+              <div class="status-item">
+                <span class="status-label">Status da Reserva:</span>
+                <span class="status-value pending">Pendente</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Prazo de Compensação:</span>
+                <span class="status-value">24 a 48 horas úteis</span>
+              </div>
+              <div class="status-item">
+                <span class="status-label">Valor Total:</span>
+                <span class="status-value price">{{
+                  totalValue | currency : "BRL" : "symbol" : "1.2-2"
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="problem-info-card">
+          <h3 class="problem-title">O que acontece agora?</h3>
+          <div class="problem-description">
+            <div class="problem-icon">
+              <img src="/assets/icons/boleto.svg" alt="Boleto" class="icon" />
+            </div>
+            <div class="problem-text">
+              <h4>Aguardando Compensação do Boleto</h4>
+              <p>
+                Seu boleto foi gerado com sucesso! O pagamento será processado
+                automaticamente pelo banco em
+                <strong>24 a 48 horas úteis</strong> após o pagamento.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="trip-info-card">
+          <h3 class="trip-title">Detalhes da Viagem</h3>
+          <div class="trip-destination">
+            <div class="destination-icon">
+              <img src="/assets/icons/pin.svg" alt="Destino" class="icon" />
+            </div>
+            <div class="destination-info">
+              <h4>{{ packageName }}</h4>
+              <p>{{ packageDuration }} dias</p>
+            </div>
+          </div>
+          <div class="trip-dates">
+            <div class="date-item">
+              <div class="date-icon">
+                <img
+                  src="/assets/icons/calendar-date.svg"
+                  alt="Check-in"
+                  class="icon"
+                />
+              </div>
+              <div class="date-info">
+                <span class="date-label">Check-in</span>
+                <span class="date-value">{{ getFormattedCheckinDate() }}</span>
+              </div>
+            </div>
+            <div class="date-separator">→</div>
+            <div class="date-item">
+              <div class="date-icon">
+                <img
+                  src="/assets/icons/calendar-date.svg"
+                  alt="Check-out"
+                  class="icon"
+                />
+              </div>
+              <div class="date-info">
+                <span class="date-label">Check-out</span>
+                <span class="date-value">{{ getFormattedCheckoutDate() }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="next-steps-card">
+          <h3 class="steps-title">Próximos Passos</h3>
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h4>Pague o Boleto</h4>
+                <p>
+                  Se ainda não pagou, acesse o boleto através do seu email ou
+                  banco e efetue o pagamento até a data de vencimento.
+                </p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h4>Aguarde a Compensação</h4>
+                <p>
+                  Após o pagamento, o processo de compensação leva de 24 a 48
+                  horas úteis. Você receberá uma notificação por email.
+                </p>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h4>Confirmação Automática</h4>
+                <p>
+                  Assim que o pagamento for identificado, sua reserva será
+                  automaticamente confirmada e você receberá os vouchers.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary-custom" routerLink="/reservations">
+            Minhas Reservas
+          </button>
+        </div>
+        <app-contact-support></app-contact-support>
+      </div>
+    </div>
+  </div>
+</div>

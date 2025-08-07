@@ -1,0 +1,271 @@
+<app-header></app-header>
+  <main class="container my-4">
+    <div class="container-fluid">
+      <div class="row g-4 justify-content-center container-margin">
+        <div class="resume-card col-lg-4 col-md-12">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title mb-3">Resumo do Pacote</h5>
+              <div class="summary-info mb-3">
+                <p class="mb-2">
+                  <strong>Data de check-in:</strong> {{ packageCheckin | date:"d 'de' MMMM 'de 'y" : 'pt-BR' }}
+                </p>
+                <p class="mb-2"><strong>Local:</strong> {{ packageDestination }}</p>
+              </div>
+              <hr />
+              <div class="price-breakdown">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>{{ travelerCount }} pacote(s)</span>
+                  <span class="fw-semibold">{{ packageDetail?.price! * travelerCount! | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between">
+                  <span class="fw-semibold">ICMS (6%)</span>
+                  <span class="fw-semibold">{{ getTotalPrice() * (6/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="fw-semibold">Taxa de Serviço (4%)</span>
+                  <span class="fw-semibold">{{ getTotalPrice() * (4/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span class="fw-bold">Total (taxas e impostos inclusos)</span>
+                  <span class="fw-bold">{{ getTotalPrice() * (1+10/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <form (ngSubmit)="processPayment()" #paymentForm="ngForm" class="col-lg-8 col-md-12">
+          <div class="card shadow-sm mb-4">
+            <div class="card-body">
+              <h5 class="card-title mb-4">Dados de quem vai viajar</h5>
+              <div id="travelers-container">
+                <div class="traveler-card border rounded p-3 mb-3">
+                  <div
+                    class="d-flex justify-content-between align-items-center mb-3"
+                  >
+                    <span class="fw-semibold">Viajante 1</span>
+                    <button
+                      class="btn remove-traveler"
+                      (click)="removeTraveler($event)"
+                      style="display: none"
+                    >
+                      <img
+                        src="assets/icons/delete.svg"
+                        alt="Remover viajante"
+                      />
+                    </button>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold text-muted"
+                        >NOME COMPLETO</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder=""
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold text-muted"
+                        >DATA DE NASCIMENTO</label
+                      >
+                      <input type="date" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold text-muted"
+                        >TIPO DE DOCUMENTO</label
+                      >
+                      <select
+                        class="form-select document-type-select"
+                        (change)="onDocumentTypeChange($event)"
+                        required
+                      >
+                        <option value="">Tipo de Documento</option>
+                        <option value="cpf">CPF</option>
+                        <option value="passaporte">Passaporte</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold text-muted"
+                        >NÚMERO</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control document-number-input"
+                        placeholder="Selecione o tipo de documento"
+                        maxlength="8"
+                        disabled
+                        required
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label small fw-semibold text-muted"
+                        >EMAIL</label
+                      >
+                      <input
+                        type="email"
+                        class="form-control"
+                        placeholder=""
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                class="btn-custom-primary w-100 mt-3"
+                (click)="addTraveler()"
+              type="button"
+              >
+                Adicionar mais viajantes + {{packageDetail?.price | currency:'BRL':'symbol':'1.2-2':'pt-BR'}}
+              </button>
+            </div>
+          </div>
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h5 class="card-title mb-4">Forma de pagamento</h5>
+              <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                  <div
+                    class="payment-option card text-center h-100"
+                    data-method="CREDITO"
+                    (click)="selectPaymentMethod('CREDITO')"
+                  >
+                    <div
+                      class="card-body payment-card d-flex flex-column justify-content-center"
+                    >
+                      <img class="payment-icon" src="assets/icons/credit-card.svg" alt="">
+                      <span class="fw-semibold">Cartão</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div
+                    class="payment-option card text-center h-100"
+                    data-method="PIX"
+                    (click)="selectPaymentMethod('PIX')"
+                  >
+                    <div
+                      class="card-body payment-card d-flex flex-column justify-content-center"
+                    >
+                      <img class="payment-icon" src="assets/icons/pix.svg" alt="">
+                      <span class="fw-semibold">PIX</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div
+                    class="payment-option card text-center h-100"
+                    data-method="BOLETO"
+                    (click)="selectPaymentMethod('BOLETO')"
+                  >
+                    <div
+                      class="card-body payment-card d-flex flex-column justify-content-center"
+                    >
+                      <img class="payment-icon" src="assets/icons/boleto.svg" alt="">
+                      <span class="fw-semibold">Boleto</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="cartao-form" class="payment-form active">
+                <div class="row g-3 mb-3">
+                  <div class="col-md-8">
+                    <label class="form-label small fw-semibold text-muted"
+                      >NÚMERO DO CARTÃO</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="0000 0000 0000 0000"
+                      maxlength="19"
+                      id="card-number"
+                      (input)="formatCardNumber($event)"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold text-muted"
+                      >NOME NO CARTÃO</label
+                    >
+                    <input type="text" class="form-control" />
+                  </div>
+                </div>
+                <div class="row g-3 mb-3">
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold text-muted"
+                      >DATA DE VENCIMENTO</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="00/00"
+                      maxlength="5"
+                      id="card-expiry"
+                      (input)="formatCardExpiry($event)"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold text-muted"
+                      >CVV</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="***"
+                      maxlength="4"
+                    />
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold text-muted"
+                      >Quantas parcelas?</label
+                    >
+                    <select class="form-select">
+                      <option value="1">1x de {{ getTotalPrice() * (1+10/100) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="2">2x de R$ {{ getTotalPrice() * (1+10/100) / 2 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="3">3x de {{ getTotalPrice() * (1+10/100) / 3 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="4">4x de {{ getTotalPrice() * (1+10/100) / 4 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="5">5x de {{ getTotalPrice() * (1+10/100) / 5 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                      <option value="6">6x de {{ getTotalPrice() * (1+10/100) / 6 | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div id="pix-form" class="payment-form">
+                <div class="text-center py-4">
+                  <i class="fab fa-pix fa-4x text-primary mb-3"></i>
+                  <h4 class="mb-3">Pagamento via PIX</h4>
+                  <p class="text-muted mb-3">
+                    Após confirmar, você receberá o QR Code para realizar o
+                    pagamento via PIX.
+                  </p>
+                  <div class="alert alert-success">
+                    🎉 5% de desconto no PIX - Total:
+                    <strong>{{ getFinalPriceWithTax() | currency:'BRL':'symbol':'1.2-2' }}</strong>
+                  </div>
+                </div>
+              </div>
+              <div id="boleto-form" class="payment-form">
+                <div class="text-center py-4">
+                  <i class="fas fa-barcode fa-4x text-primary mb-3"></i>
+                  <h4 class="mb-3">Pagamento via Boleto</h4>
+                  <p class="text-muted mb-3">
+                    O boleto será enviado para seu email e terá vencimento em 3
+                    dias úteis.
+                  </p>
+                  <div class="alert alert-warning">
+                    ⚠️ A reserva será confirmada apenas após o pagamento.
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-success btn-lg w-100 mt-4" [disabled]="!isFormValid">
+                Realizar Pagamento
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>

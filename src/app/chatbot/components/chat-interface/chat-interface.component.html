@@ -1,0 +1,123 @@
+<div class="chat-container">
+  <!-- Header do Chat -->
+  <div class="chat-header">
+    <div class="chat-title">
+      <h4>{{ title }}</h4>
+    </div>
+    <div class="chat-actions">
+      <button 
+        class="btn-icon" 
+        (click)="clearChat()" 
+        title="Limpar conversa">
+        🗑️
+      </button>
+      <button 
+        class="btn-icon" 
+        (click)="exportChat()" 
+        title="Exportar conversa">
+        📥
+      </button>
+    </div>
+  </div>
+
+  <!-- Área de Mensagens -->
+  <div class="chat-messages" [style.max-height]="maxHeight">
+    <div 
+      *ngFor="let msg of messages; trackBy: trackByMessageId" 
+      [class]="'message message-' + msg.type"
+      [attr.data-message-id]="msg.id">
+      
+      <!-- Avatar -->
+      <div class="message-avatar">
+        <span *ngIf="msg.type === 'user'">👤</span>
+        <span *ngIf="msg.type === 'bot'">🌎</span>
+        <span *ngIf="msg.type === 'system'">⚙️</span>
+        <span *ngIf="msg.type === 'error'">⚠️</span>
+      </div>
+
+      <!-- Conteúdo da Mensagem -->
+      <div class="message-content">
+        <div class="message-header">
+          <strong class="message-sender">{{ msg.sender }}</strong>
+          <span class="message-time">{{ getFormattedTime(msg.timestamp) }}</span>
+        </div>
+        <div class="message-text" [innerHTML]="formatMessageContent(msg.content)"></div>
+      </div>
+    </div>
+
+    <!-- Indicador de Digitação -->
+    <div *ngIf="typing && showTypingIndicator" class="message message-bot typing-indicator">
+      <div class="message-avatar">
+        <span>🌎</span>
+      </div>
+      <div class="message-content">
+        <div class="message-header">
+          <strong class="message-sender">Orb</strong>
+        </div>
+        <div class="typing-dots">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Input de Mensagem -->
+  <div class="chat-input-container">
+    <div class="chat-input">
+      <textarea
+        [(ngModel)]="userMessage"
+        (keydown)="onKeyPress($event)"
+        [placeholder]="placeholder"
+        [disabled]="loading"
+        class="message-input"
+        rows="1"></textarea>
+      
+      <div class="input-actions">
+        <button 
+          *ngIf="allowFileUpload"
+          class="btn-icon"
+          title="Anexar arquivo">
+          📎
+        </button>
+        
+        <button 
+          class="btn-send"
+          (click)="sendMessage()" 
+          [disabled]="loading || !userMessage.trim()"
+          [class.loading]="loading">
+          <span *ngIf="!loading">📤</span>
+          <span *ngIf="loading" class="spinner">⏳</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Indicadores de Status -->
+    <div class="chat-status" *ngIf="loading || typing">
+      <small class="status-text">
+        <span *ngIf="typing">Orb está digitando...</span>
+        <span *ngIf="loading && !typing">Enviando mensagem...</span>
+      </small>
+    </div>
+  </div>
+
+  <!-- Sugestões Rápidas (opcional) -->
+  <div class="quick-suggestions" *ngIf="messages.length === 1">
+    <button 
+      class="suggestion-btn"
+      (click)="sendQuickMessage('Quais destinos vocês oferecem?')">
+      🗺️ Destinos
+    </button>
+    <button 
+      class="suggestion-btn"
+      (click)="sendQuickMessage('Quanto custa uma viagem para o Nordeste?')">
+      💰 Preços
+    </button>
+    <button 
+      class="suggestion-btn"
+      (click)="sendQuickMessage('Como funciona o processo de reserva?')">
+      📝 Reservas
+    </button>
+  </div>
+</div>

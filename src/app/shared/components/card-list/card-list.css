@@ -1,0 +1,453 @@
+app-card {
+  display: contents;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--orvian-primary-color);
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--orvian-gray-003);
+  margin: 0;
+  font-weight: 400;
+}
+
+.packages-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding: 0;
+}
+
+.package-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card:hover {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+}
+
+.card-image-wrapper {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.package-card:hover .card-image {
+  transform: scale(1.1);
+}
+
+.duration-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--orvian-primary-variant);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-content {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-tag {
+  display: inline-block;
+  background: var(--orvian-gray-002);
+  color: var(--orvian-gray-003);
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
+  width: fit-content;
+}
+
+.package-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--orvian-primary-color);
+  margin: 0 0 0.8rem 0;
+  line-height: 1.3;
+  min-height: 2.8rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price-section {
+  margin-top: auto;
+}
+
+.price-label {
+  color: var(--orvian-gray-003);
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.price-wrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  margin-bottom: 0.3rem;
+}
+
+.currency {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--orvian-primary-color);
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--orvian-primary-color);
+  line-height: 1;
+}
+
+.price-period {
+  font-size: 0.9rem;
+  color: var(--orvian-gray-003);
+  margin-left: 0.2rem;
+}
+
+.price-disclaimer {
+  font-size: 1.2rem;
+  color: var(--orvian-gray-003);
+  margin: 0;
+}
+
+.btnClear {
+  padding: 0.5rem 1.2rem;
+  background-color: var(--orvian-button-button-background-color);
+  color: var(--orvian-button-button-text-color);
+  border: 2px solid var(--orvian-button-button-background-color);
+  font-size: 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btnClear:hover {
+  background-color: var(--orvian-button-button-background-color-hover);
+  color: var(--orvian-button-button-text-color-hover);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .packages-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .package-card {
+    margin: 0;
+    height: 380px;
+  }
+
+  .card-image-wrapper {
+    height: 180px;
+  }
+
+  .card-content {
+    padding: 1.2rem;
+  }
+
+  .package-title {
+    font-size: 1.2rem;
+    min-height: 2.6rem;
+  }
+
+  .price {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-header {
+    margin-bottom: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+  }
+
+  .packages-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .package-card {
+    margin: 0;
+    border-radius: 6px;
+    height: 360px;
+  }
+
+  .card-image-wrapper {
+    height: 160px;
+  }
+
+  .card-content {
+    padding: 1rem;
+  }
+
+  .duration-badge {
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+    border-radius: 4px;
+  }
+
+  .package-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    min-height: 2.4rem;
+  }
+
+  .price {
+    font-size: 1.6rem;
+  }
+}
+
+.pagination-container {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.pagination-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pagination-btn {
+  background: white;
+  border: 2px solid var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--orvian-primary-variant);
+  color: white;
+}
+
+.pagination-btn:disabled {
+  border-color: var(--orvian-gray-001);
+  color: var(--orvian-gray-003);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pagination-number {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--orvian-gray-001);
+  background: white;
+  color: var(--orvian-gray-003);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.pagination-number:hover {
+  border-color: var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+}
+
+.pagination-number.active {
+  background-color: var(--orvian-primary-variant);
+  border-color: var(--orvian-primary-variant);
+  color: white;
+}
+
+.pagination-info {
+  color: var(--orvian-gray-003);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .pagination-nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pagination-numbers {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-numbers {
+    gap: 0.3rem;
+  }
+
+  .pagination-number {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+
+  .pagination-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+.pagination-container {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.pagination-nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.pagination-btn {
+  background: white;
+  border: 2px solid var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: var(--orvian-primary-variant);
+  color: white;
+}
+
+.pagination-btn:disabled {
+  border-color: var(--orvian-gray-001);
+  color: var(--orvian-gray-003);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.pagination-numbers {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pagination-number {
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--orvian-gray-001);
+  background: white;
+  color: var(--orvian-gray-003);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+
+.pagination-number:hover {
+  border-color: var(--orvian-primary-variant);
+  color: var(--orvian-primary-variant);
+}
+
+.pagination-number.active {
+  background-color: var(--orvian-primary-variant);
+  border-color: var(--orvian-primary-variant);
+  color: white;
+}
+
+.pagination-info {
+  color: var(--orvian-gray-003);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .pagination-nav {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pagination-numbers {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination-numbers {
+    gap: 0.3rem;
+  }
+
+  .pagination-number {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+
+  .pagination-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}

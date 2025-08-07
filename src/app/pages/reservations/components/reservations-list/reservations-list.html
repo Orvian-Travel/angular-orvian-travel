@@ -1,0 +1,379 @@
+<main class="container my-5">
+  <div class="section-header">
+    <h1 class="section-title">Minhas Reservas</h1>
+    <p class="section-subtitle">
+      Gerencie suas reservas de viagens e acompanhe o status dos pagamentos
+    </p>
+  </div>
+  <div class="content-wrapper">
+    <!-- Layout principal: Filtros à esquerda, Reservas à direita -->
+    <div class="main-layout">
+      <!-- Coluna da esquerda: Filtros -->
+      <div class="filters-sidebar">
+        <!-- Filtros por status -->
+        <div class="filter-section">
+          <h3>Filtrar por status:</h3>
+          <div class="filter-buttons">
+            <button
+              class="filter-btn"
+              [class.active]="selectedStatus === 'todas'"
+              (click)="onStatusFilterChange('todas')"
+            >
+              Todas
+            </button>
+            <button
+              class="filter-btn"
+              [class.active]="selectedStatus === 'CONFIRMADA'"
+              (click)="onStatusFilterChange('CONFIRMADA')"
+            >
+              Confirmadas
+            </button>
+            <button
+              class="filter-btn"
+              [class.active]="selectedStatus === 'PENDENTE'"
+              (click)="onStatusFilterChange('PENDENTE')"
+            >
+              Pendentes
+            </button>
+            <button
+              class="filter-btn"
+              [class.active]="selectedStatus === 'CANCELADA'"
+              (click)="onStatusFilterChange('CANCELADA')"
+            >
+              Canceladas
+            </button>
+          </div>
+        </div>
+
+        <!-- Filtro por data -->
+        <div class="date-filter-section">
+          <h3>Filtrar por data da reserva:</h3>
+          <div class="date-filter-container">
+            <!-- Datepicker para selecionar data -->
+            <mat-form-field
+              class="date-picker-field w-100"
+              appearance="outline"
+            >
+              <mat-label>Data da reserva</mat-label>
+              <input
+                matInput
+                [matDatepicker]="reservationDatePicker"
+                [matDatepickerFilter]="dateFilter"
+                [(ngModel)]="selectedDate"
+                (dateChange)="onDateSelected($event.value)"
+                readonly
+                placeholder="Selecione uma data"
+              />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="reservationDatePicker"
+              >
+              </mat-datepicker-toggle>
+              <mat-datepicker [dateClass]="dateClass" #reservationDatePicker>
+              </mat-datepicker>
+            </mat-form-field>
+
+            <!-- Botão para limpar filtro de data -->
+            <button
+              *ngIf="selectedDate"
+              class="clear-date-btn btn btn-outline-secondary mt-2 w-100"
+              (click)="clearDateFilter()"
+              type="button"
+            >
+              <mat-icon>clear</mat-icon>
+              Limpar Data
+            </button>
+          </div>
+
+          <!-- Informação sobre datas disponíveis -->
+          <div class="date-info" *ngIf="availableDates.length > 0">
+            <small class="text-muted">
+              <mat-icon class="info-icon">info</mat-icon>
+              Apenas datas com reservas estão disponíveis para seleção ({{
+                availableDates.length
+              }}
+              data(s) encontrada(s))
+            </small>
+          </div>
+
+          <!-- Mensagem quando não há datas disponíveis -->
+          <div class="no-dates-info" *ngIf="availableDates.length === 0">
+            <small class="text-muted">
+              <mat-icon class="info-icon">info</mat-icon>
+              Nenhuma data de reserva encontrada
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Coluna da direita: Reservas -->
+      <div class="reservations-content">
+        <!-- Paginação -->
+        <div class="pagination-container pagination-top">
+          <nav class="pagination-nav">
+            <button
+              class="pagination-btn pagination-prev"
+              [disabled]="currentPage === 0"
+              (click)="onPreviousPage()"
+            >
+              Anterior
+            </button>
+            <div class="pagination-numbers">
+              <button
+                *ngFor="let page of [].constructor(totalPages); let i = index"
+                class="pagination-number"
+                [class.active]="i === currentPage"
+                (click)="onPageChange(i)"
+              >
+                {{ i + 1 }}
+              </button>
+            </div>
+            <button
+              class="pagination-btn pagination-next"
+              [disabled]="currentPage === totalPages - 1"
+              (click)="onNextPage()"
+            >
+              Próximo
+            </button>
+          </nav>
+          <div class="pagination-info">
+            Página {{ currentPage + 1 }} de {{ totalPages }} ({{
+              totalElements
+            }}
+            reservas no total)
+          </div>
+        </div>
+
+        <!-- Seção das reservas -->
+        <div class="reservations-section">
+          <div class="reservations-grid">
+            <div *ngIf="reservations.length === 0" class="no-reservations">
+              <p>Nenhuma reserva encontrada para o filtro selecionado.</p>
+            </div>
+
+            <div
+              *ngFor="let reservation of reservations"
+              class="reservation-card"
+              [class.card-cancelled]="reservation.situation === 'CANCELADA'"
+            >
+              <div class="card-image-wrapper">
+                <img
+                  [src]="getImageUrl(reservation)"
+                  [alt]="getPackageTitle(reservation)"
+                  class="card-image"
+                  loading="lazy"
+                  (error)="onImageError($event)"
+                />
+                <div class="duration-badge">
+                  <span>{{ getPackageDuration(reservation) }}</span>
+                </div>
+              </div>
+
+              <div class="card-content">
+                <div class="reservation-info">
+                  <div class="reservation-tag">
+                    {{ reservation.travelers.length || 0 }} pessoas
+                  </div>
+                  <div class="reservation-date">
+                    Reservado em:
+                    {{ reservation.reservationDate | date : "dd/MM/yyyy" }}
+                  </div>
+                  <div
+                    class="status-tag"
+                    [class.status-approved]="
+                      reservation.situation === 'CONFIRMADA'
+                    "
+                    [class.status-pending]="
+                      reservation.situation === 'PENDENTE'
+                    "
+                    [class.status-cancelled]="
+                      reservation.situation === 'CANCELADA'
+                    "
+                  >
+                    {{ getStatusLabel(reservation.situation) }}
+                  </div>
+                </div>
+
+                <h3 class="package-title">
+                  {{ getPackageTitle(reservation) }}
+                </h3>
+
+                <div class="travel-dates">
+                  <strong>Data da viagem:</strong>
+                  {{ reservation.packageDate.startDate | date : "dd/MM/yyyy" }}
+                  -
+                  {{ reservation.packageDate.endDate | date : "dd/MM/yyyy" }}
+                </div>
+
+                <!-- Informações de pagamento -->
+                <div *ngIf="reservation.payment" class="payment-info">
+                  <strong>Método:</strong>
+                  {{ getPaymentMethodLabel(reservation.payment.paymentMethod) }}
+                  |
+                  <strong>Status:</strong>
+                  {{ getPaymentStatusLabel(reservation.payment.status) }}
+                </div>
+
+                <div class="price-section" *ngIf="reservation.payment">
+                  <div class="price-wrapper">
+                    <span class="currency">R$</span>
+                    <span class="price">{{
+                      reservation.payment.valuePaid | number : "1.2-2" : "pt-BR"
+                    }}</span>
+                    <span class="price-period">total</span>
+                  </div>
+                </div>
+
+                <!-- Seção para reservas sem pagamento (canceladas) -->
+                <div
+                  class="price-section"
+                  *ngIf="
+                    !reservation.payment &&
+                    reservation.situation === 'CANCELADA'
+                  "
+                >
+                  <div class="price-wrapper">
+                    <span class="price-text">Reserva cancelada</span>
+                  </div>
+                </div>
+
+                <!-- Data de cancelamento (apenas para reservas canceladas) -->
+                <div
+                  *ngIf="reservation.situation === 'CANCELADA'"
+                  class="cancelled-date"
+                >
+                  <strong>Cancelado em:</strong>
+                  <span *ngIf="reservation.cancelledDate; else noDate">
+                    {{ formatCancelledDate(reservation.cancelledDate) }}
+                  </span>
+                  <ng-template #noDate>
+                    <span style="color: red">Sem data de cancelamento</span>
+                  </ng-template>
+                </div>
+
+                <div class="card-actions">
+                  <!-- Botões baseados no status -->
+                  <ng-container [ngSwitch]="reservation.situation">
+                    <!-- Reserva Confirmada -->
+                    <ng-container *ngSwitchCase="'CONFIRMADA'">
+                      <!-- Botão para visualizar avaliações do pacote -->
+                      <button
+                        class="action-btn btn-info"
+                        (click)="viewPackageRatings(reservation)"
+                        title="Ver todas as avaliações deste pacote"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                        Ver Avaliações
+                      </button>
+                      
+                      <!-- Botão para avaliar (só aparece após a data de viagem) -->
+                      <button
+                        *ngIf="canRateReservation(reservation)"
+                        class="action-btn"
+                        [class.btn-rating]="!hasExistingRating(reservation.id)"
+                        [class.btn-edit-rating]="hasExistingRating(reservation.id)"
+                        (click)="rateReservation(reservation)"
+                        [title]="hasExistingRating(reservation.id) ? 'Editar ou deletar sua avaliação' : 'Avaliar este pacote'">
+                        
+                        <!-- Ícone e texto para nova avaliação -->
+                        <ng-container *ngIf="!hasExistingRating(reservation.id)">
+                          <mat-icon>star</mat-icon>
+                          Avaliar Pacote
+                        </ng-container>
+                        
+                        <!-- Ícone e texto para editar avaliação existente -->
+                        <ng-container *ngIf="hasExistingRating(reservation.id)">
+                          <span class="edit-rating-icons">
+                            <mat-icon class="edit-icon">edit</mat-icon>
+                            <span class="delete-icon">🗑️</span>
+                          </span>
+                          Editar Avaliação
+                        </ng-container>
+                      </button>
+
+                      <!-- Debug: Mostra informações sobre a data -->
+                      <!-- <small style="color: red; font-size: 10px; display: block;">
+                        Debug: Fim viagem: {{reservation.packageDate.endDate | date:'dd/MM/yyyy'}} | 
+                        Hoje: {{(new Date()) | date:'dd/MM/yyyy'}} | 
+                        Pode avaliar: {{canRateReservation(reservation)}}
+                      </small> -->
+                      
+                      <button
+                        class="action-btn btn-secondary"
+                        (click)="cancelReservation(reservation.id)"
+                      >
+                        Cancelar
+                      </button>
+                    </ng-container>
+
+                    <!-- Reserva Pendente -->
+                    <ng-container *ngSwitchCase="'PENDENTE'">
+                      <!-- Botão para visualizar avaliações do pacote -->
+                      <button
+                        class="action-btn btn-info"
+                        (click)="viewPackageRatings(reservation)"
+                        title="Ver todas as avaliações deste pacote"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                        Ver Avaliações
+                      </button>
+                      
+                      <div
+                        *ngIf="reservation.payment.status === 'PENDENTE'"
+                        class="pending-message"
+                      >
+                        <mat-icon class="pending-icon">schedule</mat-icon>
+                        <span>Esperando aprovação do banco</span>
+                      </div>
+                      <button
+                        class="action-btn btn-secondary"
+                        (click)="cancelReservation(reservation.id)"
+                      >
+                        Cancelar
+                      </button>
+                    </ng-container>
+
+                    <!-- Reserva Cancelada - sem botões -->
+                    <ng-container *ngSwitchCase="'CANCELADA'">
+                      <!-- Botão para visualizar avaliações do pacote -->
+                      <button
+                        class="action-btn btn-info"
+                        (click)="viewPackageRatings(reservation)"
+                        title="Ver todas as avaliações deste pacote"
+                      >
+                        <mat-icon>visibility</mat-icon>
+                        Ver Avaliações
+                      </button>
+                    </ng-container>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal de Avaliação -->
+<app-rating-modal
+  *ngIf="showRatingModal && selectedReservationForRating"
+  [reservationId]="selectedReservationForRating.id"
+  [existingRating]="existingRatingForReservation"
+  [isOpen]="showRatingModal"
+  (modalClosed)="onRatingModalClose()"
+  (ratingSubmitted)="onRatingSaved()"
+  (ratingDeleted)="onRatingDeleted()"
+>
+</app-rating-modal>
+
+<!-- Modal de Visualização de Avaliações do Pacote -->
+<app-package-ratings-viewer
+  *ngIf="showPackageRatingsViewer && selectedPackageForViewing"
+  [packageId]="selectedPackageForViewing.id"
+  [packageTitle]="selectedPackageForViewing.title"
+  [isVisible]="showPackageRatingsViewer"
+  (close)="onPackageRatingsViewerClose()"
+>
+</app-package-ratings-viewer>

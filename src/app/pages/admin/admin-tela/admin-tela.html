@@ -1,0 +1,58 @@
+<div class="admin-container">
+    <!-- Hamburger Menu Button (móvel) -->
+    <button class="hamburger-btn" [class.active]="isMenuOpen" (click)="toggleMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Overlay para mobile -->
+    <div class="overlay" [class.active]="isMenuOpen" (click)="closeMenu()"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" [class.open]="isMenuOpen">
+        <div class="logo text-center py-3">
+            <img src="assets/logo-branca.svg" alt="Ôrvian" class="img-fluid" />
+        </div>
+        <nav class="sidebar-nav">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/" (click)="closeMenu()">
+                        <i class="fas fa-home me-2"></i>
+                        Voltar para Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <hr class="sidebar-divider">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" routerLink="/admin/dashboard" routerLinkActive="active" (click)="closeMenu()">
+                        <i class="fas fa-chart-pie me-2"></i>
+                        Visão Geral
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/users" routerLinkActive="active" (click)="closeMenu()">
+                        <i class="fas fa-users me-2"></i>
+                        Gerenciar usuários
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/admin/packages" routerLinkActive="active" (click)="closeMenu()">
+                        <i class="fas fa-map-marked-alt me-2"></i>
+                        Gerenciar pacotes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" (click)="logout(); closeMenu()" style="cursor: pointer;">
+                        <i class="fas fa-sign-out-alt me-2"></i>
+                        Sair
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <router-outlet></router-outlet>
+    </main>
+</div>

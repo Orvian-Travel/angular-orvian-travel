@@ -1,0 +1,107 @@
+<div *ngIf="isVisible" class="modal-overlay" (click)="onBackdropClick($event)">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">
+        <mat-icon>star</mat-icon>
+        Avaliações - {{ packageTitle }}
+      </h2>
+      <button class="close-btn" (click)="closeModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-content">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Carregando avaliações...</p>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="error && !isLoading" class="error-container">
+        <mat-icon class="error-icon">error</mat-icon>
+        <p>{{ error }}</p>
+        <button class="retry-btn" (click)="retryLoadRatings()">
+          Tentar novamente
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div *ngIf="!isLoading && !error" class="ratings-content">
+        <!-- Statistics Summary -->
+        <div class="ratings-summary">
+          <div class="average-rating">
+            <div class="rating-number">{{ averageRating | number: '1.1-1' }}</div>
+            <div class="rating-stars">
+              <mat-icon 
+                *ngFor="let star of generateStars(Math.round(averageRating))"
+                [class.filled]="star === 1"
+              >
+                star
+              </mat-icon>
+            </div>
+            <div class="total-count">{{ totalRatings }} avaliação{{ totalRatings !== 1 ? 'ões' : '' }}</div>
+          </div>
+
+          <div class="rating-distribution">
+            <div *ngFor="let item of [5,4,3,2,1]" class="distribution-row">
+              <span class="star-count">{{ item }}</span>
+              <mat-icon class="star-icon">star</mat-icon>
+              <div class="progress-bar">
+                <div 
+                  class="progress-fill" 
+                  [style.width.%]="getPercentage(getRatingCount(item))"
+                ></div>
+              </div>
+              <span class="count">{{ getRatingCount(item) }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- No Ratings State -->
+        <div *ngIf="totalRatings === 0" class="no-ratings">
+          <mat-icon class="no-ratings-icon">star_border</mat-icon>
+          <h3>Nenhuma avaliação ainda</h3>
+          <p>Este pacote ainda não possui avaliações de outros viajantes.</p>
+        </div>
+
+        <!-- Ratings List -->
+        <div *ngIf="totalRatings > 0" class="ratings-list">
+          <h3>Todas as avaliações ({{ totalRatings }})</h3>
+          
+          <div *ngFor="let rating of ratings" class="rating-item">
+            <div class="rating-header">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <mat-icon>person</mat-icon>
+                </div>
+                <div class="user-details">
+                  <span class="user-name">{{ rating.userName || 'Usuário Anônimo' }}</span>
+                  <span class="rating-date">{{ formatDate(rating.createdAt) }}</span>
+                </div>
+              </div>
+              <div class="rating-stars">
+                <mat-icon 
+                  *ngFor="let star of generateStars(rating.rate)"
+                  [class.filled]="star === 1"
+                >
+                  star
+                </mat-icon>
+              </div>
+            </div>
+            
+            <div class="rating-comment" *ngIf="rating.comment">
+              <p>{{ rating.comment }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="close-footer-btn" (click)="closeModal()">
+        Fechar
+      </button>
+    </div>
+  </div>
+</div>

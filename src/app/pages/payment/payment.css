@@ -1,0 +1,264 @@
+.container-margin{
+    margin-top: 6rem;
+}
+
+.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.is-invalid:focus {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+body.payment-active {
+  background: white !important;
+  background-color: white !important;
+}
+
+body.payment-active::before {
+  display: none !important;
+}
+
+app-root.payment-active {
+  background: white !important;
+  background-color: white !important;
+  padding-top: 0 !important;
+}
+
+/* Força reset em todas as páginas quando payment está ativa */
+.payment-active html,
+.payment-active body,
+.payment-active app-root {
+  background: white !important;
+  background-color: white !important;
+}
+
+.btn-custom-primary {
+  font-size: 1.08rem;
+  padding: 12px 100px;
+  border-radius: 6px;
+  color: white;
+  background-color: var(--orvian-primary-variant);
+  border: solid 2px var(--orvian-primary-variant);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-custom-primary:hover {
+    background-color: white;
+    color: var(--orvian-primary-variant);
+}
+
+.btn-info {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-info:hover,
+.btn-info:focus {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.text-primary {
+    color: var(--secondary-color) !important;
+}
+
+/* Payment options styling */
+.payment-option {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    color: var(--orvian-primary-variant);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    border: solid 2px var(--orvian-primary-variant);
+}
+
+.payment-option:hover .payment-icon{
+    filter: brightness(0) saturate(100%) invert(50%) sepia(42%) saturate(847%) hue-rotate(145deg) brightness(95%) contrast(90%);
+}
+
+.payment-option:hover span{
+    color: var(--orvian-primary-variant);
+}
+
+.payment-option.active {
+    background-color: var(--orvian-primary-variant) !important;
+}
+
+.payment-option.active span{
+    color: white;
+}
+
+.payment-option.active .payment-icon {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(88%) saturate(411%) hue-rotate(289deg) brightness(115%) contrast(101%);
+}
+
+/* Payment forms */
+.payment-form {
+    display: none;
+}
+
+.payment-form.active {
+    display: block;
+}
+
+/* Traveler card styling */
+.traveler-card {
+    transition: all 0.3s ease;
+}
+
+.traveler-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Form styling improvements */
+.form-label.small {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Custom animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.traveler-card {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .payment-option {
+        margin-bottom: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Alert customizations */
+.alert {
+    border: none;
+    border-radius: 8px;
+}
+
+.btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+/* Card improvements */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+
+/* Price styling */
+.text-danger {
+    color: #dc3545 !important;
+}
+
+/* Success button for payment */
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    font-weight: 600;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+/* Document number input styling */
+.document-number-input:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.document-number-input:disabled::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+/* Remove traveler button styling */
+.remove-traveler {
+    border: none !important;
+    background: none !important;
+    padding: 0.25rem !important;
+    box-shadow: none !important;
+}
+
+.remove-traveler:hover,
+.remove-traveler:focus,
+.remove-traveler:active {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.traveler-card .remove-traveler img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) saturate(100%) invert(27%) sepia(92%) saturate(3576%) hue-rotate(336deg) brightness(91%) contrast(97%) !important;
+}
+
+body{
+    background: white !important;
+    background-color: white !important;
+}
+
+/* Resume card specific styling */
+.resume-card .card {
+    align-self: flex-start;
+    height: auto !important;
+}
+
+.resume-card {
+    align-self: flex-start;
+}
+
+.payment-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.payment-icon{
+    display: flex;
+    width: 36px;
+    justify-content: center;
+}
+
+.payment-card span{
+    color: var(--orvian-gray-001);
+}
+
+.payment-option::selection {
+    border-color: var(--orvian-primary-variant);
+}

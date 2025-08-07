@@ -1,0 +1,677 @@
+<div class="packages-container">
+  <div class="section-header mb-4">
+    <h1 class="display-6 fw-bold">Gerenciador de Pacotes</h1>
+    <p class="text-muted">
+      Gerencie todos os pacotes de viagem disponíveis na plataforma.
+    </p>
+  </div>
+
+  <div class="packages-management card border-0 shadow-sm">
+    <div class="card-body">
+      <div
+        class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3"
+      >
+        <h2 class="h4 fw-bold mb-0">Lista de Pacotes</h2>
+        <button class="btn btn-orvian-primary" (click)="openAddModal()">
+          <i class="fas fa-plus me-2"></i>Adicionar Pacote
+        </button>
+      </div>
+
+      <!-- Barra de Pesquisa -->
+      <div class="search-section mb-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-8 col-lg-9">
+            <label for="searchInput" class="form-label fw-semibold"
+              >Pesquisar por título</label
+            >
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control search-input"
+                id="searchInput"
+                placeholder="Digite o título do pacote..."
+                [(ngModel)]="searchTerm"
+                (input)="onSearchInputChange()"
+                (keyup.enter)="onSearch()"
+              />
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                (click)="clearSearch()"
+                *ngIf="searchTerm"
+                title="Limpar pesquisa"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-4 col-lg-3">
+            <button
+              class="btn btn-orvian-primary w-100"
+              type="button"
+              (click)="onSearch()"
+            >
+              <i class="fas fa-search me-2"></i>Pesquisar
+            </button>
+          </div>
+        </div>
+
+        <!-- Indicador de pesquisa ativa -->
+        <div *ngIf="isSearching" class="search-indicator mt-3">
+          <div class="alert alert-info d-flex align-items-center mb-0">
+            <i class="fas fa-search me-2"></i>
+            <span>
+              Mostrando resultados para: <strong>"{{ searchTerm }}"</strong> ({{
+                totalElements
+              }}
+              pacote<span *ngIf="totalElements !== 1">s</span> encontrado<span
+                *ngIf="totalElements !== 1"
+                >s</span
+              >)
+            </span>
+            <button
+              type="button"
+              class="btn-close ms-auto"
+              (click)="clearSearch()"
+              title="Limpar pesquisa"
+            ></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop Table View -->
+      <div class="d-none d-lg-block">
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Destino</th>
+                <th>Preço</th>
+                <th>Duração</th>
+                <th>Quantidade Máxima</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let package of packages; index as i">
+                <td>{{ package.id }}</td>
+                <td>{{ package.title }}</td>
+                <td>{{ package.destination }}</td>
+                <td>{{ formatCurrencyBrazilian(package.price) }}</td>
+                <td>{{ package.duration }} dias</td>
+                <td>{{ package.maxPeople }} pessoa(s)</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-edit me-2"
+                    (click)="openEditModal(package)"
+                    title="Editar pacote"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
+                    class="btn btn-sm btn-delete"
+                    (click)="deletePackage(package)"
+                    title="Excluir pacote"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mobile/Tablet Card View -->
+      <div class="d-lg-none">
+        <div class="row g-3">
+          <div class="col-12" *ngFor="let package of packages; index as i">
+            <div class="package-card card border-0 shadow-sm">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-start mb-3"
+                >
+                  <div>
+                    <h5 class="card-title fw-bold mb-1">{{ package.title }}</h5>
+                    <span class="badge badge-destination">{{
+                      package.destination
+                    }}</span>
+                  </div>
+                  <div class="package-icon">
+                    <i class="fas fa-map-marked-alt fa-2x"></i>
+                  </div>
+                </div>
+
+                <div class="package-details">
+                  <div class="detail-item">
+                    <i class="fas fa-dollar-sign text-muted me-2"></i>
+                    <small>{{ formatCurrencyBrazilian(package.price) }}</small>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-calendar text-muted me-2"></i>
+                    <small>{{ package.duration }} dias</small>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-users text-muted me-2"></i>
+                    <small>Máx. {{ package.maxPeople }} pessoa(s)</small>
+                  </div>
+                  <div class="detail-item">
+                    <i class="fas fa-hashtag text-muted me-2"></i>
+                    <small>ID: {{ package.id }}</small>
+                  </div>
+                </div>
+
+                <div class="d-flex gap-2 mt-3">
+                  <button
+                    class="btn btn-edit flex-fill"
+                    (click)="openEditModal(package)"
+                  >
+                    <i class="fas fa-edit me-1"></i>Editar
+                  </button>
+                  <button
+                    class="btn btn-delete flex-fill"
+                    (click)="deletePackage(package)"
+                  >
+                    <i class="fas fa-trash me-1"></i>Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginação -->
+  <div *ngIf="totalPages > 1" class="pagination-container">
+    <nav class="pagination-nav">
+      <button
+        class="pagination-btn pagination-prev"
+        [disabled]="currentPage === 0"
+        (click)="previousPage()"
+      >
+        Anterior
+      </button>
+      <div class="pagination-numbers">
+        <button
+          *ngFor="let page of getPageNumbers()"
+          class="pagination-number"
+          [class.active]="page === currentPage"
+          (click)="goToPage(page)"
+        >
+          {{ page + 1 }}
+        </button>
+      </div>
+      <button
+        class="pagination-btn pagination-next"
+        [disabled]="currentPage === totalPages - 1"
+        (click)="nextPage()"
+      >
+        Próximo
+      </button>
+    </nav>
+    <div class="pagination-info">
+      Página {{ currentPage + 1 }} de {{ totalPages }}
+    </div>
+  </div>
+</div>
+
+<ng-template #addPackageModal let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title">
+      {{
+        currentStep === 1
+          ? "Adicionar Novo Pacote"
+          : "Configurar Datas Disponíveis"
+      }}
+    </h5>
+    <button
+      type="button"
+      class="btn-close"
+      (click)="modal.close(); resetPackageForm()"
+      aria-label="Close"
+    ></button>
+  </div>
+
+  <div *ngIf="currentStep === 1" class="modal-body">
+    <form #addPackageForm="ngForm" (ngSubmit)="$event.preventDefault()">
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label for="packageTitle" class="form-label">Título *</label>
+          <input
+            type="text"
+            class="form-control"
+            id="packageTitle"
+            name="title"
+            [(ngModel)]="tempPackageData.title"
+            required
+          />
+        </div>
+        <div class="col-md-6 mb-3">
+          <label for="packageDestination" class="form-label">Destino *</label>
+          <input
+            type="text"
+            class="form-control"
+            id="packageDestination"
+            name="destination"
+            [(ngModel)]="tempPackageData.destination"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="packageDescription" class="form-label">Descrição *</label>
+        <textarea
+          class="form-control"
+          id="packageDescription"
+          name="description"
+          rows="3"
+          [(ngModel)]="tempPackageData.description"
+          required
+        ></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label for="packageDuration" class="form-label"
+            >Duração (dias) *</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="packageDuration"
+            name="duration"
+            min="1"
+            [(ngModel)]="tempPackageData.duration"
+            required
+          />
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="packagePrice" class="form-label">Preço (R$) *</label>
+          <input
+            type="number"
+            class="form-control"
+            id="packagePrice"
+            name="price"
+            min="0"
+            step="0.01"
+            [(ngModel)]="tempPackageData.price"
+            required
+          />
+        </div>
+        <div class="col-md-4 mb-3">
+          <label for="packageMaxPeople" class="form-label"
+            >Máximo de Pessoas *</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            id="packageMaxPeople"
+            name="maxPeople"
+            min="1"
+            [(ngModel)]="tempPackageData.maxPeople"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Seção de imagens -->
+      <div class="mb-4">
+        <h6 class="text-primary mb-3">
+          <i class="fas fa-images me-2"></i>Imagens do Pacote
+        </h6>
+
+        <!-- Imagem Principal -->
+        <div class="mb-3">
+          <label for="packageMainImage" class="form-label"
+            >Capa do Pacote (Imagem Principal) *</label
+          >
+          <input
+            type="file"
+            class="form-control"
+            id="packageMainImage"
+            name="mainImage"
+            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp"
+            (change)="onMainImageChange($event)"
+            required
+          />
+          <small class="text-muted"
+            >Esta será a imagem de capa do pacote. Formatos aceitos: JPG, PNG,
+            GIF, WEBP, BMP (máx. 5MB)</small
+          >
+          <small class="text-muted d-block"
+            >Nota: WEBP e BMP serão convertidos para JPG automaticamente.</small
+          >
+        </div>
+
+        <!-- Imagens Adicionais -->
+        <div class="mb-3">
+          <label class="form-label">Galeria de Imagens Adicionais</label>
+
+          <!-- Container para as imagens adicionais -->
+          <div class="additional-images-container">
+            <!-- Loop através dos slots de imagens adicionais -->
+            <div
+              class="additional-image-item mb-2"
+              *ngFor="let imageFile of additionalImageFiles; let i = index"
+            >
+              <div class="input-group">
+                <span class="input-group-text">Imagem {{ i + 1 }}</span>
+                <input
+                  type="file"
+                  class="form-control"
+                  [id]="'additionalImage' + i"
+                  accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/bmp,video/mp4"
+                  (change)="onAdditionalImageChange($event, i)"
+                />
+                <button
+                  class="btn btn-outline-danger"
+                  type="button"
+                  (click)="removeAdditionalImage(i)"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Botão para adicionar mais imagens -->
+            <div class="text-center">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="addAdditionalImage()"
+              >
+                <i class="fas fa-plus me-2"></i>Adicionar Mais Imagem
+              </button>
+            </div>
+          </div>
+
+          <small class="text-muted"
+            >Adicione quantas imagens desejar. Formatos: JPG, PNG, GIF (WEBP e
+            BMP são convertidos para JPG)</small
+          >
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="currentStep === 2" class="modal-body">
+    <div class="alert alert-info">
+      <strong>Pacote:</strong> {{ tempPackageData.title || "Novo Pacote" }} -
+      <strong>Duração:</strong> {{ tempPackageData.duration }} dias
+    </div>
+
+    <div class="dates-section">
+      <div
+        class="date-entry mb-3"
+        *ngFor="let dateEntry of packageDates; let i = index"
+      >
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h6 class="text-primary mb-0">Data {{ i + 1 }}</h6>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            [disabled]="packageDates.length === 1"
+            (click)="removeDateEntry(i)"
+            title="Remover data"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Data de Check-in *</label>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="dateEntry.startDate"
+              (change)="onCheckinChange(i)"
+              [min]="getMinDate()"
+              required
+            />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Data de Check-out *</label>
+            <input
+              type="date"
+              class="form-control"
+              [(ngModel)]="dateEntry.endDate"
+              [min]="dateEntry.startDate"
+              readonly
+              required
+            />
+            <small class="text-muted"
+              >Calculado automaticamente pela duração</small
+            >
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">Reservas Disponíveis *</label>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="dateEntry.availableReservations"
+              min="1"
+              placeholder="Ex: 10"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="mt-2">
+          <small class="text-muted">
+            <i class="fas fa-calendar-alt me-1"></i>
+            Período: {{ formatDateBrazilian(dateEntry.startDate) }} até
+            {{ formatDateBrazilian(dateEntry.endDate) }}
+          </small>
+        </div>
+      </div>
+
+      <div class="text-center mb-3">
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm"
+          (click)="addNewDateEntry()"
+        >
+          <i class="fas fa-plus me-2"></i>Adicionar Mais Uma Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-orvian-secondary"
+      *ngIf="currentStep === 1"
+      (click)="modal.close(); resetPackageForm()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-orvian-secondary"
+      *ngIf="currentStep === 2"
+      (click)="goBackToStep1()"
+    >
+      Voltar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-orvian-primary"
+      *ngIf="currentStep === 1"
+      (click)="advanceToStep2()"
+    >
+      Avançar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-orvian-secondary"
+      *ngIf="currentStep === 2"
+      (click)="modal.close(); resetPackageForm()"
+    >
+      Cancelar
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-orvian-primary"
+      *ngIf="currentStep === 2"
+      (click)="concludePackageCreation()"
+    >
+      <i class="fas fa-check me-2"></i>Concluir
+    </button>
+  </div>
+</ng-template>
+<ng-template #editPackageModal let-modal>
+  <form #editPackageForm="ngForm" (ngSubmit)="onEditPackageSubmit()">
+    <div class="modal-header">
+      <h5 class="modal-title">Editar Pacote</h5>
+      <button
+        type="button"
+        class="btn-close"
+        (click)="modal.close()"
+        aria-label="Fechar"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <div class="mb-3">
+        <label for="editTitle" class="form-label">Título</label>
+        <input
+          type="text"
+          class="form-control"
+          id="editTitle"
+          name="title"
+          [(ngModel)]="editPackageData.title"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="editDescription" class="form-label">Descrição</label>
+        <textarea
+          class="form-control"
+          id="editDescription"
+          name="description"
+          [(ngModel)]="editPackageData.description"
+          required
+        ></textarea>
+      </div>
+      <div class="mb-3">
+        <label for="editDestination" class="form-label">Destino</label>
+        <input
+          type="text"
+          class="form-control"
+          id="editDestination"
+          name="destination"
+          [(ngModel)]="editPackageData.destination"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="editDuration" class="form-label">Duração (dias)</label>
+        <input
+          type="number"
+          class="form-control"
+          id="editDuration"
+          name="duration"
+          [(ngModel)]="editPackageData.duration"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="editPrice" class="form-label">Preço</label>
+        <input
+          type="number"
+          class="form-control"
+          id="editPrice"
+          name="price"
+          [(ngModel)]="editPackageData.price"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="editMaxPeople" class="form-label">Máximo de Pessoas</label>
+        <input
+          type="number"
+          class="form-control"
+          id="editMaxPeople"
+          name="maxPeople"
+          [(ngModel)]="editPackageData.maxPeople"
+          required
+        />
+      </div>
+    </div>
+    <div
+      class="mb-3"
+      *ngFor="let date of editPackageData.packageDates; let i = index"
+    >
+      <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+          <label class="form-label">Check-in</label>
+          <input
+            type="date"
+            class="form-control"
+            [ngModel]="date.startDate ? date.startDate : ''"
+            (ngModelChange)="onEditDateChange(i, 'startDate', $event)"
+            name="editStartDate{{ i }}"
+            required
+          />
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Check-out</label>
+          <input
+            type="date"
+            class="form-control"
+            [ngModel]="date.endDate ? date.endDate : ''"
+            name="editEndDate{{ i }}"
+            readonly
+            required
+          />
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Reservas Disponíveis</label>
+          <input
+            type="number"
+            class="form-control"
+            [(ngModel)]="date.qtd_available"
+            name="editQtdAvailable{{ i }}"
+            min="1"
+            required
+          />
+        </div>
+        <div class="col-md-1">
+          <button
+            type="button"
+            class="btn btn-outline-danger"
+            (click)="removeEditDateEntry(i)"
+            [disabled]="editPackageData.packageDates?.length === 1"
+          >
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mb-3">
+      <button
+        type="button"
+        class="btn btn-outline-primary btn-sm"
+        (click)="addEditDateEntry()"
+      >
+        <i class="fas fa-plus me-2"></i>Adicionar Data
+      </button>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">
+        Cancelar
+      </button>
+      <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+    </div>
+  </form>
+</ng-template>
