@@ -1,5 +1,5 @@
 import { AuthStateService } from './../../services/auth/auth-state-service';
-import { Component, Inject, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -40,7 +40,8 @@ export class Payment implements OnInit, OnDestroy {
     @Inject(SERVICES_TOKEN.HTTP.RESERVATION)
     private readonly reservationService: IReservationService,
     @Inject(SERVICES_TOKEN.HTTP.PAYMENT)
-    private readonly paymentService: IPaymentService
+    private readonly paymentService: IPaymentService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   packageId: string | null = null;
@@ -869,5 +870,10 @@ export class Payment implements OnInit, OnDestroy {
     }
 
     return true;
+  }
+
+  onCardInputChange() {
+    // Apenas força detecção de mudanças
+    this.cdr.detectChanges();
   }
 }

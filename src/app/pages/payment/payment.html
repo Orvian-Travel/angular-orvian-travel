@@ -190,7 +190,12 @@
                     <label class="form-label small fw-semibold text-muted"
                       >NOME NO CARTÃO</label
                     >
-                    <input type="text" class="form-control" />
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Nome do Titular"
+                      required
+                    />
                   </div>
                 </div>
                 <div class="row g-3 mb-3">
@@ -269,3 +274,7 @@
       </div>
     </div>
   </main>
+
+  <script>
+    const cardNameInput = document.querySelector('#cartao-form input[placeholder="Nome do Titular"]');
+  </script>
