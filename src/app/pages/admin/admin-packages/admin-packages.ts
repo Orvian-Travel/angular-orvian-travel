@@ -156,15 +156,13 @@ export class AdminPackages implements OnInit {
       .subscribe({
         next: () => {
           this.loadPackages();
-          const modal = document.getElementById('editPackageModal');
-          if (modal) {
-            const bootstrapModal = (window as any).bootstrap.Modal.getInstance(
-              modal
-            );
-            if (bootstrapModal) {
-              bootstrapModal.hide();
-            }
-          }
+          this.closeEditModal(); // Usar o método ng-bootstrap para fechar
+          Swal.fire({
+            icon: 'success',
+            title: 'Pacote atualizado!',
+            text: 'O pacote foi atualizado com sucesso.',
+            confirmButtonText: 'OK',
+          });
         },
         error: () => {
           Swal.fire({
@@ -258,6 +256,9 @@ export class AdminPackages implements OnInit {
     if (this.editModalRef) {
       this.editModalRef.close();
       this.editModalRef = undefined;
+      // Limpar dados do formulário de edição
+      this.editPackageData = {};
+      this.selectedPackageId = null;
     }
   }
 
@@ -763,14 +764,7 @@ export class AdminPackages implements OnInit {
           this.loadPackages();
 
           this.resetPackageForm();
-          const modal = document.getElementById('addPackageModal');
-          if (modal) {
-            const bootstrapModal = (window as any).bootstrap.Modal.getInstance(modal);
-            if (bootstrapModal) {
-              const bootstrapModal = (window as any).bootstrap.Modal.getInstance(modal);
-              bootstrapModal.hide();
-            }
-          }
+          this.closeAddModal(); // Usar o método ng-bootstrap para fechar
         },
         error: (error) => {
           console.error('Erro ao criar pacote:', error);
