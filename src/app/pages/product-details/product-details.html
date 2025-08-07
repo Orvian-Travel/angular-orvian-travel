@@ -53,7 +53,7 @@
               <mat-label>Data de retorno</mat-label>
               <input
                 matInput
-                [value]="endDate | date : 'dd/MM/yyyy'"
+                [value]="formatDate(endDate || '')"
                 readonly
                 disabled
                 placeholder="Será preenchido automaticamente"

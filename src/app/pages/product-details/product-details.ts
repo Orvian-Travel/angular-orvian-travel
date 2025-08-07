@@ -271,6 +271,6 @@ export class ProductDetails implements OnInit, OnDestroy {
   formatDate(date: string | Date): string {
     if (!date) return '';
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('pt-BR');
+    return dateObj.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
   }
 }
