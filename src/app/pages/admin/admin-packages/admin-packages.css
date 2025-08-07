@@ -11,7 +11,7 @@
 
 /* ===== SECTION HEADER ===== */
 .section-header h1 {
-    color: #2D3748;
+    color: var(--orvian-primary-color);
     margin-bottom: 0.5rem;
     font-size: 1.75rem;
 }
@@ -23,8 +23,13 @@
 }
 
 .section-header p {
-    color: #718096;
+    color: var(--orvian-gray-003);
     font-size: 0.95rem;
+}
+
+/* ===== TÍTULOS SECUNDÁRIOS ===== */
+h2.h4, .h4 {
+    color: var(--orvian-primary-color);
 }
 
 /* ===== BOTÕES ===== */
@@ -49,6 +54,7 @@
 /* ===== CARDS ===== */
 .packages-management {
     border-radius: 12px;
+    padding: 1.5rem;
     overflow: hidden;
 }
 
@@ -835,4 +841,79 @@
 .date-entry .btn-outline-danger:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+/* ===== BARRA DE PESQUISA ===== */
+.search-section {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    padding: 1.25rem;
+    border: 1px solid #e9ecef;
+}
+
+.search-input {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.625rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--orvian-primary-variant);
+    box-shadow: 0 0 0 0.2rem rgba(27, 157, 189, 0.25);
+    outline: none;
+}
+
+.search-input::placeholder {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.search-indicator {
+    animation: slideDown 0.3s ease-out;
+}
+
+.search-indicator .alert {
+    border: none;
+    border-left: 4px solid var(--orvian-primary-variant);
+    background-color: rgba(27, 157, 189, 0.1);
+    color: var(--orvian-primary-color);
+}
+
+.search-indicator .btn-close {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.search-indicator .btn-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade para a barra de pesquisa */
+@media (max-width: 768px) {
+    .search-section {
+        padding: 1rem;
+    }
+    
+    .search-input {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.875rem;
+    }
+    
+    .search-indicator .alert {
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
 }

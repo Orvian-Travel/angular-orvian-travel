@@ -34,6 +34,13 @@ export class UserService implements IUserService {
     );
   }
 
+  getAllUsersWithPaginationWithName(pageNumber: number, pageSize: number, name: string): Observable<PagedResponse<UserDetail>> {
+    const url = `${this.baseUrl}?pageNumber=${pageNumber}&pageSize=${pageSize}&name=${name}`;
+    return this.http.get<any>(url).pipe(
+      map(response => transformPagedResponse<UserDetail>(response, 'userSearchResultDTOList'))
+    );
+  }
+
   getUserById(id: string): Observable<UserDetail> {
     return this.http.get<UserDetail>(`${this.baseUrl}/${id}`);
   }

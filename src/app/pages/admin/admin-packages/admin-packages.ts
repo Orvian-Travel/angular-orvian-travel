@@ -65,6 +65,10 @@ export class AdminPackages implements OnInit {
   selectedPackage: PackageDetail | null = null;
   selectedImageFile: File | null = null;
 
+  // Propriedades para pesquisa
+  searchTerm: string = '';
+  isSearching: boolean = false;
+
   currentPage: number = 0;
   pageSize: number = 10;
   totalPages: number = 0;
@@ -204,22 +208,24 @@ export class AdminPackages implements OnInit {
     this.loadPackages();
   }
 
-  private loadPackages() {
-    this.packageService
-      .getAllPackagesWithPagination(this.currentPage, this.pageSize)
-      .subscribe({
-        next: (response: PagedResponse<PackageDetail>) => {
-          this.packages = response._embedded.DTOList;
-          this.totalPages = response.page?.totalElements!;
-          this.totalPages = response.page?.totalPages!;
-        },
-        error: (error) => {
-          console.error('Erro ao carregar pacotes:', error);
-          alert(
-            'Erro ao carregar pacotes. Por favor, tente novamente mais tarde.'
-          );
-        },
-      });
+  private loadPackages(searchTitle?: string) {
+    const serviceCall = searchTitle
+      ? this.packageService.getAllPackagesWithTitleAndPagination(this.currentPage, this.pageSize, searchTitle)
+      : this.packageService.getAllPackagesWithPagination(this.currentPage, this.pageSize);
+
+    serviceCall.subscribe({
+      next: (response: PagedResponse<PackageDetail>) => {
+        this.packages = response._embedded.DTOList;
+        this.totalElements = response.page?.totalElements!;
+        this.totalPages = response.page?.totalPages!;
+      },
+      error: (error: any) => {
+        console.error('Erro ao carregar pacotes:', error);
+        alert(
+          'Erro ao carregar pacotes. Por favor, tente novamente mais tarde.'
+        );
+      },
+    });
   }
 
   // Métodos para controle dos modais ng-bootstrap
@@ -258,21 +264,21 @@ export class AdminPackages implements OnInit {
   nextPage(): void {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
-      this.loadPackages();
+      this.loadPackages(this.searchTerm || undefined);
     }
   }
 
   previousPage(): void {
     if (this.currentPage > 0) {
       this.currentPage--;
-      this.loadPackages();
+      this.loadPackages(this.searchTerm || undefined);
     }
   }
 
   goToPage(page: number): void {
     if (page >= 0 && page < this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
-      this.loadPackages();
+      this.loadPackages(this.searchTerm || undefined);
     }
   }
 
@@ -291,6 +297,27 @@ export class AdminPackages implements OnInit {
       pages.push(i);
     }
     return pages;
+  }
+
+  // Métodos para pesquisa
+  onSearch() {
+    this.currentPage = 0; // Resetar para primeira página
+    this.isSearching = !!this.searchTerm.trim();
+    this.loadPackages(this.searchTerm.trim() || undefined);
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.isSearching = false;
+    this.currentPage = 0;
+    this.loadPackages();
+  }
+
+  onSearchInputChange() {
+    // Se o campo estiver vazio, limpar a pesquisa automaticamente
+    if (!this.searchTerm.trim()) {
+      this.clearSearch();
+    }
   }
 
   goBackToForm() {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Inject, Input, OnInit, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { PackageService } from '../../../services/api/package/package-service';
@@ -36,6 +36,8 @@ interface PackageWithRatings extends PackageDetail {
   ]
 })
 export class CardList implements OnInit, OnChanges {
+  @ViewChild('cardListContainer', { static: true }) cardListContainer!: ElementRef;
+
   constructor(
     private router: Router,
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
@@ -238,6 +240,7 @@ export class CardList implements OnInit, OnChanges {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
       this.updateLocalPagination();
+      setTimeout(() => this.scrollToCardList(), 100);
     }
   }
 
@@ -245,6 +248,7 @@ export class CardList implements OnInit, OnChanges {
     if (this.currentPage > 0) {
       this.currentPage--;
       this.updateLocalPagination();
+      setTimeout(() => this.scrollToCardList(), 100);
     }
   }
 
@@ -252,6 +256,17 @@ export class CardList implements OnInit, OnChanges {
     if (page >= 0 && page < this.totalPages && page !== this.currentPage) {
       this.currentPage = page;
       this.updateLocalPagination();
+      setTimeout(() => this.scrollToCardList(), 100);
+    }
+  }
+
+  private scrollToCardList() {
+    const cardListElement = document.querySelector('.section-title');
+    if (cardListElement) {
+      cardListElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
   }
 
