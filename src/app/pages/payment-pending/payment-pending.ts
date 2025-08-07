@@ -59,7 +59,8 @@ export class PaymentPending implements OnInit, OnDestroy {
       return date.toLocaleDateString('pt-BR', {
         day: 'numeric',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC'
       });
     } catch (error) {
       console.error('Erro ao formatar data de check-in:', error);
@@ -84,7 +85,8 @@ export class PaymentPending implements OnInit, OnDestroy {
       return checkoutDate.toLocaleDateString('pt-BR', {
         day: 'numeric',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC'
       });
     } catch (error) {
       console.error('Erro ao calcular data de check-out:', error);
