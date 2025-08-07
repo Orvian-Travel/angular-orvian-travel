@@ -46,6 +46,10 @@ app-reservations-list {
 /* Conteúdo das reservas à direita */
 .reservations-content {
   flex: 1; /* Ocupa o restante do espaço */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centraliza em mobile */
+  justify-content: center; /* Centraliza verticalmente também */
 }
 
 /* Seções de filtro */
@@ -158,6 +162,7 @@ app-reservations-list {
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   padding: 0;
+  place-items: center; /* Centraliza completamente os cards */
 }
 
 .reservation-card {
@@ -507,6 +512,22 @@ app-reservations-list {
   .reservations-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+  
+  /* Garante centralização em tablet e mobile */
+  .reservations-content {
+    align-items: center;
+  }
+}
+
+/* Desktop: remove centralização */
+@media (min-width: 1201px) {
+  .reservations-content {
+    align-items: stretch;
+  }
+  
+  .reservations-section {
+    justify-content: flex-start;
+  }
 }
 
 @media (max-width: 768px) {
@@ -514,9 +535,30 @@ app-reservations-list {
     font-size: 2rem;
   }
   
+  .reservations-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .reservations-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 1rem; /* Respiro nas laterais para tablet */
+  }
+  
   .reservations-grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: flex !important; /* Força flexbox ao invés de grid */
+    flex-direction: column;
+    align-items: center;
     gap: 1rem;
+    width: 100%;
+    max-width: 600px; /* Limita a largura para centralizar melhor */
+    margin: 0 auto; /* Centraliza o container */
   }
   
   .filter-buttons {
@@ -530,6 +572,8 @@ app-reservations-list {
   
   .reservation-card {
     margin: 0;
+    width: 100%;
+    max-width: 280px; /* Limita largura para 2 colunas */
   }
   
   .card-image-wrapper {
@@ -625,13 +669,37 @@ app-reservations-list {
     justify-content: center;
   }
   
+  .reservations-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .reservations-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 0 0.75rem; /* Respiro mínimo nas laterais para mobile */
+  }
+  
   .reservations-grid {
-    grid-template-columns: 1fr;
+    display: flex !important; /* Força flexbox ao invés de grid */
+    flex-direction: column;
+    align-items: center;
     gap: 1rem;
+    width: 100%;
+    max-width: min(400px, 90vw); /* Responsivo: máximo 400px ou 90% da viewport */
+    margin: 0 auto; /* Centralização automática e flexível */
   }
   
   .reservation-card {
-    border-radius: 8px;
+    border-radius: 18px;
+    width: 100%;
+    max-width: 350px; /* Largura máxima para mobile - mais estreito */
+    margin: 0 auto; /* Centraliza cada card individualmente */
   }
   
   .card-image-wrapper {
@@ -763,6 +831,18 @@ app-reservations-list {
 /* Seção das reservas */
 .reservations-section {
   width: 100%;
+  display: flex;
+  justify-content: center; /* Centraliza o grid */
+  align-items: center; /* Alinha verticalmente ao centro */
+  padding: 0 1rem; /* Adiciona padding lateral para respirar nas bordas */
+  min-height: 200px; /* Altura mínima para garantir centralização */
+}
+
+.reservations-section .reservations-grid {
+  width: 100%;
+  justify-content: center; /* Força centralização do grid */
+  justify-items: center; /* Centraliza cada item do grid */
+  margin: 0 auto; /* Centralização adicional */
 }
 
 /* Mensagem quando não há reservas */
@@ -1107,6 +1187,7 @@ app-reservations-list {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
   }
+
 }/* SOLUÇÃO EXTREMA - SEM :host PARA MÁXIMA ESPECIFICIDADE */
 .cdk-overlay-container .mat-datepicker-popup .mat-calendar-header {
   background-color: var(--orvian-primary-variant) !important;
@@ -1180,6 +1261,34 @@ app-reservations-list {
 .delete-icon {
   font-size: 12px;
   opacity: 0.8;
+}
+
+/* Mensagem informativa sobre avaliação */
+.rating-info-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 12px;
+  transition: all 0.3s ease;
+}
+
+.rating-info-message:hover {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  border-color: #9ca3af;
+}
+
+.rating-info-message .info-icon {
+  font-size: 16px;
+  color: #3b82f6;
+}
+
+.rating-info-message .info-text {
+  font-weight: 100;
 }
 
 .action-btn mat-icon {

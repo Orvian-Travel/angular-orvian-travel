@@ -19,6 +19,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { AuthStateService } from '../../services/auth/auth-state-service';
 import { Geocoding } from '@services/api/externals/geocoding';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { RatingService } from '../../services/api/rating/rating.service';
+import { RatingDetail } from '../../services/entities/rating.model';
 
 @Component({
   selector: 'app-product-details',
@@ -35,6 +37,7 @@ export class ProductDetails implements OnInit, OnDestroy {
     private authStateService: AuthStateService,
     private geocodingService: Geocoding,
     private sanitizer: DomSanitizer,
+    private ratingService: RatingService,
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
     private route: ActivatedRoute
   ) { }
@@ -45,6 +48,18 @@ export class ProductDetails implements OnInit, OnDestroy {
   selectedDate: Date | null = null;
   endDate: Date | null = null;
   mapEmbedUrl: SafeResourceUrl | null = null;
+
+  // Propriedades para avaliações
+  packageRatings: RatingDetail[] = [];
+  loadingRatings = false;
+  averageRating = 0;
+  showAllReviews = false;
+  ratingDistribution: Record<number, number> = {
+    5: 0, 4: 0, 3: 0, 2: 0, 1: 0
+  };
+
+  // Expõe Math para o template
+  Math = Math;
 
   ngOnInit(): void {
     this.routeSubscription = this.route.paramMap.subscribe(params => {
@@ -130,6 +145,7 @@ export class ProductDetails implements OnInit, OnDestroy {
     this.service.getPackageById(id).subscribe((response: PackageDetail) => {
       this.package = response;
       this.updateMapLocation();
+      this.loadPackageRatings(id); // Carregar avaliações após carregar o pacote
     });
   }
 
@@ -195,5 +211,66 @@ export class ProductDetails implements OnInit, OnDestroy {
     }
 
     return 'assets/images/default-package-image.png';
+  }
+
+  // Métodos para avaliações
+  private loadPackageRatings(packageId: string): void {
+    this.loadingRatings = true;
+    this.ratingService.getRatingsByPackage(packageId).subscribe({
+      next: (ratings) => {
+        this.packageRatings = ratings;
+        this.calculateRatingStatistics();
+        this.loadingRatings = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar avaliações do pacote:', error);
+        this.loadingRatings = false;
+      }
+    });
+  }
+
+  private calculateRatingStatistics(): void {
+    if (this.packageRatings.length === 0) {
+      this.averageRating = 0;
+      return;
+    }
+
+    // Calcula média
+    const sum = this.packageRatings.reduce((acc, rating) => acc + rating.rate, 0);
+    this.averageRating = sum / this.packageRatings.length;
+
+    // Calcula distribuição
+    this.ratingDistribution = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    this.packageRatings.forEach(rating => {
+      const rateKey = rating.rate as keyof typeof this.ratingDistribution;
+      this.ratingDistribution[rateKey]++;
+    });
+  }
+
+  generateStars(rating: number): number[] {
+    return Array(5).fill(0).map((_, index) => index < rating ? 1 : 0);
+  }
+
+  getRatingPercentage(rating: number): number {
+    const count = this.getRatingCount(rating);
+    return this.packageRatings.length > 0 ? (count / this.packageRatings.length) * 100 : 0;
+  }
+
+  getRatingCount(rating: number): number {
+    return this.ratingDistribution[rating] || 0;
+  }
+
+  get displayedRatings(): RatingDetail[] {
+    return this.showAllReviews ? this.packageRatings : this.packageRatings.slice(0, 3);
+  }
+
+  toggleShowAllReviews(): void {
+    this.showAllReviews = !this.showAllReviews;
+  }
+
+  formatDate(date: string | Date): string {
+    if (!date) return '';
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return dateObj.toLocaleDateString('pt-BR');
   }
 }

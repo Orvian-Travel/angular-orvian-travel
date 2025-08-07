@@ -11,10 +11,9 @@
   <div class="packages-grid">
     <div
       class="package-card"
-      (click)="navigateToDetails(package.id)"
       *ngFor="let package of packages"
     >
-      <div class="card-image-wrapper">
+      <div class="card-image-wrapper" (click)="navigateToDetails(package.id)">
         <img
           [src]="getPackageImageUrl(package)"
           class="card-image"
@@ -26,7 +25,30 @@
       </div>
       <div class="card-content">
         <div class="package-tag">{{ package.maxPeople }} pessoas</div>
-        <h3 class="package-title">{{ package.title }}</h3>
+        <h3 class="package-title" (click)="navigateToDetails(package.id)">{{ package.title }}</h3>
+        
+        <!-- Nova seção de avaliações -->
+        <div class="ratings-section">
+          <div class="ratings-summary" (click)="openRatingsModal(package.id, package.title)">
+            <div class="stars-display">
+              <mat-icon 
+                *ngFor="let star of generateStars(package.averageRating || 0)"
+                [class.filled]="star === 1"
+                class="star-icon"
+              >
+                star
+              </mat-icon>
+            </div>
+            <span class="rating-text">
+              {{ package.averageRating ? (package.averageRating | number: '1.1-1') : 'Sem avaliações' }}
+              <span *ngIf="package.totalRatings && package.totalRatings > 0" class="ratings-count">
+                ({{ package.totalRatings }} avaliação{{ package.totalRatings !== 1 ? 'ões' : '' }})
+              </span>
+            </span>
+            <mat-icon class="view-icon">visibility</mat-icon>
+          </div>
+        </div>
+
         <div class="price-section">
           <span class="price-label">A partir de</span>
           <div class="price-wrapper">
@@ -74,3 +96,11 @@
     </div>
   </div>
 </main>
+
+<!-- Modal de Avaliações -->
+<app-package-ratings-viewer
+  [packageId]="selectedPackageId"
+  [packageTitle]="selectedPackageTitle"
+  [isVisible]="isRatingsModalVisible"
+  (close)="closeRatingsModal()"
+></app-package-ratings-viewer>

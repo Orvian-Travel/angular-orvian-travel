@@ -351,7 +351,14 @@ export class ReservationsList implements OnInit {
 
   /**
    * Verifica se o usuário pode avaliar uma reserva
-   * Regra: Só pode avaliar após a data de término da viagem
+   * 
+   * REGRAS DE NEGÓCIO:
+   * 1. Só pode avaliar reservas CONFIRMADAS (não pendentes ou canceladas)
+   * 2. Só pode avaliar APÓS a data de término da viagem
+   * 3. A data é comparada sem considerar as horas (apenas dia, mês e ano)
+   * 
+   * @param reservation - Dados da reserva a ser verificada
+   * @returns true se o usuário pode avaliar, false caso contrário
    */
   canRateReservation(reservation: ReservationDetail): boolean {
     // Só pode avaliar reservas confirmadas

@@ -79,6 +79,112 @@
       </button>
     </aside>
   </section>
+
+  <!-- Seção de Avaliações -->
+  <section class="reviews-section" *ngIf="package">
+    <div class="reviews-header">
+      <h2 class="reviews-title">
+        <mat-icon class="title-icon">star</mat-icon>
+        Avaliações dos Viajantes
+      </h2>
+      <p class="reviews-subtitle">Veja o que outros viajantes acharam deste pacote</p>
+    </div>
+
+    <!-- Resumo das Avaliações -->
+    <div class="reviews-summary" *ngIf="packageRatings && packageRatings.length > 0">
+      <div class="rating-overview">
+        <div class="average-rating">
+          <span class="rating-number">{{ averageRating | number: '1.1-1' }}</span>
+          <div class="rating-stars">
+            <mat-icon 
+              *ngFor="let star of generateStars(Math.round(averageRating))"
+              [class.filled]="star === 1"
+              class="star-icon"
+            >
+              star
+            </mat-icon>
+          </div>
+          <span class="total-reviews">{{ packageRatings.length }} avaliação{{ packageRatings.length !== 1 ? 'ões' : '' }}</span>
+        </div>
+        
+        <div class="rating-distribution">
+          <div *ngFor="let item of [5,4,3,2,1]" class="distribution-item">
+            <span class="star-label">{{ item }}</span>
+            <mat-icon class="mini-star">star</mat-icon>
+            <div class="progress-bar">
+              <div 
+                class="progress-fill" 
+                [style.width.%]="getRatingPercentage(item)"
+              ></div>
+            </div>
+            <span class="count-label">{{ getRatingCount(item) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Avaliações -->
+    <div class="reviews-list" *ngIf="packageRatings && packageRatings.length > 0">
+      <div class="reviews-grid">
+        <div 
+          *ngFor="let rating of displayedRatings" 
+          class="review-card"
+        >
+          <div class="review-header">
+            <div class="user-info">
+              <div class="user-avatar">
+                <mat-icon>person</mat-icon>
+              </div>
+              <div class="user-details">
+                <span class="user-name">{{ rating.userName || 'Viajante Anônimo' }}</span>
+                <span class="review-date">{{ formatDate(rating.createdAt) }}</span>
+              </div>
+            </div>
+            <div class="review-rating">
+              <mat-icon 
+                *ngFor="let star of generateStars(rating.rate)"
+                [class.filled]="star === 1"
+                class="review-star"
+              >
+                star
+              </mat-icon>
+            </div>
+          </div>
+          
+          <div class="review-comment" *ngIf="rating.comment">
+            <p>{{ rating.comment }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botão Ver Mais/Menos -->
+      <div class="reviews-actions" *ngIf="packageRatings.length > 3">
+        <button 
+          class="btn-show-more" 
+          (click)="toggleShowAllReviews()"
+        >
+          {{ showAllReviews ? 'Ver menos avaliações' : 'Ver todas as avaliações (' + packageRatings.length + ')' }}
+          <mat-icon>{{ showAllReviews ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Estado sem avaliações -->
+    <div class="no-reviews" *ngIf="!loadingRatings && (!packageRatings || packageRatings.length === 0)">
+      <div class="no-reviews-content">
+        <mat-icon class="no-reviews-icon">star_border</mat-icon>
+        <h3>Ainda não há avaliações</h3>
+        <p>Este pacote ainda não possui avaliações de outros viajantes.</p>
+        <p class="no-reviews-encourage">Seja o primeiro a avaliar esta experiência!</p>
+      </div>
+    </div>
+
+    <!-- Estado de carregamento -->
+    <div class="reviews-loading" *ngIf="loadingRatings">
+      <div class="loading-spinner"></div>
+      <p>Carregando avaliações...</p>
+    </div>
+  </section>
 </main>
 <app-card-list></app-card-list>
 <app-footer></app-footer>

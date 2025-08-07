@@ -291,6 +291,17 @@
                         </ng-container>
                       </button>
 
+                      <!-- Mensagem informativa quando ainda não pode avaliar -->
+                      <div 
+                        *ngIf="!canRateReservation(reservation)"
+                        class="rating-info-message"
+                        title="Você poderá avaliar este pacote após o término da viagem">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <span class="info-text">
+                          Após {{ reservation.packageDate.endDate | date : "dd/MM/yyyy" }} será possível avaliar
+                        </span>
+                      </div>
+
                       <!-- Debug: Mostra informações sobre a data -->
                       <!-- <small style="color: red; font-size: 10px; display: block;">
                         Debug: Fim viagem: {{reservation.packageDate.endDate | date:'dd/MM/yyyy'}} | 
@@ -317,6 +328,16 @@
                         <mat-icon>visibility</mat-icon>
                         Ver Avaliações
                       </button>
+                      
+                      <!-- Mensagem informativa sobre avaliação -->
+                      <div 
+                        class="rating-info-message"
+                        title="Você poderá avaliar este pacote após a confirmação da reserva e término da viagem">
+                        <mat-icon class="info-icon">info</mat-icon>
+                        <span class="info-text">
+                          Avaliação disponível após confirmação e {{ reservation.packageDate.endDate | date : "dd/MM/yyyy" }}
+                        </span>
+                      </div>
                       
                       <div
                         *ngIf="reservation.payment.status === 'PENDENTE'"

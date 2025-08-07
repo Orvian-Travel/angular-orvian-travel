@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 export class LoadingService {
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private activeRequests = 0;
-  private minLoadingTime = 1000;
+  private minLoadingTime = 100;
   private loadingStartTime: number | null = null;
 
   loading$ = this.loadingSubject.asObservable();
