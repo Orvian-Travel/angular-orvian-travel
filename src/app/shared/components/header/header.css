@@ -23,6 +23,27 @@ header {
   padding: 0.05rem 0;
 }
 
+/* ===== NAVEGAÇÃO ===== */
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: white !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white !important;
+}
+
 /* ===== LOGO/BRAND ===== */
 .brand {
   height: 5.2rem;

@@ -1,0 +1,162 @@
+<app-header></app-header>
+
+<main class="about-main">
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-brand">
+          <img src="assets/logo.svg" alt="Orvian Travel Logo" class="hero-logo">
+          <p class="hero-slogan">Conectando você ao mundo através de experiências únicas</p>
+        </div>
+        <h1 class="hero-title">Sobre a Orvian Travel</h1>
+        <p class="hero-subtitle">
+          Descubra nossa história, missão e a equipe apaixonada por criar jornadas inesquecíveis 
+          que transformam sonhos em realidade
+        </p>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">100+</span>
+            <span class="stat-label">Destinos</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">1000+</span>
+            <span class="stat-label">Viajantes Felizes</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">5★</span>
+            <span class="stat-label">Avaliação</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+      <div class="mission-container">
+        <h2 class="section-title">Nossa Missão</h2>
+        <div class="mission-content">
+          <p class="mission-text">
+            Na Orvian Travel, acreditamos que viajar é mais do que apenas sair de casa – é sobre descobrir novos horizontes, 
+            culturas e criar memórias que durarão para sempre. Nossa missão é tornar essas experiências acessíveis e 
+            inesquecíveis para todos os nossos viajantes.
+          </p>
+          <p class="mission-text">
+            Oferecemos pacotes de viagem cuidadosamente planejados, com destinos únicos e experiências autênticas que 
+            conectam você com a essência de cada lugar que você visita.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Name Origin Section -->
+    <section class="name-origin-section">
+      <div class="name-container">
+        <h2 class="section-title">A Origem do Nosso Nome</h2>
+        <div class="name-content">
+          <div class="name-explanation">
+            <div class="name-breakdown">
+              <div class="name-part">
+                <span class="name-syllable highlight-or">OR</span>
+                <span class="name-meaning">(órbita)</span>
+              </div>
+              <div class="name-part">
+                <span class="name-syllable highlight-vi">VI</span>
+                <span class="name-meaning">(viajar)</span>
+              </div>
+              <div class="name-part">
+                <span class="name-syllable highlight-an">AN</span>
+                <span class="name-meaning">(pronúncia amigável)</span>
+              </div>
+            </div>
+            <p class="name-description">
+              O nome <strong>Orvian</strong> está diretamente relacionado à nossa missão: 
+              <span class="highlight-or">OR</span> representa a <em>órbita</em>, simbolizando nossa conexão global; 
+              <span class="highlight-vi">VI</span> vem de <em>viajar</em>, nossa essência; e 
+              <span class="highlight-an">AN</span> torna a pronúncia mais amigável para idiomas de outros países, 
+              refletindo nossa visão internacional.
+            </p>
+          </div>
+          <div class="name-visual">
+            <div class="orbit-animation">
+              <div class="orbit">
+                <div class="planet"></div>
+              </div>
+              <div class="center-logo">
+                <mat-icon class="travel-icon">flight</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+      <div class="team-container">
+        <h2 class="section-title">Nossa Equipe de Desenvolvimento</h2>
+        <p class="team-subtitle">Conheça os desenvolvedores que tornam a Orvian Travel realidade</p>
+        
+        <div class="developers-grid">
+          <div *ngFor="let developer of developers" class="developer-card">
+            <div class="developer-image-container">
+              <img 
+                [src]="developer.image" 
+                [alt]="developer.name"
+                class="developer-image"
+                loading="lazy"
+              >
+              <div class="developer-overlay">
+                <button 
+                  mat-fab 
+                  color="primary" 
+                  class="linkedin-btn"
+                  (click)="openLinkedin(developer.linkedinUrl)"
+                  title="Ver perfil no LinkedIn"
+                >
+                  <mat-icon>link</mat-icon>
+                </button>
+              </div>
+            </div>
+            <div class="developer-info">
+              <h3 class="developer-name">{{ developer.name }}</h3>
+              <p class="developer-role">{{ developer.role }}</p>
+              <p class="developer-description">{{ developer.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+      <div class="values-container">
+        <h2 class="section-title">Nossos Valores</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <mat-icon class="value-icon">explore</mat-icon>
+            <h3 class="value-title">Exploração</h3>
+            <p class="value-description">Incentivamos a descoberta de novos lugares e culturas únicas.</p>
+          </div>
+          <div class="value-card">
+            <mat-icon class="value-icon">security</mat-icon>
+            <h3 class="value-title">Segurança</h3>
+            <p class="value-description">Garantimos que cada viagem seja segura e bem planejada.</p>
+          </div>
+          <div class="value-card">
+            <mat-icon class="value-icon">favorite</mat-icon>
+            <h3 class="value-title">Experiências Memoráveis</h3>
+            <p class="value-description">Criamos momentos que ficarão marcados para sempre.</p>
+          </div>
+          <div class="value-card">
+            <mat-icon class="value-icon">public</mat-icon>
+            <h3 class="value-title">Conexão Global</h3>
+            <p class="value-description">Conectamos pessoas ao redor do mundo através do turismo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<app-footer></app-footer>
