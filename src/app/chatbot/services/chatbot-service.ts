@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import ModelClient from "@azure-rest/ai-inference";
 import { AzureKeyCredential } from "@azure/core-auth";
 import { ConfigService } from '../../services/config.service';
+import { ChatbotDataService } from './chatbot-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,10 @@ export class ChatbotService {
   private client: any;
   private isInitialized = false;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private chatbotDataService: ChatbotDataService
+  ) {
     this.initializeClient();
   }
 
@@ -54,6 +58,13 @@ export class ChatbotService {
   }
 
   async sendMessage(message: string): Promise<string> {
+    // Primeira: tentar processar a mensagem localmente com dados reais
+    const localResponse = await this.processMessageWithData(message);
+    if (localResponse) {
+      return localResponse;
+    }
+
+    // Se não conseguiu processar localmente, usa Azure AI
     // Se o cliente não estiver inicializado, tenta inicializar novamente
     if (!this.isInitialized) {
       await this.initializeClient();
@@ -67,7 +78,135 @@ export class ChatbotService {
 
     try {
       console.log('Enviando mensagem para Azure AI...');
-      const systemPrompt = `Você é o assistente virtual da Ôrvian Travel, uma agência de viagens especializada em experiências únicas.
+      
+      // Enriquecer o contexto com dados reais
+      const enhancedMessage = await this.enhanceMessageWithData(message);
+      
+      const systemPrompt = this.getSystemPrompt();
+
+      const response = await this.client.path("/chat/completions").post({
+        body: {
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: enhancedMessage }
+          ],
+          max_tokens: 1000,
+          temperature: 0.7,
+          model: "Phi-4"
+        }
+      });
+
+      if (response.status === "200" && 'choices' in response.body) {
+        console.log('Resposta recebida do Azure AI');
+        return response.body.choices[0]?.message?.content || "Desculpe, não consegui processar sua mensagem.";
+      }
+      
+      throw new Error('Erro na resposta da API');
+    } catch (error) {
+      console.error('Erro no chatbot:', error);
+      return this.getFallbackResponse(message);
+    }
+  }
+
+  /**
+   * Processa mensagem usando dados reais da aplicação
+   */
+  private async processMessageWithData(message: string): Promise<string | null> {
+    const lowerMessage = message.toLowerCase();
+
+    // Buscar pacotes por destino específico
+    if (this.isDestinationQuery(lowerMessage)) {
+      const destination = this.extractDestination(lowerMessage);
+      if (destination) {
+        const packages = await this.chatbotDataService.getPackagesByDestination(destination);
+        return this.chatbotDataService.formatPackageInfo(packages);
+      }
+    }
+
+    // Mostrar destinos populares
+    if (lowerMessage.includes('destino') && (lowerMessage.includes('popular') || lowerMessage.includes('recomend'))) {
+      const destinations = await this.chatbotDataService.getPopularDestinations();
+      return `Nossos destinos mais populares são:\n\n${destinations.map((dest, i) => `${i + 1}. ${dest} ✈️`).join('\n')}\n\nEm qual desses você gostaria de mais informações? 🌎`;
+    }
+
+    // Recomendações gerais
+    if (lowerMessage.includes('recomend') || lowerMessage.includes('sugest') || lowerMessage.includes('indic')) {
+      const recommendations = await this.chatbotDataService.getPackageRecommendations(message);
+      return this.chatbotDataService.formatPackageInfo(recommendations);
+    }
+
+    return null; // Deixa para o Azure AI processar
+  }
+
+  /**
+   * Enriquece a mensagem com dados reais antes de enviar para Azure AI
+   */
+  private async enhanceMessageWithData(message: string): Promise<string> {
+    try {
+      const destinations = await this.chatbotDataService.getAllDestinations();
+      const destinationsContext = destinations.length > 0 
+        ? `\n\nDestinos disponíveis em nosso catálogo: ${destinations.slice(0, 10).join(', ')}`
+        : '';
+      
+      return `${message}${destinationsContext}`;
+    } catch (error) {
+      return message; // Retorna mensagem original se der erro
+    }
+  }
+
+  /**
+   * Identifica se a mensagem é uma consulta sobre destino
+   */
+  private isDestinationQuery(message: string): boolean {
+    const keywords = [
+      'viagem para', 'viajar para', 'ir para', 'conhecer',
+      'pacote para', 'destino', 'onde ir', 'roteiro para'
+    ];
+    return keywords.some(keyword => message.includes(keyword));
+  }
+
+  /**
+   * Extrai o destino da mensagem do usuário
+   */
+  private extractDestination(message: string): string | null {
+    // Palavras comuns de destinos brasileiros e internacionais
+    const destinations = [
+      'nordeste', 'fernando de noronha', 'recife', 'salvador', 'fortaleza',
+      'rio de janeiro', 'são paulo', 'minas gerais', 'paraty', 'ouro preto',
+      'caldas novas', 'bonito', 'pantanal', 'amazonia', 'manaus',
+      'europa', 'frança', 'italia', 'espanha', 'portugal', 'alemanha',
+      'eua', 'nova york', 'miami', 'orlando', 'california',
+      'caribe', 'cancun', 'punta cana', 'jamaica', 'cuba',
+      'asia', 'japao', 'china', 'tailandia', 'india'
+    ];
+
+    for (const dest of destinations) {
+      if (message.includes(dest)) {
+        return dest;
+      }
+    }
+
+    // Tentar extrair destino após preposições
+    const patterns = [
+      /(?:para|pro)\s+([a-záçãoôéíúàè\s]+)/i,
+      /(?:conhecer|ir)\s+(?:para|pro|em|na|no|a|o)?\s*([a-záçãoôéíúàè\s]+)/i
+    ];
+
+    for (const pattern of patterns) {
+      const match = message.match(pattern);
+      if (match && match[1]) {
+        return match[1].trim();
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Retorna o prompt do sistema
+   */
+  private getSystemPrompt(): string {
+    return `Você é o assistente virtual da Ôrvian Travel, uma agência de viagens especializada em experiências únicas.
 
 INFORMAÇÕES DA EMPRESA:
 - Nome: Orvian Travel
@@ -108,29 +247,6 @@ PREÇO PARA A VIAGEM PARA O NORDESTE:
 - Fale apenas sobre lugares que realmente ficam no nordeste
 
 Se perguntarem sobre preços específicos, diga que os valores variam e oriente a consultar nossos consultores para um orçamento personalizado.`;
-
-      const response = await this.client.path("/chat/completions").post({
-        body: {
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user", content: message }
-          ],
-          max_tokens: 1000,
-          temperature: 0.7,
-          model: "Phi-4"
-        }
-      });
-
-      if (response.status === "200" && 'choices' in response.body) {
-        console.log('Resposta recebida do Azure AI');
-        return response.body.choices[0]?.message?.content || "Desculpe, não consegui processar sua mensagem.";
-      }
-      
-      throw new Error('Erro na resposta da API');
-    } catch (error) {
-      console.error('Erro no chatbot:', error);
-      return this.getFallbackResponse(message);
-    }
   }
 
   private getFallbackResponse(message: string): string {
