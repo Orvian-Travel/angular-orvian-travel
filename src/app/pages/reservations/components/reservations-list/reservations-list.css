@@ -2,6 +2,11 @@ app-reservations-list {
     display: contents;
 }
 
+/* Regra global para evitar ícones cortados */
+mat-icon {
+  overflow: visible !important;
+}
+
 .section-header {
   text-align: center;
   margin-bottom: 3rem;
@@ -131,9 +136,10 @@ app-reservations-list {
 }
 
 .clear-date-btn mat-icon {
-  font-size: 18px;
-  width: 18px;
-  height: 18px;
+  font-size: 16px; /* Diminuído de 18px para 16px */
+  width: 16px; /* Diminuído de 18px para 16px */
+  height: 16px; /* Diminuído de 18px para 16px */
+  overflow: visible; /* Garante que o ícone não seja cortado */
 }
 
 .date-info, .no-dates-info {
@@ -144,10 +150,11 @@ app-reservations-list {
 }
 
 .info-icon {
-  font-size: 16px !important;
-  width: 16px !important;
-  height: 16px !important;
+  font-size: 14px !important; /* Diminuído de 16px para 14px */
+  width: 14px !important; /* Diminuído de 16px para 14px */
+  height: 14px !important; /* Diminuído de 16px para 14px */
   color: var(--orvian-primary-color);
+  overflow: visible !important; /* Garante que o ícone não seja cortado */
 }
 
 .filter-buttons {
@@ -172,7 +179,7 @@ app-reservations-list {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   position: relative;
-  height: 680px;
+  height: 800px; /* Aumentado de 680px para 800px */
   display: flex;
   flex-direction: column;
   border: 1px solid var(--orvian-gray-001);
@@ -620,7 +627,9 @@ app-reservations-list {
   .reservation-card {
     margin: 0;
     width: 100%;
-    max-width: 280px; /* Limita largura para 2 colunas */
+    max-width: calc(50vw - 2rem); /* Responsivo para tablets */
+    min-width: 250px; /* Largura mínima */
+    height: 700px; /* Altura específica para tablets */
   }
   
   .card-image-wrapper {
@@ -740,7 +749,7 @@ app-reservations-list {
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding: 0 0.75rem; /* Respiro mínimo nas laterais para mobile */
+    padding: 0 1rem; /* Mais padding lateral para mobile */
   }
   
   .reservations-grid {
@@ -749,15 +758,17 @@ app-reservations-list {
     align-items: center;
     gap: 1rem;
     width: 100%;
-    max-width: min(400px, 90vw); /* Responsivo: máximo 400px ou 90% da viewport */
+    max-width: calc(100vw - 2rem); /* Usa toda largura disponível menos padding */
     margin: 0 auto; /* Centralização automática e flexível */
   }
   
   .reservation-card {
     border-radius: 18px;
     width: 100%;
-    max-width: 350px; /* Largura máxima para mobile - mais estreito */
+    max-width: calc(100vw - 2.5rem); /* Largura responsiva baseada na viewport */
     margin: 0 auto; /* Centraliza cada card individualmente */
+    min-width: 280px; /* Largura mínima para não ficar muito pequeno */
+    height: 650px; /* Altura específica para mobile */
   }
   
   .card-image-wrapper {
@@ -1308,6 +1319,23 @@ app-reservations-list {
   border-color: #2563eb;
 }
 
+/* Estilo para botão desabilitado */
+.action-btn:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  border-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.action-btn:disabled:hover {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  border-color: #d1d5db;
+  transform: none;
+  box-shadow: none;
+}
+
 /* Estilo para botão de editar avaliação */
 .btn-edit-rating {
   background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
@@ -1331,14 +1359,18 @@ app-reservations-list {
 }
 
 .edit-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
+  font-size: 14px; /* Diminuído de 16px para 14px */
+  width: 14px; /* Diminuído de 16px para 14px */
+  height: 14px; /* Diminuído de 16px para 14px */
+  overflow: visible; /* Garante que o ícone não seja cortado */
 }
 
 .delete-icon {
-  font-size: 12px;
+  font-size: 10px; /* Diminuído de 12px para 10px */
+  width: 10px; /* Adicionado */
+  height: 10px; /* Adicionado */
   opacity: 0.8;
+  overflow: visible; /* Garante que o ícone não seja cortado */
 }
 
 /* Mensagem informativa sobre avaliação */
@@ -1363,8 +1395,11 @@ app-reservations-list {
 }
 
 .rating-info-message .info-icon {
-  font-size: 16px;
+  font-size: 14px; /* Diminuído de 16px para 14px */
+  width: 14px; /* Adicionado */
+  height: 14px; /* Adicionado */
   color: #3b82f6;
+  overflow: visible; /* Garante que o ícone não seja cortado */
 }
 
 .rating-info-message .info-text {
@@ -1372,10 +1407,11 @@ app-reservations-list {
 }
 
 .action-btn mat-icon {
-  font-size: 16px;
-  width: 16px;
-  height: 16px;
+  font-size: 14px; /* Diminuído de 16px para 14px */
+  width: 14px; /* Diminuído de 16px para 14px */
+  height: 14px; /* Diminuído de 16px para 14px */
   margin-right: 4px;
+  overflow: visible; /* Garante que o ícone não seja cortado */
 }
 
 /* Ajustes para card-actions com múltiplos botões */
@@ -1407,5 +1443,35 @@ app-reservations-list {
   .card-actions .action-btn {
     width: 100%;
     min-width: auto;
+  }
+}
+
+/* Telas muito pequenas (dispositivos móveis pequenos) */
+@media (max-width: 360px) {
+  .reservations-section {
+    padding: 0 0.5rem; /* Padding ainda menor para telas muito pequenas */
+  }
+  
+  .reservation-card {
+    max-width: calc(100vw - 1rem); /* Usa quase toda a largura disponível */
+    min-width: 0; /* Remove largura mínima para telas muito pequenas */
+    height: 600px; /* Altura específica para telas muito pequenas */
+  }
+  
+  .card-content {
+    padding: 0.3rem 0.7rem 0.7rem 0.7rem; /* Padding menor no conteúdo */
+  }
+  
+  .package-title {
+    font-size: 1rem; /* Título menor */
+  }
+  
+  .price {
+    font-size: 1.3rem; /* Preço menor */
+  }
+  
+  .action-btn {
+    padding: 0.5rem 0.8rem; /* Botões menores */
+    font-size: 0.75rem;
   }
 }
