@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, ViewEncapsulation, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, ViewEncapsulation, TemplateRef, ViewChild, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -13,7 +13,7 @@ import { RatingDetail } from '../../../services/entities/rating.model';
   styleUrl: './package-ratings-viewer.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class PackageRatingsViewerComponent implements OnInit, OnChanges {
+export class PackageRatingsViewerComponent implements OnInit, OnChanges, OnDestroy {
   @Input() packageId!: string;
   @Input() packageTitle!: string;
   @Input() isVisible = false;
@@ -43,23 +43,47 @@ export class PackageRatingsViewerComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    if (this.packageId && this.isVisible) {
-      this.loadPackageRatings();
-      this.openModal();
-    }
+    console.log('PackageRatingsViewer ngOnInit called', {
+      packageId: this.packageId,
+      isVisible: this.isVisible
+    });
   }
 
   ngOnChanges() {
-    if (this.packageId && this.isVisible) {
+    console.log('PackageRatingsViewer ngOnChanges called', {
+      packageId: this.packageId,
+      isVisible: this.isVisible,
+      hasModalRef: !!this.modalRef
+    });
+
+    if (this.packageId && this.isVisible && !this.modalRef) {
       this.loadPackageRatings();
-      this.openModal();
+      // Aguarda o próximo ciclo para garantir que o template esteja disponível
+      setTimeout(() => {
+        this.openModal();
+      }, 0);
     } else if (!this.isVisible && this.modalRef) {
       this.closeModal();
     }
   }
 
+  ngOnDestroy() {
+    if (this.modalRef) {
+      this.modalRef.close();
+      this.modalRef = undefined;
+    }
+  }
+
   private openModal() {
+    console.log('Attempting to open modal', {
+      isVisible: this.isVisible,
+      hasTemplate: !!this.ratingsModalTemplate,
+      hasModalRef: !!this.modalRef
+    });
+
     if (this.isVisible && this.ratingsModalTemplate && !this.modalRef) {
+      console.log('Opening modal...');
+      
       this.modalRef = this.modalService.open(this.ratingsModalTemplate, {
         size: 'xl',
         backdrop: 'static',
@@ -71,27 +95,41 @@ export class PackageRatingsViewerComponent implements OnInit, OnChanges {
       this.modalRef.result.then(
         () => {
           // Modal fechado normalmente
+          console.log('Modal closed normally');
           this.handleModalClose();
         },
         () => {
           // Modal fechado via backdrop ou ESC
+          console.log('Modal dismissed');
           this.handleModalClose();
         }
       );
+      
+      console.log('Modal opened successfully');
+    } else {
+      console.warn('Cannot open modal:', {
+        isVisible: this.isVisible,
+        hasTemplate: !!this.ratingsModalTemplate,
+        hasModalRef: !!this.modalRef
+      });
     }
   }
 
   private handleModalClose() {
+    console.log('Handling modal close');
     this.modalRef = undefined;
     this.close.emit();
   }
 
   private loadPackageRatings(): void {
+    console.log('Loading package ratings for packageId:', this.packageId);
+    
     this.isLoading = true;
     this.error = '';
 
     this.ratingService.getRatingsByPackage(this.packageId).subscribe({
       next: (ratings) => {
+        console.log('Package ratings loaded successfully:', ratings);
         this.ratings = ratings;
         this.calculateStatistics();
         this.isLoading = false;
@@ -148,6 +186,8 @@ export class PackageRatingsViewerComponent implements OnInit, OnChanges {
   }
 
   closeModal(): void {
+    console.log('Closing modal manually');
+    
     if (this.modalRef) {
       this.modalRef.close();
       this.modalRef = undefined;

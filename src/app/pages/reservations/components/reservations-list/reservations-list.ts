@@ -455,12 +455,22 @@ export class ReservationsList implements OnInit {
     console.log('travelPackageId:', reservation.packageDate?.travelPackageId);
 
     if (this.canViewPackageRatings(reservation)) {
-      this.selectedPackageForViewing = {
-        id: reservation.packageDate.travelPackageId,
-        title: reservation.packageDate.packageTitle || 'Pacote'
-      };
-      this.showPackageRatingsViewer = true;
-      console.log('Modal opened successfully');
+      // Sempre fecha primeiro para garantir estado limpo
+      this.showPackageRatingsViewer = false;
+      this.selectedPackageForViewing = null;
+      
+      // Força a re-renderização
+      setTimeout(() => {
+        this.selectedPackageForViewing = {
+          id: reservation.packageDate.travelPackageId,
+          title: reservation.packageDate.packageTitle || 'Pacote'
+        };
+        this.showPackageRatingsViewer = true;
+        console.log('Modal state updated:', {
+          showModal: this.showPackageRatingsViewer,
+          selectedPackage: this.selectedPackageForViewing
+        });
+      }, 10);
     } else {
       console.warn('Cannot open ratings viewer: missing packageDate or travelPackageId');
 
@@ -473,6 +483,7 @@ export class ReservationsList implements OnInit {
    * Fecha o modal de visualização de avaliações do pacote
    */
   onPackageRatingsViewerClose(): void {
+    console.log('Closing package ratings viewer');
     this.showPackageRatingsViewer = false;
     this.selectedPackageForViewing = null;
   }

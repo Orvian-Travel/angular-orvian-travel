@@ -260,17 +260,10 @@
                       <button
                         class="action-btn"
                         [class.btn-info]="canViewPackageRatings(reservation)"
-                        [class.btn-outline]="
-                          !canViewPackageRatings(reservation)
-                        "
+                        [class.btn-outline]="!canViewPackageRatings(reservation)"
                         [disabled]="!canViewPackageRatings(reservation)"
                         (click)="viewPackageRatings(reservation)"
-                        [title]="
-                          canViewPackageRatings(reservation)
-                            ? 'Ver todas as avaliações deste pacote'
-                            : 'Avaliações não disponíveis para este pacote'
-                        "
-                      >
+                        [title]="canViewPackageRatings(reservation) ? 'Ver todas as avaliações deste pacote': 'Avaliações não disponíveis para este pacote'">
                         <mat-icon>visibility</mat-icon>
                         Ver Avaliações
                       </button>
@@ -302,7 +295,6 @@
                         <ng-container *ngIf="hasExistingRating(reservation.id)">
                           <span class="edit-rating-icons">
                             <mat-icon class="edit-icon">edit</mat-icon>
-                            <span class="delete-icon">🗑️</span>
                           </span>
                           Editar Avaliação
                         </ng-container>
