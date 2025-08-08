@@ -129,35 +129,31 @@ export class Payment implements OnInit, OnDestroy {
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-muted">NOME COMPLETO</label>
-            <input type="text" class="form-control" placeholder="" required>
+            <input type="text" class="form-control" placeholder="Digite o nome completo" required>
           </div>
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-muted">DATA DE NASCIMENTO</label>
             <input type="date" class="form-control" required>
           </div>
           <div class="col-md-6">
-            <label class="form-label small fw-semibold text-muted">TIPO DE DOCUMENTO</label>
-            <select class="form-select document-type-select" required>
-              <option value="">Tipo de Documento</option>
-              <option value="cpf">CPF</option>
-              <option value="passaporte">Passaporte</option>
-            </select>
+            <label class="form-label small fw-semibold text-muted">NÚMERO DO CPF</label>
+            <input
+              type="text"
+              class="form-control document-number-input"
+              maxlength="14"
+              placeholder="000.000.000-00"
+              required
+            />
           </div>
           <div class="col-md-6">
-            <label class="form-label small fw-semibold text-muted">NÚMERO</label>
-            <input type="text" class="form-control document-number-input" placeholder="Selecione o tipo de documento" maxlength="8" disabled required>
+            <label class="form-label small fw-semibold text-muted">EMAIL</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Digite o email do viajante"
+              required
+            />
           </div>
-                              <div class="col-md-6">
-                      <label class="form-label small fw-semibold text-muted"
-                        >EMAIL</label
-                      >
-                      <input
-                        type="email"
-                        class="form-control"
-                        placeholder=""
-                        required
-                      />
-                    </div>
         </div>
       `;
 
@@ -167,8 +163,6 @@ export class Payment implements OnInit, OnDestroy {
         removeButton.addEventListener('click', (event) =>
           this.removeTraveler(event)
         );
-
-        // Forçar aplicação do estilo vermelho no ícone
         const icon = removeButton.querySelector('img');
         if (icon) {
           (icon as HTMLElement).style.filter =
@@ -178,14 +172,10 @@ export class Payment implements OnInit, OnDestroy {
         }
       }
 
-      // Adicionar event listener para o select de tipo de documento
-      const documentTypeSelect = travelerCard.querySelector(
-        '.document-type-select'
-      );
-      if (documentTypeSelect) {
-        documentTypeSelect.addEventListener('change', (event) =>
-          this.onDocumentTypeChange(event)
-        );
+      // Adicionar event listener para máscara de CPF
+      const cpfInput = travelerCard.querySelector('.document-number-input') as HTMLInputElement;
+      if (cpfInput) {
+        cpfInput.addEventListener('input', (e) => this.formatCPF(e));
       }
 
       const inputs = travelerCard.querySelectorAll('input, select');
@@ -824,9 +814,6 @@ export class Payment implements OnInit, OnDestroy {
       const birthDateInput = card.querySelector('input[type="date"]') as HTMLInputElement;
       if (!birthDateInput?.value) return false;
 
-      const documentTypeSelect = card.querySelector('.document-type-select') as HTMLSelectElement;
-      if (!documentTypeSelect?.value) return false;
-
       const documentNumberInput = card.querySelector('.document-number-input') as HTMLInputElement;
       if (!documentNumberInput?.value?.trim()) return false;
 
@@ -853,7 +840,6 @@ export class Payment implements OnInit, OnDestroy {
   }
 
   onCardInputChange() {
-    // Apenas força detecção de mudanças
     this.cdr.detectChanges();
   }
 }

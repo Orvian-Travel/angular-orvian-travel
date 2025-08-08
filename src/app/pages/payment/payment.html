@@ -169,7 +169,7 @@
                       placeholder="0000 0000 0000 0000"
                       maxlength="19"
                       id="card-number"
-                      (input)="formatCardNumber($event)"
+                      (input)="onCardInputChange()"
                     />
                   </div>
                   <div class="col-md-4">
@@ -181,6 +181,7 @@
                       class="form-control"
                       placeholder="Nome do Titular"
                       required
+                      (input)="onCardInputChange()"
                     />
                   </div>
                 </div>
@@ -195,7 +196,7 @@
                       placeholder="00/00"
                       maxlength="5"
                       id="card-expiry"
-                      (input)="formatCardExpiry($event)"
+                      (input)="onCardInputChange()"
                     />
                   </div>
                   <div class="col-md-4">
@@ -207,6 +208,7 @@
                       class="form-control"
                       placeholder="***"
                       maxlength="4"
+                      (input)="onCardInputChange()"
                     />
                   </div>
                   <div class="col-md-4">
