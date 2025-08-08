@@ -134,7 +134,8 @@
 }
 
 .btn-minimize,
-.btn-close {
+.btn-close,
+.btn-clear-chat {
   background: rgba(255, 255, 255, 0.2);
   border: none;
   border-radius: 50%;
@@ -149,8 +150,18 @@
 }
 
 .btn-minimize:hover,
-.btn-close:hover {
+.btn-close:hover,
+.btn-clear-chat:hover {
   background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.btn-clear-chat {
+  color: #ff6b6b;
+}
+
+.btn-clear-chat:hover {
+  background: rgba(255, 107, 107, 0.2);
   transform: scale(1.1);
 }
 
@@ -248,7 +259,8 @@
   }
 
   .btn-minimize,
-  .btn-close {
+  .btn-close,
+  .btn-clear-chat {
     width: 36px;
     height: 36px;
     font-size: 14px;
@@ -304,7 +316,8 @@
   }
 
   .btn-minimize,
-  .btn-close {
+  .btn-close,
+  .btn-clear-chat {
     width: 32px;
     height: 32px;
     font-size: 12px;
@@ -343,7 +356,8 @@
   }
 
   .btn-minimize,
-  .btn-close {
+  .btn-close,
+  .btn-clear-chat {
     width: 30px;
     height: 30px;
     font-size: 11px;
@@ -446,7 +460,8 @@
   }
   
   .btn-minimize,
-  .btn-close {
+  .btn-close,
+  .btn-clear-chat {
     min-width: 44px;
     min-height: 44px;
   }

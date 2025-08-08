@@ -51,16 +51,17 @@ export class PaymentApproved implements OnInit, OnDestroy {
     try {
       const date = new Date(this.purshaseDate);
       if (isNaN(date.getTime())) {
-        console.error('Data de check-in inválida:', this.purshaseDate);
+        console.error('Data de compra inválida:', this.purshaseDate);
         return 'Data inválida';
       }
       return date.toLocaleDateString('pt-BR', {
         day: 'numeric',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC'
       });
     } catch (error) {
-      console.error('Erro ao formatar data de check-in:', error);
+      console.error('Erro ao formatar data de compra:', error);
       return 'Erro na data';
     }
   }
@@ -77,7 +78,8 @@ export class PaymentApproved implements OnInit, OnDestroy {
       return date.toLocaleDateString('pt-BR', {
         day: 'numeric',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC'
       });
     } catch (error) {
       console.error('Erro ao formatar data de check-in:', error);
@@ -102,7 +104,8 @@ export class PaymentApproved implements OnInit, OnDestroy {
       return checkoutDate.toLocaleDateString('pt-BR', {
         day: 'numeric',
         month: 'long',
-        year: 'numeric'
+        year: 'numeric',
+        timeZone: 'UTC'
       });
     } catch (error) {
       console.error('Erro ao calcular data de check-out:', error);

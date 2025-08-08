@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, OnInit, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PackageService } from '../../../services/api/package/package-service';
 import { PagedResponse } from '../../../services/entities/paged-response.model';
 import { SERVICES_TOKEN } from '../../../services/services-token';
@@ -9,16 +11,24 @@ import { IPackageService } from '../../../services/api/package/package-service.i
 import { SearchData } from '../../../services/entities/search-data.model';
 import { DialogManager } from '../../../services/dialog/dialog-manager';
 import { IDialogManager } from '../../../services/dialog/dialog-manager.interface';
+import { PackageRatingsViewerComponent } from '../package-ratings-viewer/package-ratings-viewer.component';
+import { RatingService } from '../../../services/api/rating/rating.service';
 
 interface CacheEntry {
-  data: PackageDetail[];
+  data: PackageWithRatings[];
   totalElements: number;
   timestamp: number;
 }
 
+// Extensão do PackageDetail para incluir dados de avaliação
+interface PackageWithRatings extends PackageDetail {
+  averageRating?: number;
+  totalRatings?: number;
+}
+
 @Component({
   selector: 'app-card-list',
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule, PackageRatingsViewerComponent],
   templateUrl: './card-list.html',
   styleUrl: './card-list.css',
   providers: [
@@ -32,14 +42,16 @@ export class CardList implements OnInit, OnChanges {
   constructor(
     private router: Router,
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
-    @Inject(SERVICES_TOKEN.DIALOG) private readonly dialogManager: IDialogManager
+    @Inject(SERVICES_TOKEN.DIALOG) private readonly dialogManager: IDialogManager,
+    private ratingService: RatingService,
+    private modalService: NgbModal
   ) { }
 
 
   @Input() searchData: SearchData | null = null;
 
   cardListTitle: string = 'Pacotes recentes';
-  packages: PackageDetail[] = [];
+  packages: PackageWithRatings[] = [];
   currentPage: number = 0;
   pageSize: number = 8;
   totalPages: number = 0;
@@ -47,7 +59,12 @@ export class CardList implements OnInit, OnChanges {
 
   isSearching: boolean = false;
 
-  private allCurrentData: PackageDetail[] = [];
+  // Propriedades para o modal de avaliações
+  isRatingsModalVisible = false;
+  selectedPackageId = '';
+  selectedPackageTitle = '';
+
+  private allCurrentData: PackageWithRatings[] = [];
 
   private allPackagesCache: CacheEntry | null = null;
   private readonly CACHE_DURATION = 5 * 60 * 1000;
@@ -103,13 +120,21 @@ export class CardList implements OnInit, OnChanges {
           return;
         }
 
-        const allData = response._embedded.DTOList;
+        // Converter para PackageWithRatings
+        const allData: PackageWithRatings[] = response._embedded.DTOList.map(pkg => ({
+          ...pkg,
+          averageRating: 0,
+          totalRatings: 0
+        }));
 
         // Atualizar dados locais
         this.allCurrentData = allData;
         this.cardListTitle = `Pacotes para "${data.destination}"`;
         this.currentPage = 0;
         this.updateLocalPagination();
+        
+        // Carregar avaliações para os pacotes encontrados
+        this.loadRatingsForPackages();
 
         this.dialogManager.showNotificationAlert(
           'Busca completa',
@@ -141,6 +166,8 @@ export class CardList implements OnInit, OnChanges {
       this.cardListTitle = 'Pacotes recentes';
       this.currentPage = 0;
       this.updateLocalPagination();
+      // Carregar avaliações para dados em cache
+      this.loadRatingsForPackages();
       return;
     }
 
@@ -148,16 +175,24 @@ export class CardList implements OnInit, OnChanges {
     // Fazer requisição com size maior para buscar todos os resultados
     this.service.getAllPackagesWithPagination(0, 1000).subscribe({
       next: (response: PagedResponse<PackageDetail>) => {
-        const allData = response._embedded.DTOList;
+        // Converter para PackageWithRatings
+        const allData: PackageWithRatings[] = response._embedded.DTOList.map(pkg => ({
+          ...pkg,
+          averageRating: 0,
+          totalRatings: 0
+        }));
 
-        // Salvar no cache
-        this.setCachedData(allData, allData.length);
+        // Salvar no cache (usando os dados originais)
+        this.setCachedData(response._embedded.DTOList, response._embedded.DTOList.length);
 
         // Atualizar dados locais
         this.allCurrentData = allData;
         this.cardListTitle = 'Pacotes recentes';
         this.currentPage = 0;
         this.updateLocalPagination();
+        
+        // Carregar avaliações para os pacotes
+        this.loadRatingsForPackages();
       },
       error: () => {
         this.dialogManager.showErrorAlert(
@@ -178,8 +213,15 @@ export class CardList implements OnInit, OnChanges {
   }
 
   private setCachedData(data: PackageDetail[], totalElements: number): void {
+    // Converter PackageDetail para PackageWithRatings
+    const dataWithRatings: PackageWithRatings[] = data.map(pkg => ({
+      ...pkg,
+      averageRating: 0,
+      totalRatings: 0
+    }));
+
     const cacheEntry: CacheEntry = {
-      data,
+      data: dataWithRatings,
       totalElements,
       timestamp: Date.now()
     };
@@ -258,5 +300,57 @@ export class CardList implements OnInit, OnChanges {
     }
     
     return 'assets/images/default-package-image.png';
+  }
+
+  // Métodos para avaliações
+  generateStars(rating: number): number[] {
+    return Array(5).fill(0).map((_, index) => index < Math.round(rating) ? 1 : 0);
+  }
+
+  openRatingsModal(packageId: string, packageTitle: string): void {
+    this.selectedPackageId = packageId;
+    this.selectedPackageTitle = packageTitle;
+    this.isRatingsModalVisible = true;
+  }
+
+  closeRatingsModal(): void {
+    this.isRatingsModalVisible = false;
+    this.selectedPackageId = '';
+    this.selectedPackageTitle = '';
+  }
+
+  private loadRatingsForPackages(): void {
+    this.allCurrentData.forEach((package_, index) => {
+      this.ratingService.getRatingsByPackage(package_.id).subscribe({
+        next: (ratings) => {
+          const totalRatings = ratings.length;
+          let averageRating = 0;
+          
+          if (totalRatings > 0) {
+            const sum = ratings.reduce((acc, rating) => acc + rating.rate, 0);
+            averageRating = sum / totalRatings;
+          }
+          
+          // Atualizar o pacote com dados de avaliação
+          this.allCurrentData[index] = {
+            ...package_,
+            averageRating,
+            totalRatings
+          };
+          
+          // Atualizar a paginação local para refletir as mudanças
+          this.updateLocalPagination();
+        },
+        error: (error) => {
+          console.error(`Erro ao carregar avaliações para pacote ${package_.id}:`, error);
+          // Em caso de erro, manter os dados originais sem avaliação
+          this.allCurrentData[index] = {
+            ...package_,
+            averageRating: 0,
+            totalRatings: 0
+          };
+        }
+      });
+    });
   }
 }

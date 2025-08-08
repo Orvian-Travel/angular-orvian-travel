@@ -67,7 +67,7 @@ export class ReservationsList implements OnInit {
   showRatingModal = false;
   selectedReservationForRating: ReservationDetail | null = null;
   existingRatingForReservation: RatingDetail | undefined = undefined;
-  
+
   // Cache para avaliações existentes por reserva
   existingRatingsCache: Map<string, RatingDetail | null> = new Map();
 
@@ -186,8 +186,8 @@ export class ReservationsList implements OnInit {
    * Verifica se já existe avaliação para uma reserva (usando cache)
    */
   hasExistingRating(reservationId: string): boolean {
-    return this.existingRatingsCache.get(reservationId) !== null && 
-           this.existingRatingsCache.get(reservationId) !== undefined;
+    return this.existingRatingsCache.get(reservationId) !== null &&
+      this.existingRatingsCache.get(reservationId) !== undefined;
   }
 
   onImageError(event: Event): void {
@@ -351,7 +351,14 @@ export class ReservationsList implements OnInit {
 
   /**
    * Verifica se o usuário pode avaliar uma reserva
-   * Regra: Só pode avaliar após a data de término da viagem
+   * 
+   * REGRAS DE NEGÓCIO:
+   * 1. Só pode avaliar reservas CONFIRMADAS (não pendentes ou canceladas)
+   * 2. Só pode avaliar APÓS a data de término da viagem
+   * 3. A data é comparada sem considerar as horas (apenas dia, mês e ano)
+   * 
+   * @param reservation - Dados da reserva a ser verificada
+   * @returns true se o usuário pode avaliar, false caso contrário
    */
   canRateReservation(reservation: ReservationDetail): boolean {
     // Só pode avaliar reservas confirmadas
@@ -365,7 +372,7 @@ export class ReservationsList implements OnInit {
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Remove as horas para comparar apenas a data
       endDate.setHours(0, 0, 0, 0);
-      
+
       return endDate < today; // Retorna true se a viagem já terminou
     }
 
@@ -377,7 +384,7 @@ export class ReservationsList implements OnInit {
    */
   rateReservation(reservation: ReservationDetail): void {
     this.selectedReservationForRating = reservation;
-    
+
     // Primeiro tenta o endpoint específico
     this.ratingService.getRatingByReservation(reservation.id).subscribe({
       next: (existingRating) => {
@@ -433,15 +440,42 @@ export class ReservationsList implements OnInit {
   }
 
   /**
+   * Verifica se é possível visualizar as avaliações de um pacote
+   */
+  canViewPackageRatings(reservation: ReservationDetail): boolean {
+    return !!(reservation.packageDate?.travelPackageId);
+  }
+
+  /**
    * Abre o modal para visualizar todas as avaliações de um pacote
    */
   viewPackageRatings(reservation: ReservationDetail): void {
-    if (reservation.packageDate?.travelPackageId) {
-      this.selectedPackageForViewing = {
-        id: reservation.packageDate.travelPackageId,
-        title: reservation.packageDate.packageTitle || 'Pacote'
-      };
-      this.showPackageRatingsViewer = true;
+    console.log('viewPackageRatings called for reservation:', reservation.id);
+    console.log('packageDate:', reservation.packageDate);
+    console.log('travelPackageId:', reservation.packageDate?.travelPackageId);
+
+    if (this.canViewPackageRatings(reservation)) {
+      // Sempre fecha primeiro para garantir estado limpo
+      this.showPackageRatingsViewer = false;
+      this.selectedPackageForViewing = null;
+      
+      // Força a re-renderização
+      setTimeout(() => {
+        this.selectedPackageForViewing = {
+          id: reservation.packageDate.travelPackageId,
+          title: reservation.packageDate.packageTitle || 'Pacote'
+        };
+        this.showPackageRatingsViewer = true;
+        console.log('Modal state updated:', {
+          showModal: this.showPackageRatingsViewer,
+          selectedPackage: this.selectedPackageForViewing
+        });
+      }, 10);
+    } else {
+      console.warn('Cannot open ratings viewer: missing packageDate or travelPackageId');
+
+      // Feedback simples para o usuário
+      alert('Não é possível visualizar as avaliações deste pacote no momento. Dados do pacote não encontrados.');
     }
   }
 
@@ -449,6 +483,7 @@ export class ReservationsList implements OnInit {
    * Fecha o modal de visualização de avaliações do pacote
    */
   onPackageRatingsViewerClose(): void {
+    console.log('Closing package ratings viewer');
     this.showPackageRatingsViewer = false;
     this.selectedPackageForViewing = null;
   }

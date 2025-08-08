@@ -37,7 +37,7 @@ app-card {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  height: 420px;
+  height: 550px; /* Aumentado para acomodar avaliações */
   display: flex;
   flex-direction: column;
 }
@@ -111,10 +111,81 @@ app-card {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.package-title:hover {
+  color: var(--orvian-primary-variant);
+}
+
+/* Seção de Avaliações */
+.ratings-section {
+  margin: 1rem 0;
+  border-top: 1px solid var(--orvian-gray-002);
+  padding-top: 1rem;
+}
+
+.ratings-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: var(--orvian-gray-002);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ratings-summary:hover {
+  background: rgba(27, 157, 189, 0.1);
+  border-color: var(--orvian-primary-variant);
+}
+
+.stars-display {
+  display: flex;
+  gap: 2px;
+}
+
+.star-icon {
+  font-size: 16px !important;
+  width: 16px !important;
+  height: 16px !important;
+  color: var(--orvian-gray-003);
+  transition: color 0.3s ease;
+}
+
+.star-icon.filled {
+  color: #ffc107;
+}
+
+.rating-text {
+  flex: 1;
+  font-size: 0.9rem;
+  color: var(--orvian-gray-003);
+  font-weight: 500;
+}
+
+.ratings-count {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.view-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+  color: var(--orvian-primary-variant);
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.ratings-summary:hover .view-icon {
+  opacity: 1;
 }
 
 .price-section {
-  margin-top: auto;
+  margin-top: 0.5rem;
 }
 
 .price-label {
@@ -184,7 +255,7 @@ app-card {
 
   .package-card {
     margin: 0;
-    height: 380px;
+    height: 440px; /* Ajustado para acomodar avaliações */
   }
 
   .card-image-wrapper {
@@ -203,11 +274,26 @@ app-card {
   .price {
     font-size: 1.8rem;
   }
+
+  /* Ajustes para avaliações em tablet */
+  .ratings-summary {
+    padding: 0.6rem;
+  }
+
+  .star-icon {
+    font-size: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .rating-text {
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 480px) {
   .section-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .section-title {
@@ -226,7 +312,7 @@ app-card {
   .package-card {
     margin: 0;
     border-radius: 6px;
-    height: 360px;
+    height: 430px; /* Ajustado para acomodar avaliações */
   }
 
   .card-image-wrapper {
@@ -253,6 +339,33 @@ app-card {
 
   .price {
     font-size: 1.6rem;
+  }
+
+  /* Ajustes para avaliações em mobile */
+  .ratings-section {
+    margin: 0.1rem 0;
+    padding-top: 0.1rem;
+  }
+
+  .ratings-summary {
+    padding: 0.5rem;
+    gap: 0.4rem;
+  }
+
+  .star-icon {
+    font-size: 12px !important;
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .rating-text {
+    font-size: 0.8rem;
+  }
+
+  .view-icon {
+    font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
   }
 }
 

@@ -121,8 +121,7 @@ app-root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f0fbff00; /* Permite ver os padrões globais */
-  padding-top: 5.5rem; /* Compensação para header fixo */
+  background-color: #f0fbff00; /* Permite ver os padrões globais */ /* Compensação para header fixo */
   position: relative;
   z-index: 200; /* Fica acima dos padrões de fundo */
 }
@@ -134,19 +133,35 @@ app-register,
 app-forgot-password,
 app-admin-tela,
 app-reset-password {
-  margin-top: -5.5rem; /* Compensa o padding-top do app-root */
+   /* Compensa o padding-top do app-root */
   min-height: 100vh;
   display: block;
 }
 
 /* ===== HIERARQUIA Z-INDEX PARA COMPONENTES ===== */
-/* Garante que header e hero fiquem acima das linhas de fundo */
+/* CSS para NgBootstrap Modal de avaliações */
+::ng-deep .ratings-modal-wrapper {
+  z-index: 2147483647 !important;
+}
+
+::ng-deep .ratings-modal-wrapper .modal-backdrop {
+  z-index: 2147483646 !important;
+}
+
+/* FORÇA header com z-index baixo */
 app-header,
+app-header header,
 .header,
 header {
-  position: relative;
-  z-index: 1000 !important;
-  background: inherit; /* Mantém o background próprio do header */
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+/* FORÇA todos os elementos do header com z-index baixo */
+app-header *,
+header *,
+.header * {
+  z-index: 999 !important;
 }
 
 app-hero,

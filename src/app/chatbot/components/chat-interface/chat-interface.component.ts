@@ -134,6 +134,19 @@ export class ChatInterfaceComponent implements OnInit {
     this.ngOnInit(); // Recarregar mensagem de boas-vindas
   }
 
+  // Método para obter as mensagens atuais
+  getMessages(): ChatMessage[] {
+    return [...this.messages];
+  }
+
+  // Método para restaurar mensagens salvas
+  restoreMessages(messages: ChatMessage[]) {
+    this.messages = [...messages];
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 100);
+  }
+
   exportChat() {
     const chatData = {
       timestamp: new Date().toISOString(),

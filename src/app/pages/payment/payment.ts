@@ -1,5 +1,5 @@
 import { AuthStateService } from './../../services/auth/auth-state-service';
-import { Component, Inject, OnInit, ViewEncapsulation, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, ViewEncapsulation, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CurrencyPipe, DatePipe } from '@angular/common';
@@ -40,7 +40,8 @@ export class Payment implements OnInit, OnDestroy {
     @Inject(SERVICES_TOKEN.HTTP.RESERVATION)
     private readonly reservationService: IReservationService,
     @Inject(SERVICES_TOKEN.HTTP.PAYMENT)
-    private readonly paymentService: IPaymentService
+    private readonly paymentService: IPaymentService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   packageId: string | null = null;
@@ -128,35 +129,31 @@ export class Payment implements OnInit, OnDestroy {
         <div class="row g-3">
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-muted">NOME COMPLETO</label>
-            <input type="text" class="form-control" placeholder="" required>
+            <input type="text" class="form-control" placeholder="Digite o nome completo" required>
           </div>
           <div class="col-md-6">
             <label class="form-label small fw-semibold text-muted">DATA DE NASCIMENTO</label>
             <input type="date" class="form-control" required>
           </div>
           <div class="col-md-6">
-            <label class="form-label small fw-semibold text-muted">TIPO DE DOCUMENTO</label>
-            <select class="form-select document-type-select" required>
-              <option value="">Tipo de Documento</option>
-              <option value="cpf">CPF</option>
-              <option value="passaporte">Passaporte</option>
-            </select>
+            <label class="form-label small fw-semibold text-muted">NÚMERO DO CPF</label>
+            <input
+              type="text"
+              class="form-control document-number-input"
+              maxlength="14"
+              placeholder="000.000.000-00"
+              required
+            />
           </div>
           <div class="col-md-6">
-            <label class="form-label small fw-semibold text-muted">NÚMERO</label>
-            <input type="text" class="form-control document-number-input" placeholder="Selecione o tipo de documento" maxlength="8" disabled required>
+            <label class="form-label small fw-semibold text-muted">EMAIL</label>
+            <input
+              type="email"
+              class="form-control"
+              placeholder="Digite o email do viajante"
+              required
+            />
           </div>
-                              <div class="col-md-6">
-                      <label class="form-label small fw-semibold text-muted"
-                        >EMAIL</label
-                      >
-                      <input
-                        type="email"
-                        class="form-control"
-                        placeholder=""
-                        required
-                      />
-                    </div>
         </div>
       `;
 
@@ -166,8 +163,6 @@ export class Payment implements OnInit, OnDestroy {
         removeButton.addEventListener('click', (event) =>
           this.removeTraveler(event)
         );
-
-        // Forçar aplicação do estilo vermelho no ícone
         const icon = removeButton.querySelector('img');
         if (icon) {
           (icon as HTMLElement).style.filter =
@@ -177,14 +172,10 @@ export class Payment implements OnInit, OnDestroy {
         }
       }
 
-      // Adicionar event listener para o select de tipo de documento
-      const documentTypeSelect = travelerCard.querySelector(
-        '.document-type-select'
-      );
-      if (documentTypeSelect) {
-        documentTypeSelect.addEventListener('change', (event) =>
-          this.onDocumentTypeChange(event)
-        );
+      // Adicionar event listener para máscara de CPF
+      const cpfInput = travelerCard.querySelector('.document-number-input') as HTMLInputElement;
+      if (cpfInput) {
+        cpfInput.addEventListener('input', (e) => this.formatCPF(e));
       }
 
       const inputs = travelerCard.querySelectorAll('input, select');
@@ -470,44 +461,22 @@ export class Payment implements OnInit, OnDestroy {
         };
       }
 
-      const documentTypeSelect = card.querySelector('.document-type-select') as HTMLSelectElement;
-      if (!documentTypeSelect?.value) {
-        this.highlightInvalidField(travelerNumber, 'documentType');
-        return {
-          isValid: false,
-          message: `Viajante ${travelerNumber}: Selecione o tipo de documento.`
-        };
-      }
-
       const documentNumberInput = card.querySelector('.document-number-input') as HTMLInputElement;
       if (!documentNumberInput?.value?.trim()) {
         this.highlightInvalidField(travelerNumber, 'documentNumber');
         return {
           isValid: false,
-          message: `Viajante ${travelerNumber}: O número do documento é obrigatório.`
+          message: `Viajante ${travelerNumber}: O número do CPF é obrigatório.`
         };
       }
 
-      if (documentTypeSelect.value === 'cpf') {
-        const cpfValue = documentNumberInput.value.replace(/\D/g, '');
-        if (cpfValue.length !== 11) {
-          this.highlightInvalidField(travelerNumber, 'documentNumber');
-          return {
-            isValid: false,
-            message: `Viajante ${travelerNumber}: CPF deve ter 11 dígitos.`
-          };
-        }
-      }
-
-      if (documentTypeSelect.value === 'passaporte') {
-        const passportValue = documentNumberInput.value;
-        if (passportValue.length !== 8) {
-          this.highlightInvalidField(travelerNumber, 'documentNumber');
-          return {
-            isValid: false,
-            message: `Viajante ${travelerNumber}: Passaporte deve ter 8 caracteres (2 letras + 6 números).`
-          };
-        }
+      const cpfValue = documentNumberInput.value.replace(/\D/g, '');
+      if (cpfValue.length !== 11) {
+        this.highlightInvalidField(travelerNumber, 'documentNumber');
+        return {
+          isValid: false,
+          message: `Viajante ${travelerNumber}: CPF deve ter 11 dígitos.`
+        };
       }
 
       const emailInput = card.querySelector('input[type="email"]') as HTMLInputElement;
@@ -735,10 +704,12 @@ export class Payment implements OnInit, OnDestroy {
 
     value = value.substring(0, 11);
 
-    if (value.length <= 11) {
-      value = value.replace(/(\d{3})(\d)/, '$1.$2');
-      value = value.replace(/(\d{3})(\d)/, '$1.$2');
-      value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    if (value.length > 9) {
+      value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    } else if (value.length > 6) {
+      value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else if (value.length > 3) {
+      value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
     }
 
     input.value = value;
@@ -843,9 +814,6 @@ export class Payment implements OnInit, OnDestroy {
       const birthDateInput = card.querySelector('input[type="date"]') as HTMLInputElement;
       if (!birthDateInput?.value) return false;
 
-      const documentTypeSelect = card.querySelector('.document-type-select') as HTMLSelectElement;
-      if (!documentTypeSelect?.value) return false;
-
       const documentNumberInput = card.querySelector('.document-number-input') as HTMLInputElement;
       if (!documentNumberInput?.value?.trim()) return false;
 
@@ -869,5 +837,9 @@ export class Payment implements OnInit, OnDestroy {
     }
 
     return true;
+  }
+
+  onCardInputChange() {
+    this.cdr.detectChanges();
   }
 }

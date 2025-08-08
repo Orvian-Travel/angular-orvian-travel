@@ -33,22 +33,18 @@ h2.h4, .h4 {
 }
 
 /* ===== BOTÕES ===== */
-.btn-orvian-primary {
+.btn-orvian-primary{
     background-color: var(--orvian-primary-variant);
     border: solid 2px var(--orvian-primary-variant);
     color: white;
     border-radius: 8px;
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 1rem;
     font-weight: 500;
-    transition: all 0.3s ease;
 }
 
 .btn-orvian-primary:hover {
     background-color: var(--orvian-primary);
-    border-color: var(--orvian-primary);
-    color: white;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: var(--orvian-primary-variant);
 }
 
 .btn-orvian-secondary {

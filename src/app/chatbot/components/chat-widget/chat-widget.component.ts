@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatInterfaceComponent, ChatMessage } from '../chat-interface/chat-interface.component';
 
@@ -35,6 +35,12 @@ import { ChatInterfaceComponent, ChatMessage } from '../chat-interface/chat-inte
         </div>
         <div class="widget-actions">
           <button 
+            class="btn-clear-chat" 
+            (click)="clearChatMessages()"
+            title="Limpar conversa">
+            🔄
+          </button>
+          <button 
             class="btn-minimize" 
             (click)="toggleChat()"
             title="Minimizar chat">
@@ -70,11 +76,15 @@ export class ChatWidgetComponent implements OnInit {
   @Input() position: 'bottom-right' | 'bottom-left' = 'bottom-right';
   @Input() autoOpen: boolean = false;
   @Input() welcomeMessage: string = '';
+  @ViewChild(ChatInterfaceComponent) chatInterface!: ChatInterfaceComponent;
 
   isOpen = false;
   hasNewMessage = false;
   unreadCount = 0;
   isMobile = false;
+  
+  // Armazenar mensagens persistentes para preservar histórico
+  persistentMessages: ChatMessage[] = [];
 
   ngOnInit() {
     this.checkMobile();
@@ -106,6 +116,18 @@ export class ChatWidgetComponent implements OnInit {
     if (this.isOpen) {
       this.hasNewMessage = false;
       this.unreadCount = 0;
+      
+      // Restaurar mensagens quando abrir o chat
+      setTimeout(() => {
+        if (this.chatInterface && this.persistentMessages.length > 0) {
+          this.chatInterface.restoreMessages(this.persistentMessages);
+        }
+      }, 100);
+    } else {
+      // Salvar mensagens quando fechar o chat
+      if (this.chatInterface) {
+        this.persistentMessages = [...this.chatInterface.getMessages()];
+      }
     }
   }
 
@@ -113,10 +135,29 @@ export class ChatWidgetComponent implements OnInit {
     this.isOpen = true;
     this.hasNewMessage = false;
     this.unreadCount = 0;
+    
+    // Restaurar mensagens quando abrir o chat
+    setTimeout(() => {
+      if (this.chatInterface && this.persistentMessages.length > 0) {
+        this.chatInterface.restoreMessages(this.persistentMessages);
+      }
+    }, 100);
   }
 
   closeChat() {
+    // Salvar mensagens antes de fechar
+    if (this.chatInterface) {
+      this.persistentMessages = [...this.chatInterface.getMessages()];
+    }
     this.isOpen = false;
+  }
+
+  clearChatMessages() {
+    // Limpar mensagens persistentes e do chat interface
+    this.persistentMessages = [];
+    if (this.chatInterface) {
+      this.chatInterface.clearChat();
+    }
   }
 
   onMessageSent(message: ChatMessage) {

@@ -15,7 +15,8 @@ import { PaymentPending } from './pages/payment-pending/payment-pending';
 import { AdminDashboard } from '@pages/admin/admin-dashboard/admin-dashboard';
 import { AdminUsers } from '@pages/admin/admin-users/admin-users';
 import { AdminPackages } from '@pages/admin/admin-packages/admin-packages';
-import { Faq } from '@pages/faq/faq'
+import { Faq } from '@pages/faq/faq';
+import { AboutComponent } from './pages/about/about';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -24,6 +25,7 @@ export const routes: Routes = [
   { path: 'register', component: Register },
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'reset-password/:token', component: ResetPassword },
+  { path: 'about', component: AboutComponent },
 
   { path: 'reservations', component: Reservations, canActivate: [authGuard] },
 

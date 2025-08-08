@@ -537,7 +537,7 @@
       <button
         type="button"
         class="btn-close"
-        (click)="modal.close()"
+        (click)="closeEditModal()"
         aria-label="Fechar"
       ></button>
     </div>
@@ -668,7 +668,11 @@
       </button>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.close()">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="closeEditModal()"
+      >
         Cancelar
       </button>
       <button type="submit" class="btn btn-primary">Salvar Alterações</button>
