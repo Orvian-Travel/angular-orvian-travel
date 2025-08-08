@@ -331,11 +331,12 @@
                       
                       <!-- Mensagem informativa sobre avaliação -->
                       <div 
+                        *ngIf="!canRateReservation(reservation)"
                         class="rating-info-message"
-                        title="Você poderá avaliar este pacote após a confirmação da reserva e término da viagem">
+                        title="Você poderá avaliar este pacote após o término da viagem">
                         <mat-icon class="info-icon">info</mat-icon>
                         <span class="info-text">
-                          Avaliação disponível após confirmação e {{ reservation.packageDate.endDate | date : "dd/MM/yyyy" }}
+                          Após {{ reservation.packageDate.endDate | date : "dd/MM/yyyy" }} será possível avaliar
                         </span>
                       </div>
                       

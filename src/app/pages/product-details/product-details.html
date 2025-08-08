@@ -82,13 +82,14 @@
 
   <!-- Seção de Avaliações -->
   <section class="reviews-section" *ngIf="package">
-    <div class="reviews-header">
-      <h2 class="reviews-title">
-        <mat-icon class="title-icon">star</mat-icon>
-        Avaliações dos Viajantes
-      </h2>
-      <p class="reviews-subtitle">Veja o que outros viajantes acharam deste pacote</p>
-    </div>
+    <div class="reviews-container">
+      <div class="reviews-header">
+        <h2 class="reviews-title">
+          <mat-icon class="title-icon">star</mat-icon>
+          Avaliações dos Viajantes
+        </h2>
+        <p class="reviews-subtitle">Veja o que outros viajantes acharam deste pacote</p>
+      </div>
 
     <!-- Resumo das Avaliações -->
     <div class="reviews-summary" *ngIf="packageRatings && packageRatings.length > 0">
@@ -104,10 +105,10 @@
               star
             </mat-icon>
           </div>
-          <span class="total-reviews">{{ packageRatings.length }} avaliação{{ packageRatings.length !== 1 ? 'ões' : '' }}</span>
+          <span class="total-reviews">{{ packageRatings.length }} avaliaç{{ packageRatings.length !== 1 ? 'ões' : 'ão' }}</span>
         </div>
         
-        <div class="rating-distribution">
+        <!-- <div class="rating-distribution">
           <div *ngFor="let item of [5,4,3,2,1]" class="distribution-item">
             <span class="star-label">{{ item }}</span>
             <mat-icon class="mini-star">star</mat-icon>
@@ -119,7 +120,7 @@
             </div>
             <span class="count-label">{{ getRatingCount(item) }}</span>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -179,10 +180,11 @@
       </div>
     </div>
 
-    <!-- Estado de carregamento -->
-    <div class="reviews-loading" *ngIf="loadingRatings">
-      <div class="loading-spinner"></div>
-      <p>Carregando avaliações...</p>
+      <!-- Estado de carregamento -->
+      <div class="reviews-loading" *ngIf="loadingRatings">
+        <div class="loading-spinner"></div>
+        <p>Carregando avaliações...</p>
+      </div>
     </div>
   </section>
 </main>
