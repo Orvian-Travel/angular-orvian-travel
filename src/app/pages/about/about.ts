@@ -30,45 +30,45 @@ export class AboutComponent {
   developers: Developer[] = [
     {
       name: 'Silas Henrique Silva',
-      role: 'Full Stack Developer & Tech Lead',
+      role: 'Fullstack Developer',
       image: 'assets/images/Silas.jpeg',
       linkedinUrl: 'https://www.linkedin.com/in/silas-henrique-silva/',
-      description: 'Especialista em desenvolvimento web com foco em Angular e Node.js'
+      description: 'Desenvolvedor Spring Boot e Angular.'
     },
     {
       name: 'Dalton Joaquim Soares Guimarães',
-      role: 'Backend Developer',
+      role: 'Fullstack Developer',
       image: 'assets/images/Dalton.jpeg',
       linkedinUrl: 'https://www.linkedin.com/in/dalton-joaquim-soares-guimar%C3%A3es-13a897231/',
-      description: 'Desenvolvedor backend especializado em APIs e arquitetura de sistemas'
+      description: 'Desenvolvedor Spring Boot e Angular.'
     },
     {
       name: 'Leonardo Lima Ferreira',
-      role: 'Frontend Developer',
+      role: 'Fullstack Developer',
       image: 'assets/images/Leonardo.jpg',
       linkedinUrl: 'https://www.linkedin.com/in/leolimaferreira/',
-      description: 'Desenvolvedor frontend com expertise em React e Angular'
+      description: 'Desenvolvedor Spring Boot e Angular, Azure DevOps Engineer.'
     },
     {
       name: 'Vitor D\'Angelo do Prado',
-      role: 'Full Stack Developer',
+      role: 'Fullstack Developer',
       image: 'assets/images/Vito D\'Angelo.jpeg',
       linkedinUrl: 'https://www.linkedin.com/in/vitor-dangelo-do-prado/',
-      description: 'Desenvolvedor full stack com experiência em tecnologias modernas'
+      description: 'Desenvolvedor Spring Boot e Angular.'
     },
     {
       name: 'Vitor Rodrigues Souza',
       role: 'Frontend Developer',
       image: 'assets/images/Vitor Rodrigues.jpeg',
       linkedinUrl: 'https://www.linkedin.com/in/vitor-souza-a694b726a/',
-      description: 'Especialista em desenvolvimento frontend e experiência do usuário'
+      description: 'Desenvolvedor Spring Boot e Angular.'
     },
     {
       name: 'Diego de Mello',
-      role: 'Backend Developer',
+      role: 'Fullstack Developer',
       image: 'assets/images/Diego.jpg',
       linkedinUrl: 'https://www.linkedin.com/in/diego-de-mello/',
-      description: 'Desenvolvedor backend com foco em performance e escalabilidade'
+      description: 'Desenvolvedor Spring Boot e Angular, UI Designer.'
     }
   ];
 
