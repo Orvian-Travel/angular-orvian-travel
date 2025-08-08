@@ -1,6 +1,7 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, ViewEncapsulation, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { RatingService } from '../../../services/api/rating/rating.service';
 import { RatingDetail } from '../../../services/entities/rating.model';
 
@@ -9,13 +10,18 @@ import { RatingDetail } from '../../../services/entities/rating.model';
   standalone: true,
   imports: [CommonModule, MatIconModule],
   templateUrl: './package-ratings-viewer.component.html',
-  styleUrl: './package-ratings-viewer.component.css'
+  styleUrl: './package-ratings-viewer.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class PackageRatingsViewerComponent implements OnInit, OnChanges {
   @Input() packageId!: string;
   @Input() packageTitle!: string;
   @Input() isVisible = false;
   @Output() close = new EventEmitter<void>();
+
+  @ViewChild('ratingsModal') ratingsModalTemplate!: TemplateRef<any>;
+
+  private modalRef?: NgbModalRef;
 
   ratings: RatingDetail[] = [];
   isLoading = false;
@@ -31,18 +37,53 @@ export class PackageRatingsViewerComponent implements OnInit, OnChanges {
   // Expõe Math para o template
   Math = Math;
 
-  constructor(private ratingService: RatingService) {}
+  constructor(
+    private ratingService: RatingService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit() {
     if (this.packageId && this.isVisible) {
       this.loadPackageRatings();
+      this.openModal();
     }
   }
 
   ngOnChanges() {
     if (this.packageId && this.isVisible) {
       this.loadPackageRatings();
+      this.openModal();
+    } else if (!this.isVisible && this.modalRef) {
+      this.closeModal();
     }
+  }
+
+  private openModal() {
+    if (this.isVisible && this.ratingsModalTemplate && !this.modalRef) {
+      this.modalRef = this.modalService.open(this.ratingsModalTemplate, {
+        size: 'xl',
+        backdrop: 'static',
+        keyboard: true,
+        windowClass: 'ratings-modal-wrapper',
+        centered: true
+      });
+
+      this.modalRef.result.then(
+        () => {
+          // Modal fechado normalmente
+          this.handleModalClose();
+        },
+        () => {
+          // Modal fechado via backdrop ou ESC
+          this.handleModalClose();
+        }
+      );
+    }
+  }
+
+  private handleModalClose() {
+    this.modalRef = undefined;
+    this.close.emit();
   }
 
   private loadPackageRatings(): void {
@@ -106,13 +147,11 @@ export class PackageRatingsViewerComponent implements OnInit, OnChanges {
     return dateObj.toLocaleDateString('pt-BR');
   }
 
-  onBackdropClick(event: Event): void {
-    if (event.target === event.currentTarget) {
-      this.closeModal();
-    }
-  }
-
   closeModal(): void {
+    if (this.modalRef) {
+      this.modalRef.close();
+      this.modalRef = undefined;
+    }
     this.close.emit();
   }
 }

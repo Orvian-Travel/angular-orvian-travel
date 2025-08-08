@@ -172,7 +172,7 @@ app-reservations-list {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   position: relative;
-  height: auto;
+  height: 720px;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--orvian-gray-001);
@@ -412,18 +412,15 @@ app-reservations-list {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.2rem;
+  padding: 0.5rem 0.5rem;
   background: var(--orvian-warning-light, #fff3cd);
   border: 1px solid var(--orvian-warning, #ffc107);
   border-radius: 8px;
   color: var(--orvian-warning-dark, #856404);
   font-weight: 500;
   font-size: 0.9rem;
-  margin-bottom: 0.5rem;
-}
-
-.pending-icon {
-  font-size: 1.1rem;
+  min-width: 240px;
+  height: auto;
 }
 
 .btn-outline {
@@ -1268,7 +1265,7 @@ app-reservations-list {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 2px 8px;
   background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   border: 1px solid #d1d5db;
   border-radius: 8px;

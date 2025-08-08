@@ -185,7 +185,7 @@ app-card {
 }
 
 .price-section {
-  margin-top: auto;
+  margin-top: 0.5rem;
 }
 
 .price-label {
@@ -293,7 +293,7 @@ app-card {
 
 @media (max-width: 480px) {
   .section-header {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
   }
 
   .section-title {
@@ -312,7 +312,7 @@ app-card {
   .package-card {
     margin: 0;
     border-radius: 6px;
-    height: 420px; /* Ajustado para acomodar avaliações */
+    height: 430px; /* Ajustado para acomodar avaliações */
   }
 
   .card-image-wrapper {
@@ -343,8 +343,8 @@ app-card {
 
   /* Ajustes para avaliações em mobile */
   .ratings-section {
-    margin: 0.75rem 0;
-    padding-top: 0.75rem;
+    margin: 0.1rem 0;
+    padding-top: 0.1rem;
   }
 
   .ratings-summary {

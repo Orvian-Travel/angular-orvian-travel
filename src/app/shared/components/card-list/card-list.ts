@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, OnInit, OnChanges, SimpleChanges, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PackageService } from '../../../services/api/package/package-service';
 import { PagedResponse } from '../../../services/entities/paged-response.model';
 import { SERVICES_TOKEN } from '../../../services/services-token';
@@ -42,7 +43,8 @@ export class CardList implements OnInit, OnChanges {
     private router: Router,
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE) private readonly service: IPackageService,
     @Inject(SERVICES_TOKEN.DIALOG) private readonly dialogManager: IDialogManager,
-    private ratingService: RatingService
+    private ratingService: RatingService,
+    private modalService: NgbModal
   ) { }
 
 
