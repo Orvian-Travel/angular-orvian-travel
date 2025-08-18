@@ -13,6 +13,8 @@ import { PagedResponse } from '@services/entities/paged-response.model';
 import { PackageService } from '@services/api/package/package-service';
 import { SavePackageDateRequest } from '@services/entities/package-date.model';
 import Swal from 'sweetalert2';
+import { DialogManager } from '@services/dialog/dialog-manager';
+import { IDialogManager } from '@services/dialog/dialog-manager.interface';
 
 interface Package {
   id: number;
@@ -50,6 +52,10 @@ interface CreatePackageRequest extends SavePackageRequest {
       provide: SERVICES_TOKEN.HTTP.PACKAGE,
       useClass: PackageService,
     },
+    {
+      provide: SERVICES_TOKEN.DIALOG,
+      useClass: DialogManager
+    }
   ],
 })
 export class AdminPackages implements OnInit {
@@ -142,12 +148,17 @@ export class AdminPackages implements OnInit {
         (d) => !d.startDate || !d.endDate || !d.qtd_available
       )
     ) {
-      Swal.fire({
-        icon: 'warning',
+      this.dialogService.showWarningAlert({
         title: 'Preencha todas as datas',
-        text: 'Todas as datas devem ter check-in, check-out e reservas disponíveis.',
-        confirmButtonText: 'OK',
+        message: 'Todas as datas devem ter check-in, check-out e reservas disponíveis.',
+        showIcon: true,
       });
+      // Swal.fire({
+      //   icon: 'warning',
+      //   title: 'Preencha todas as datas',
+      //   text: 'Todas as datas devem ter check-in, check-out e reservas disponíveis.',
+      //   confirmButtonText: 'OK',
+      // });
       return;
     }
 
@@ -157,20 +168,30 @@ export class AdminPackages implements OnInit {
         next: () => {
           this.loadPackages();
           this.closeEditModal(); // Usar o método ng-bootstrap para fechar
-          Swal.fire({
-            icon: 'success',
+          this.dialogService.showSuccessAlert({
             title: 'Pacote atualizado!',
-            text: 'O pacote foi atualizado com sucesso.',
-            confirmButtonText: 'OK',
-          });
+            message: 'O pacote foi atualizado com sucesso.',
+            showIcon: true,
+          })
+          // Swal.fire({
+          //   icon: 'success',
+          //   title: 'Pacote atualizado!',
+          //   text: 'O pacote foi atualizado com sucesso.',
+          //   confirmButtonText: 'OK',
+          // });
         },
         error: () => {
-          Swal.fire({
-            icon: 'error',
+          this.dialogService.showErrorAlert({
             title: 'Erro ao atualizar pacote',
-            text: 'Ocorreu um erro ao atualizar o pacote. Por favor, tente novamente.',
-            confirmButtonText: 'OK',
-          });
+            message: 'Ocorreu um erro ao atualizar o pacote. Por favor, tente novamente.',
+            showIcon: true,
+          })
+          // Swal.fire({
+          //   icon: 'error',
+          //   title: 'Erro ao atualizar pacote',
+          //   text: 'Ocorreu um erro ao atualizar o pacote. Por favor, tente novamente.',
+          //   confirmButtonText: 'OK',
+          // });
         },
       });
   }
@@ -199,6 +220,8 @@ export class AdminPackages implements OnInit {
   constructor(
     @Inject(SERVICES_TOKEN.HTTP.PACKAGE)
     private readonly packageService: IPackageService,
+    @Inject(SERVICES_TOKEN.DIALOG)
+    private readonly dialogService: IDialogManager,
     private modalService: NgbModal
   ) { }
 
@@ -754,12 +777,17 @@ export class AdminPackages implements OnInit {
       this.packageService.createPackage(createPackageRequest).subscribe({
         next: () => {
           console.log('Pacote criado com sucesso.');
-          Swal.fire({
-            icon: 'success',
+          this.dialogService.showSuccessAlert({
             title: 'Sucesso!',
-            text: `O pacote para ${this.tempPackageData.destination} foi criado com sucesso!`,
-            confirmButtonText: 'OK',
-          });
+            message: `O pacote para ${this.tempPackageData.destination} foi criado com sucesso!`,
+            showIcon: true,
+          })
+          // Swal.fire({
+          //   icon: 'success',
+          //   title: 'Sucesso!',
+          //   text: `O pacote para ${this.tempPackageData.destination} foi criado com sucesso!`,
+          //   confirmButtonText: 'OK',
+          // });
 
           this.loadPackages();
 
@@ -788,11 +816,11 @@ export class AdminPackages implements OnInit {
 
   deletePackage(packageToDelete: PackageDetail): void {
     // Usar SweetAlert2 para confirmação
-    Swal.fire({
+    this.dialogService.showConfirmationAlert({
       title: 'Confirmar Exclusão',
+      message: 'Tem certeza que deseja excluir este pacote?',
       html: `
         <div class="text-start">
-          <p><strong>Tem certeza que deseja excluir este pacote?</strong></p>
           <div class="alert alert-warning">
             <strong>Pacote:</strong> ${packageToDelete.title}<br>
             <strong>Destino:</strong> ${packageToDelete.destination}<br>
@@ -801,21 +829,40 @@ export class AdminPackages implements OnInit {
           <p class="text-danger"><small><i class="fas fa-exclamation-triangle me-1"></i>Esta ação não pode ser desfeita!</small></p>
         </div>
       `,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: '<i class="fas fa-trash me-2"></i>Sim, Excluir',
-      cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
-      focusCancel: true,
-      customClass: {
-        popup: 'swal-delete-popup',
-      },
-    }).then((result) => {
+      showIcon: true
+    }).subscribe((result) => {
       if (result.isConfirmed) {
         this.executePackageDelection(packageToDelete);
       }
     });
+    // Swal.fire({
+    //   title: 'Confirmar Exclusão',
+    //   html: `
+    //     <div class="text-start">
+    //       <p><strong>Tem certeza que deseja excluir este pacote?</strong></p>
+    //       <div class="alert alert-warning">
+    //         <strong>Pacote:</strong> ${packageToDelete.title}<br>
+    //         <strong>Destino:</strong> ${packageToDelete.destination}<br>
+    //         <strong>ID:</strong> ${packageToDelete.id}
+    //       </div>
+    //       <p class="text-danger"><small><i class="fas fa-exclamation-triangle me-1"></i>Esta ação não pode ser desfeita!</small></p>
+    //     </div>
+    //   `,
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonColor: '#dc3545',
+    //   cancelButtonColor: '#6c757d',
+    //   confirmButtonText: '<i class="fas fa-trash me-2"></i>Sim, Excluir',
+    //   cancelButtonText: '<i class="fas fa-times me-2"></i>Cancelar',
+    //   focusCancel: true,
+    //   customClass: {
+    //     popup: 'swal-delete-popup',
+    //   },
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.executePackageDelection(packageToDelete);
+    //   }
+    // });
   }
 
   private executePackageDelection(packageToDelete: PackageDetail): void {
@@ -834,14 +881,20 @@ export class AdminPackages implements OnInit {
       next: () => {
         console.log(`Pacote ${packageToDelete.id} excluído com sucesso`);
 
-        Swal.fire({
-          icon: 'success',
+        this.dialogService.showSuccessAlert({
           title: 'Excluído!',
-          text: `O pacote "${packageToDelete.title}" foi excluído com sucesso.`,
-          confirmButtonText: 'OK',
-          timer: 3000,
-          timerProgressBar: true,
+          message: `O pacote "${packageToDelete.title}" foi excluído com sucesso.`,
+          showIcon: true,
         });
+
+        // Swal.fire({
+        //   icon: 'success',
+        //   title: 'Excluído!',
+        //   text: `O pacote "${packageToDelete.title}" foi excluído com sucesso.`,
+        //   confirmButtonText: 'OK',
+        //   timer: 3000,
+        //   timerProgressBar: true,
+        // });
 
         this.loadPackages();
       },
@@ -862,12 +915,18 @@ export class AdminPackages implements OnInit {
           errorMessage = error.error.message;
         }
 
-        Swal.fire({
-          icon: 'error',
+        this.dialogService.showErrorAlert({
           title: 'Erro ao Excluir',
-          text: errorMessage,
-          confirmButtonText: 'OK',
+          message: errorMessage,
+          showIcon: true,
         });
+
+        // Swal.fire({
+        //   icon: 'error',
+        //   title: 'Erro ao Excluir',
+        //   text: errorMessage,
+        //   confirmButtonText: 'OK',
+        // });
       },
     });
   }

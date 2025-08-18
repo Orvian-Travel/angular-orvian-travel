@@ -1,21 +1,30 @@
 import { UserService } from './../../services/api/user/user-service';
-import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SaveUserRequest } from '../../services/entities/user.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import Swal from 'sweetalert2';
+import { SERVICES_TOKEN } from '@services/services-token';
+import { DialogManager } from '@services/dialog/dialog-manager';
+import { IDialogManager } from '@services/dialog/dialog-manager.interface';
 
 @Component({
   selector: 'app-register',
   imports: [FormsModule, CommonModule],
   templateUrl: './register.html',
-  styleUrl: './register.css'
+  styleUrl: './register.css',
+  providers: [
+    { provide: SERVICES_TOKEN.DIALOG, useClass: DialogManager }
+  ]
 })
 export class Register implements OnInit {
   @ViewChild('birthdateInput') birthdateInput!: ElementRef<HTMLInputElement>;
 
-  constructor(private router: Router, private userService: UserService) { }
+  constructor(
+    private router: Router, private userService: UserService,
+    @Inject(SERVICES_TOKEN.DIALOG) private readonly dialogManager: IDialogManager
+  ) { }
 
   user: SaveUserRequest = {} as SaveUserRequest;
   confirmPassword: string = '';
@@ -350,44 +359,68 @@ export class Register implements OnInit {
       next: (response) => {
         console.log('User created successfully:', response);
 
-        Swal.fire({
-          icon: 'success',
+        this.dialogManager.showSuccessAlert({
           title: 'Conta criada com sucesso!',
-          text: 'Você será redirecionado para a página de login.',
-          timer: 2000,
-          timerProgressBar: true,
-          showConfirmButton: false,
-          confirmButtonColor: '#1486b4'
-        }).then(() => {
+          message: 'Você será redirecionado para a página de login.',
+          showIcon: true
+        }).subscribe(() => {
           this.router.navigate(['/login']);
         });
+
+        // Swal.fire({
+        //   icon: 'success',
+        //   title: 'Conta criada com sucesso!',
+        //   text: 'Você será redirecionado para a página de login.',
+        //   timer: 2000,
+        //   timerProgressBar: true,
+        //   showConfirmButton: false,
+        //   confirmButtonColor: '#1486b4'
+        // }).then(() => {
+        //   this.router.navigate(['/login']);
+        // });
       },
       error: (error) => {
         console.error('Error creating user:', error);
 
         if (error.status === 409) {
-          Swal.fire({
-            icon: 'error',
+          this.dialogManager.showConfirmationAlert({
             title: 'Email já cadastrado',
-            text: 'Este email já está sendo usado por outra conta. Tente fazer login ou use outro email.',
-            confirmButtonText: 'Tentar novamente',
-            confirmButtonColor: '#1486b4',
-            showCancelButton: true,
-            cancelButtonText: 'Ir para Login',
-            cancelButtonColor: '#6c757d'
-          }).then((result) => {
+            message: 'Este email já está sendo usado por outra conta. Tente fazer login ou use outro email.',
+            confirmText: 'Tentar novamente',
+            cancelText: 'Ir para Login',
+            showIcon: false
+          }).subscribe((result) => {
             if (result.dismiss === Swal.DismissReason.cancel) {
               this.router.navigate(['/login']);
             }
           });
+          // Swal.fire({
+          //   icon: 'error',
+          //   title: 'Email já cadastrado',
+          //   text: 'Este email já está sendo usado por outra conta. Tente fazer login ou use outro email.',
+          //   confirmButtonText: 'Tentar novamente',
+          //   confirmButtonColor: '#1486b4',
+          //   showCancelButton: true,
+          //   cancelButtonText: 'Ir para Login',
+          //   cancelButtonColor: '#6c757d'
+          // }).then((result) => {
+          //   if (result.dismiss === Swal.DismissReason.cancel) {
+          //     this.router.navigate(['/login']);
+          //   }
+          // });
         } else {
-          Swal.fire({
-            icon: 'error',
+          this.dialogManager.showErrorAlert({
             title: 'Erro no cadastro',
-            text: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
-            confirmButtonText: 'Tentar novamente',
-            confirmButtonColor: '#1486b4'
-          });
+            message: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+            showIcon: true
+          })
+          // Swal.fire({
+          //   icon: 'error',
+          //   title: 'Erro no cadastro',
+          //   text: 'Ocorreu um erro inesperado. Tente novamente mais tarde.',
+          //   confirmButtonText: 'Tentar novamente',
+          //   confirmButtonColor: '#1486b4'
+          // });
         }
       }
     });

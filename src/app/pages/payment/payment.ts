@@ -14,6 +14,8 @@ import { IPaymentService } from '../../services/api/payment/payment-service.inte
 import { PaymentMethod } from '../../services/entities/payment.model';
 import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
+import { DialogManager } from '@services/dialog/dialog-manager';
+import { IDialogManager } from '@services/dialog/dialog-manager.interface';
 
 @Component({
   selector: 'app-payment',
@@ -25,6 +27,7 @@ import Swal from 'sweetalert2';
     { provide: SERVICES_TOKEN.HTTP.PACKAGE, useClass: PackageService },
     { provide: SERVICES_TOKEN.HTTP.RESERVATION, useClass: ReservationService },
     { provide: SERVICES_TOKEN.HTTP.PAYMENT, useClass: PaymentService },
+    { provide: SERVICES_TOKEN.DIALOG, useClass: DialogManager }
   ],
 })
 export class Payment implements OnInit, OnDestroy {
@@ -41,6 +44,8 @@ export class Payment implements OnInit, OnDestroy {
     private readonly reservationService: IReservationService,
     @Inject(SERVICES_TOKEN.HTTP.PAYMENT)
     private readonly paymentService: IPaymentService,
+    @Inject(SERVICES_TOKEN.DIALOG)
+    private readonly dialogManager: IDialogManager,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -181,10 +186,10 @@ export class Payment implements OnInit, OnDestroy {
       const inputs = travelerCard.querySelectorAll('input, select');
       inputs.forEach(input => {
         input.addEventListener('input', () => {
-          setTimeout(() => {}, 0);
+          setTimeout(() => { }, 0);
         });
         input.addEventListener('change', () => {
-          setTimeout(() => {}, 0);
+          setTimeout(() => { }, 0);
         });
       });
 
@@ -350,57 +355,88 @@ export class Payment implements OnInit, OnDestroy {
     const token = localStorage.getItem('orvian_token');
 
     if (!token) {
-      Swal.fire({
-        icon: 'error',
+      this.dialogManager.showErrorAlert({
         title: 'Erro de autenticação',
-        text: 'Você precisa estar logado para realizar o pagamento. Por favor, faça login.',
-        confirmButtonText: 'Fazer Login',
-      });
-      this.router.navigate(['/login']);
+        message: 'Você precisa estar logado para realizar o pagamento. Por favor, faça login.',
+        showIcon: true
+      }).subscribe(() => {
+        this.router.navigate(['/login']);
+      })
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Erro de autenticação',
+      //   text: 'Você precisa estar logado para realizar o pagamento. Por favor, faça login.',
+      //   confirmButtonText: 'Fazer Login',
+      // });
+      // this.router.navigate(['/login']);
       return;
     }
 
     const user = this.getUser();
     if (!user?.id) {
-      Swal.fire({
-        icon: 'error',
+      this.dialogManager.showErrorAlert({
         title: 'Usuário não encontrado',
-        text: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
-        confirmButtonText: 'Fazer Login',
+        message: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
+        showIcon: true
+      }).subscribe(() => {
+        this.router.navigate(['/login']);
       });
-      this.router.navigate(['/login']);
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Usuário não encontrado',
+      //   text: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
+      //   confirmButtonText: 'Fazer Login',
+      // });
+      // this.router.navigate(['/login']);
       return;
     }
 
     if (!this.selectedPaymentMethod) {
-      Swal.fire({
-        icon: 'warning',
+      this.dialogManager.showWarningAlert({
         title: 'Método de pagamento não selecionado',
-        text: 'Por favor, selecione um método de pagamento.',
-        confirmButtonText: 'OK',
+        message: 'Por favor, selecione um método de pagamento.',
+        showIcon: true
       });
+      // Swal.fire({
+      //   icon: 'warning',
+      //   title: 'Método de pagamento não selecionado',
+      //   text: 'Por favor, selecione um método de pagamento.',
+      //   confirmButtonText: 'OK',
+      // });
       return;
     }
 
     const validationResult = this.validateTravelersData();
     if (!validationResult.isValid) {
-      Swal.fire({
-        icon: 'warning',
+      this.dialogManager.showWarningAlert({
         title: 'Dados incompletos',
-        text: validationResult.message,
-        confirmButtonText: 'OK',
+        message: validationResult.message,
+        showIcon: true
       });
+      // Swal.fire({
+      //   icon: 'warning',
+      //   title: 'Dados incompletos',
+      //   text: validationResult.message,
+      //   confirmButtonText: 'OK',
+      // });
       return;
     }
 
     if (!user?.id) {
-      Swal.fire({
-        icon: 'error',
+      this.dialogManager.showErrorAlert({
         title: 'Usuário não encontrado',
-        text: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
-        confirmButtonText: 'Fazer Login',
+        message: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
+        showIcon: true
+      }).subscribe(() => {
+        this.router.navigate(['/login']);
       });
-      this.router.navigate(['/login']);
+      // Swal.fire({
+      //   icon: 'error',
+      //   title: 'Usuário não encontrado',
+      //   text: 'Erro: Não foi possível identificar o usuário. Tente fazer login novamente.',
+      //   confirmButtonText: 'Fazer Login',
+      // });
+      // this.router.navigate(['/login']);
       return;
     }
 
@@ -421,7 +457,7 @@ export class Payment implements OnInit, OnDestroy {
 
   private validateTravelersData(): { isValid: boolean; message: string } {
     const travelerCards = document.querySelectorAll('.traveler-card');
-    
+
     if (travelerCards.length === 0) {
       return {
         isValid: false,
@@ -430,7 +466,7 @@ export class Payment implements OnInit, OnDestroy {
     }
 
     let travelerNumber = 1;
-    
+
     for (const card of travelerCards) {
       const nameInput = card.querySelector('input[type="text"]') as HTMLInputElement;
       if (!nameInput?.value?.trim()) {
@@ -560,7 +596,7 @@ export class Payment implements OnInit, OnDestroy {
     });
   }
 
-   private handleReservationError(error: any, reservationType: 'confirmada' | 'pendente'): void {
+  private handleReservationError(error: any, reservationType: 'confirmada' | 'pendente'): void {
     console.error(`Erro detalhado da reserva ${reservationType}:`, error);
 
     let title = 'Erro na reserva';
@@ -591,18 +627,24 @@ export class Payment implements OnInit, OnDestroy {
       message = 'Erro interno do servidor. Tente novamente em alguns minutos.';
     }
 
-    Swal.fire({
-      icon: 'error',
+    this.dialogManager.showErrorAlert({
       title: title,
-      text: message,
-      confirmButtonText: 'OK',
+      message: message,
+      showIcon: true
     });
+
+    // Swal.fire({
+    //   icon: 'error',
+    //   title: title,
+    //   text: message,
+    //   confirmButtonText: 'OK',
+    // });
   }
 
   private highlightInvalidField(travelerNumber: number, fieldType: string): void {
     const travelerCards = document.querySelectorAll('.traveler-card');
     const targetCard = travelerCards[travelerNumber - 1];
-    
+
     if (!targetCard) return;
 
     let targetInput: HTMLElement | null = null;
@@ -628,7 +670,7 @@ export class Payment implements OnInit, OnDestroy {
     if (targetInput) {
       targetInput.classList.add('is-invalid');
       targetInput.focus();
-      
+
       setTimeout(() => {
         targetInput?.classList.remove('is-invalid');
       }, 3000);

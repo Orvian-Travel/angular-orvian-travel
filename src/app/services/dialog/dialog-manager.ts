@@ -8,10 +8,10 @@ import Swal, { SweetAlertResult } from 'sweetalert2';
 })
 export class DialogManager implements IDialogManager {
 
-  showNotificationAlert(title: string, message: string, showIcon: boolean = false): Observable<SweetAlertResult> {
+  showNotificationAlert(options: { title: string, message: string, showIcon?: boolean, html?: string }): Observable<SweetAlertResult> {
     const swalPromise = Swal.fire({
-      title: title,
-      text: message,
+      title: options.title,
+      text: options.message,
       timer: 3000,
       showConfirmButton: false,
       position: 'top-end',
@@ -24,65 +24,73 @@ export class DialogManager implements IDialogManager {
       hideClass: {
         popup: 'animate__animated animate__fadeOutUp'
       },
-      ...(showIcon && { icon: 'info' })
+      ...(options.html && { html: options.html }),
+      ...(options.showIcon && { icon: 'info' })
     });
 
     return from(swalPromise);
   }
 
-  showSuccessAlert(title: string, message: string, showIcon: boolean = true): Observable<SweetAlertResult> {
+  showSuccessAlert(options: { title: string, message: string, showIcon?: boolean, html?: string }): Observable<SweetAlertResult> {
     const swalPromise = Swal.fire({
-      title: title,
-      text: message,
+      title: options.title,
+      text: options.message,
       confirmButtonText: 'OK',
       confirmButtonColor: '#28a745',
-      ...(showIcon && { icon: 'success' })
+      ...(options.html && { html: options.html }),
+      ...(options.showIcon && { icon: 'success' })
     });
 
     return from(swalPromise);
   }
 
-  showErrorAlert(title: string, message: string, showIcon: boolean = true): Observable<SweetAlertResult> {
+  showErrorAlert(options: { title: string, message: string, showIcon?: boolean, html?: string }): Observable<SweetAlertResult> {
     const swalPromise = Swal.fire({
-      title: title,
-      text: message,
+      title: options.title,
+      text: options.message,
       confirmButtonText: 'OK',
       confirmButtonColor: '#dc3545',
-      ...(showIcon && { icon: 'error' })
+      ...(options.html && { html: options.html }),
+      ...(options.showIcon && { icon: 'error' })
     });
 
     return from(swalPromise);
   }
 
-  showWarningAlert(title: string, message: string, showIcon: boolean): Observable<SweetAlertResult> {
+  showWarningAlert(options: { title: string, message: string, showIcon?: boolean, html?: string }): Observable<SweetAlertResult> {
     const swalPromise = Swal.fire({
-      title: title,
-      text: message,
+      title: options.title,
+      text: options.message,
       confirmButtonText: 'OK',
       confirmButtonColor: '#007bff',
-      ...(showIcon && { icon: 'warning' })
+      ...(options.html && { html: options.html }),
+      ...(options.showIcon && { icon: 'warning' })
     });
 
     return from(swalPromise);
   }
 
   showConfirmationAlert(
-    title: string,
-    message: string,
-    confirmText: string = 'Sim',
-    cancelText: string = 'Não',
-    showIcon: boolean = true
+    options: {
+      title: string,
+      message: string,
+      confirmText?: string,
+      cancelText?: string,
+      showIcon?: boolean,
+      html?: string
+    }
   ): Observable<SweetAlertResult> {
     const swalPromise = Swal.fire({
-      title: title,
-      text: message,
+      title: options.title,
+      text: options.message,
       showCancelButton: true,
-      confirmButtonText: confirmText,
-      cancelButtonText: cancelText,
+      confirmButtonText: options.confirmText,
+      cancelButtonText: options.cancelText,
       confirmButtonColor: '#007bff',
       cancelButtonColor: '#6c757d',
       reverseButtons: true,
-      ...(showIcon && { icon: 'question' })
+      ...(options.html && { html: options.html }),
+      ...(options.showIcon && { icon: 'question' })
     });
 
     return from(swalPromise);

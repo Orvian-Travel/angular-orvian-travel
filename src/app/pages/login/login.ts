@@ -70,13 +70,13 @@ export class Login implements OnInit {
         console.error('Login failed:', error);
 
         if (error.status === 401) {
-          this.dialogManager.showErrorAlert('Falha no login', 'Email ou senha incorretos', false)
+          this.dialogManager.showErrorAlert({ title: 'Falha no login', message: 'Email ou senha incorretos', showIcon: false })
         } else if (error.status === 500) {
-          this.dialogManager.showErrorAlert('Erro', 'Erro no servidor. Tente novamente mais tarde.', false)
+          this.dialogManager.showErrorAlert({ title: 'Erro', message: 'Erro no servidor. Tente novamente mais tarde.', showIcon: false })
         } else if (error.status === 404) {
-          this.dialogManager.showErrorAlert('Usuário não encontrado', 'Usuário não cadastrado.', false)
+          this.dialogManager.showErrorAlert({ title: 'Usuário não encontrado', message: 'Usuário não cadastrado.', showIcon: false })
         } else {
-          this.dialogManager.showErrorAlert('Erro no login', 'Erro no login. Verifique sua conexão.', false)
+          this.dialogManager.showErrorAlert({ title: 'Erro no login', message: 'Erro no login. Verifique sua conexão.', showIcon: false })
         }
       },
     });

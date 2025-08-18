@@ -34,12 +34,12 @@ export class Hero {
 
   onSearch() {
     if (!this.searchData.destination.trim()) {
-      this.dialogManager.showErrorAlert('Erro', 'Por favor, informe o destino', true)
+      this.dialogManager.showErrorAlert({ title: 'Erro', message: 'Por favor, informe o destino', showIcon: true })
       return;
     }
 
     if (this.searchData.date.trim() && new Date(this.searchData.date) < new Date(new Date().toISOString().split('T')[0])) {
-      this.dialogManager.showErrorAlert('Erro', 'Selecione uma Data valida', true)
+      this.dialogManager.showErrorAlert({ title: 'Erro', message: 'Selecione uma Data valida', showIcon: true })
       return;
     }
 

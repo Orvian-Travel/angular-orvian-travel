@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UserDetail } from '../../../services/entities/user.model';
@@ -6,12 +6,21 @@ import { UserService } from '../../../services/api/user/user-service';
 import { PagedResponse } from '../../../services/entities/paged-response.model';
 import Swal from 'sweetalert2';
 import { AuthStateService } from '@services/auth/auth-state-service';
+import { SERVICES_TOKEN } from '@services/services-token';
+import { DialogManager } from '@services/dialog/dialog-manager';
+import { IDialogManager } from '@services/dialog/dialog-manager.interface';
 
 @Component({
   selector: 'app-admin-users',
   imports: [CommonModule, FormsModule],
   templateUrl: './admin-users.html',
-  styleUrl: './admin-users.css'
+  styleUrl: './admin-users.css',
+  providers: [
+    {
+      provide: SERVICES_TOKEN.DIALOG,
+      useClass: DialogManager
+    }
+  ]
 })
 export class AdminUsers implements OnInit {
   users: UserDetail[] = [];
@@ -35,6 +44,7 @@ export class AdminUsers implements OnInit {
   showPasswordRequirements: boolean = false;
 
   constructor(
+    @Inject(SERVICES_TOKEN.DIALOG) private readonly dialogManager: IDialogManager,
     private userService: UserService,
     private authStateService: AuthStateService
   ) { }
@@ -188,12 +198,17 @@ export class AdminUsers implements OnInit {
         }
       });
     } else {
-      Swal.fire({
-        icon: 'warning',
+      this.dialogManager.showWarningAlert({
         title: 'Senha inválida',
-        text: 'A senha deve atender todos os requisitos e coincidir com a confirmação.',
-        confirmButtonText: 'Entendi'
-      });
+        message: 'A senha deve atender todos os requisitos e coincidir com a confirmação.',
+        showIcon: true
+      })
+      // Swal.fire({
+      //   icon: 'warning',
+      //   title: 'Senha inválida',
+      //   text: 'A senha deve atender todos os requisitos e coincidir com a confirmação.',
+      //   confirmButtonText: 'Entendi'
+      // });
     }
   }
 
@@ -229,54 +244,89 @@ export class AdminUsers implements OnInit {
               modalInstance.hide();
             }
           }
-          Swal.fire({
+          this.dialogManager.showSuccessAlert({
             title: 'Sucesso!',
-            text: 'Usuário editado com sucesso!',
-            icon: 'success',
-            timer: 2000,
-            showConfirmButton: false
+            message: 'Usuário editado com sucesso!',
+            showIcon: true
           });
+          // Swal.fire({
+          //   title: 'Sucesso!',
+          //   text: 'Usuário editado com sucesso!',
+          //   icon: 'success',
+          //   timer: 2000,
+          //   showConfirmButton: false
+          // });
         },
         error: (err) => {
-          Swal.fire({
+          this.dialogManager.showErrorAlert({
             title: 'Erro!',
-            text: 'Erro ao editar usuário: ' + (err?.error?.message || 'Tente novamente.'),
-            icon: 'error'
+            message: 'Erro ao editar usuário: ' + (err?.error?.message || 'Tente novamente.'),
+            showIcon: true
           });
+          // Swal.fire({
+          //   title: 'Erro!',
+          //   text: 'Erro ao editar usuário: ' + (err?.error?.message || 'Tente novamente.'),
+          //   icon: 'error'
+          // });
         }
       });
     }
   }
 
   deleteUser(userId: string) {
-    Swal.fire({
+    this.dialogManager.showConfirmationAlert({
       title: 'Tem certeza?',
-      text: 'Você não poderá reverter esta ação!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sim, excluir!',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
+      message: 'Você não poderá reverter esta ação!',
+      showIcon: true
+    }).subscribe((result) => {
       if (result.isConfirmed) {
         this.userService.deleteUser(userId).subscribe({
           next: () => {
-            Swal.fire(
-              'Excluído!',
-              'O usuário foi excluído com sucesso.',
-              'success'
-            );
             this.loadUsers();
+            this.dialogManager.showSuccessAlert({
+              title: 'Excluído!',
+              message: 'O usuário foi excluído com sucesso.',
+              showIcon: true
+            });
           },
           error: (err) => {
-            Swal.fire(
-              'Erro!',
-              'Não foi possível excluir o usuário: ' + (err?.error?.message || 'Tente novamente.'),
-              'error'
-            );
+            this.dialogManager.showErrorAlert({
+              title: 'Erro!',
+              message: 'Não foi possível excluir o usuário: ' + (err?.error?.message || 'Tente novamente.'),
+              showIcon: true
+            });
           }
         });
       }
     });
+    // Swal.fire({
+    //   title: 'Tem certeza?',
+    //   text: 'Você não poderá reverter esta ação!',
+    //   icon: 'warning',
+    //   showCancelButton: true,
+    //   confirmButtonText: 'Sim, excluir!',
+    //   cancelButtonText: 'Cancelar'
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     this.userService.deleteUser(userId).subscribe({
+    //       next: () => {
+    //         Swal.fire(
+    //           'Excluído!',
+    //           'O usuário foi excluído com sucesso.',
+    //           'success'
+    //         );
+    //         this.loadUsers();
+    //       },
+    //       error: (err) => {
+    //         Swal.fire(
+    //           'Erro!',
+    //           'Não foi possível excluir o usuário: ' + (err?.error?.message || 'Tente novamente.'),
+    //           'error'
+    //         );
+    //       }
+    //     });
+    //   }
+    // });
   }
 
   onDocumentTypeChange(event: Event, isEdit: boolean = false): void {

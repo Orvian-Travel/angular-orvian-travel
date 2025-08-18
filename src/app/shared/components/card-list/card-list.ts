@@ -112,10 +112,11 @@ export class CardList implements OnInit, OnChanges {
     ).subscribe({
       next: (response: PagedResponse<PackageDetail>) => {
         if (response._embedded.DTOList.length === 0) {
-          this.dialogManager.showNotificationAlert(
-            'Nenhum resultado',
-            'Nenhum pacote encontrado para a busca informada.',
-            true)
+          this.dialogManager.showNotificationAlert({
+            title: 'Nenhum resultado',
+            message: 'Nenhum pacote encontrado para a busca informada.',
+            showIcon: true
+          })
           this.loadPackages();
           return;
         }
@@ -132,22 +133,22 @@ export class CardList implements OnInit, OnChanges {
         this.cardListTitle = `Pacotes para "${data.destination}"`;
         this.currentPage = 0;
         this.updateLocalPagination();
-        
+
         // Carregar avaliações para os pacotes encontrados
         this.loadRatingsForPackages();
 
-        this.dialogManager.showNotificationAlert(
-          'Busca completa',
-          'Pacotes encontrados, Aproveite!',
-          true
-        )
+        this.dialogManager.showNotificationAlert({
+          title: 'Busca completa',
+          message: 'Pacotes encontrados, Aproveite!',
+          showIcon: true
+        })
       },
       error: () => {
-        this.dialogManager.showErrorAlert(
-          'Erro inesperado',
-          'Ocorreu um erro ao buscar os pacotes. Tente novamente mais tarde.',
-          true
-        )
+        this.dialogManager.showErrorAlert({
+          title: 'Erro inesperado',
+          message: 'Ocorreu um erro ao buscar os pacotes. Tente novamente mais tarde.',
+          showIcon: true
+        })
         this.loadPackages();
       }
     });
@@ -190,16 +191,16 @@ export class CardList implements OnInit, OnChanges {
         this.cardListTitle = 'Pacotes recentes';
         this.currentPage = 0;
         this.updateLocalPagination();
-        
+
         // Carregar avaliações para os pacotes
         this.loadRatingsForPackages();
       },
       error: () => {
-        this.dialogManager.showErrorAlert(
-          'Erro ao carregar pacotes:',
-          'Ocorreu um erro ao carregar os pacotes. Tente novamente mais tarde.',
-          true
-        );
+        this.dialogManager.showErrorAlert({
+          title: 'Erro ao carregar pacotes:',
+          message: 'Ocorreu um erro ao carregar os pacotes. Tente novamente mais tarde.',
+          showIcon: true
+        });
       }
     });
   }
@@ -293,12 +294,12 @@ export class CardList implements OnInit, OnChanges {
   getPackageImageUrl(packageItem: PackageDetail): string {
     if (packageItem.medias && packageItem.medias.length > 0) {
       const firstMedia = packageItem.medias[0];
-      
+
       if (firstMedia.contentType) {
         return `data:${firstMedia.type};base64,${firstMedia.contentType}`;
       }
     }
-    
+
     return 'assets/images/default-package-image.png';
   }
 
@@ -325,19 +326,19 @@ export class CardList implements OnInit, OnChanges {
         next: (ratings) => {
           const totalRatings = ratings.length;
           let averageRating = 0;
-          
+
           if (totalRatings > 0) {
             const sum = ratings.reduce((acc, rating) => acc + rating.rate, 0);
             averageRating = sum / totalRatings;
           }
-          
+
           // Atualizar o pacote com dados de avaliação
           this.allCurrentData[index] = {
             ...package_,
             averageRating,
             totalRatings
           };
-          
+
           // Atualizar a paginação local para refletir as mudanças
           this.updateLocalPagination();
         },
