@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - testefrontorvian
+name: Build and deploy Node.js app to Azure Web App - orvian-travel
 
 on:
   push:
@@ -19,21 +19,29 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Set up Node.js version
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '22.x'
+          node-version: '22'
+          cache: 'npm'
 
-      - name: npm install, build, and test
+      - name: npm install and build
         run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+          npm ci
+          npm run build --prod
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          path: |
+            dist/
+            package.json
+            package-lock.json
+            server.js
+            web.config
+            .deployment
+            startup.sh
+            public/assets/env.js
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,18 +56,27 @@ jobs:
         with:
           name: node-app
       
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm install --production
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_70C1B839F6AA442F8483A0682A51EC85 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2771DD59605C48B6AFC41D9C2C8665CB }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_206E64B5A93940E69819BE7AD7995D38 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_D396ACD5AAF64DC18031F5A60C75EDE8 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B2C0950111274DC29314E7B1960DC305 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_76F6A05EDDF549F6A37FE1C244D49A8C }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'testefrontorvian'
+          app-name: 'orvian-travel'
           slot-name: 'Production'
           package: .
-          
+    
